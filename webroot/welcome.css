@@ -5,7 +5,7 @@ body {background:#E2E2E2 url('./slide02-1024.jpg') no-repeat top;}
 .screen-center {position:fixed; top:50%; left:50%; 
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);}
-.main-container {background-color:#fff; width:1024px; height:530px;}
+.main-container {background-color:#fff; }
 
 .login-table {width: 100%;}
 .login-table tr td {padding:5px 5px 0 0;}
