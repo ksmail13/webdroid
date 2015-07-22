@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Device Displayer</title>
+
+		<style>
+			body{
+				background: #dddddd;
+			}
+			#displayer{
+				position: absolute;
+				left: 0px;
+				top: 20px;
+				margin: 20px;
+				background: #ffffff;
+				border: thin inset rgba(100,230,150,0.5);
+			}
+			#xy_field{
+				margin-top: 0px;
+				margin-left: 15px;
+				color: green;
+			}
+			#xy_text{
+				position: absolute;
+				left: 400px;
+				top: 40px;
+				resize: none;
+			}
+			#table{
+				position: absolute;
+				left: 400px;
+				top: 510px;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src='requestNextAnimationFrame.js'></script>
+		<script src='device_displayer.js'></script>
+	</head>
+
+	<body>
+		<script>
+			$(document).ready(function (){
+				makeDevice('#target');
+			});
+		</script>
+		<div id='target'></div>
+	</body>
+</html>
