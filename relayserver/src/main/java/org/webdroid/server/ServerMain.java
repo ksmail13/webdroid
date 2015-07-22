@@ -8,7 +8,10 @@ import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
+import org.webdroid.util.DBConnector;
 import org.webdroid.util.Log;
+
+import java.util.Optional;
 
 /**
  * 서버의 메인 클래스
@@ -17,16 +20,7 @@ import org.webdroid.util.Log;
 public class ServerMain extends AbstractVerticle {
 
     private final static int WEB_PORT = 54321;
-    private final static String DB_IP = "192.168.0.48";
-    private final static String DB_PORT = "3306";
-    private final static String DB_NAME = "webdroid";
-    private final static String DB_ID = DB_NAME;
-    private final static String DB_PW = "web321droid!@#";
-
-    private JsonObject mDBConnectionConfig = null;
-    private JDBCClient mJDBCClient = null;
-    private SQLConnection mDBConnection = null;
-
+    private DBConnector mDBConnector = null;
 
     /**
      * 서버 실행 엔트리 포인트
@@ -56,14 +50,7 @@ public class ServerMain extends AbstractVerticle {
         initRouter(server);
         server.listen(WEB_PORT);
 
-        mDBConnectionConfig = initDBConfig();
-
-        mJDBCClient = JDBCClient.createShared(vertx, mDBConnectionConfig, DB_NAME);
-
-        mJDBCClient.getConnection(handler -> {
-            Log.logging("DB ON`");
-            mDBConnection = handler.result();
-        });
+        mDBConnector = new DBConnector(vertx, aBoolean -> Log.logging("DB "+aBoolean.toString()));
     }
 
     /**
@@ -73,7 +60,7 @@ public class ServerMain extends AbstractVerticle {
     @Override
     public void stop() throws Exception {
         super.stop();
-
+        mDBConnector.close();
         Log.logging("stop server");
     }
 
@@ -90,31 +77,5 @@ public class ServerMain extends AbstractVerticle {
         server.requestHandler(router::accept);
     }
 
-
-    /*
-    DB 설정
-    address  : "test.persistor",
-
-  // JDBC connection settings
-  driver   : "com.mysql.jdbc.Driver",
-  url      : "jdbc:mysql://localhost:3306/vertx",
-  username : "test",
-  password : "test",
-     */
-
-    /**
-     * DB접속을 위한 설정값을 생성한다.
-     * @return 설정된 DB접속 정보
-     */
-    protected JsonObject initDBConfig() {
-        JsonObject config = new JsonObject();
-        config.put("address", "webdroid.persistor");
-        config.put("driver", "com.mysql.jdbc.Driver");
-        config.put("url", String.format("jdbc:mysql://%s:%s/%s", DB_IP, DB_PORT, DB_NAME));
-        config.put("username", DB_NAME);
-        config.put("password", DB_PW);
-
-        return config;
-    }
 
 }
