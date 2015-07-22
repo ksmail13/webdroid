@@ -5,11 +5,12 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> </link>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-        </script>
-		
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js"></script>
+        <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js"></script>
+		<script src="settings.js"></script>
 		<title>
 			samilgong settings
 		</title>
@@ -83,7 +84,7 @@
                                   </div>
 
                                   <div class="form-group">
-                                        <input type="submit" class="setting_btn padding5" value="등록하기">
+                                        <input type="submit" class="setting_btn padding5" id="gitsubmit" value="등록하기">
                                   </div>
 
                                 </div> <!--modalbody-->
@@ -114,23 +115,24 @@
                             </div>
 
                             <div class="modal-body">
+                            <form method="post" id="pw-form" name="pw-form">
                               <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">ID</label>
-                                <input type="password" name="user_id" class="form-control input-lg" id="txt_in_user_id" placeholder="이전 비밀번호 ">
+                                <label class="sr-only" for="txt_in_user_id">oldPW</label>
+                                <input type="password" name="old-pw" class="form-control input-lg" id="old-pw" placeholder="이전 비밀번호 ">
                               </div>
 
                               <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">ID</label>
-                                <input type="password" name="user_id" class="form-control input-lg" id="txt_in_user_id" placeholder="새로운 비밀번호">
+                                <label class="sr-only" for="txt_in_user_id">newPW</label>
+                                <input type="password" name="new-password" class="form-control input-lg" id="new-password" placeholder="새로운 비밀번호">
                               </div>
 
                               <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">ID</label>
-                                <input type="password" name="user_id" class="form-control input-lg" id="txt_in_user_id" placeholder="비밀번호 확인">
+                                <label class="sr-only" for="txt_in_user_id">confirmPW</label> 
+                                <input type="password" name="confirm-new-password" class="form-control input-lg" id="confirm-new-pssword" placeholder="비밀번호 확인">
                               </div>
 
                               <div class="form-group">
-                                    <input type="submit" class="setting_btn padding5" value="변경하기">
+                                    <input type="submit" class="setting_btn padding5" id="pwsubmit" value="변경하기" onClick="validatePassword();">
                               </div>
 
                             </div> <!--modalbody-->
