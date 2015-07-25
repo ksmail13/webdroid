@@ -3,15 +3,10 @@ package org.webdroid.server;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Starter;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jdbc.JDBCClient;
-import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
 import org.webdroid.util.DBConnector;
 import org.webdroid.util.Log;
-
-import java.util.Optional;
 
 /**
  * 서버의 메인 클래스
@@ -50,7 +45,13 @@ public class ServerMain extends AbstractVerticle {
         initRouter(server);
         server.listen(WEB_PORT);
 
-        mDBConnector = new DBConnector(vertx, aBoolean -> Log.logging("DB "+aBoolean.toString()));
+        mDBConnector = new DBConnector(vertx, aBoolean -> {
+            Log.logging("DB " + (aBoolean ? "Connected":"Unconnected"));
+            if(aBoolean) {
+                //mDBConnector.query();
+            }
+        });
+
     }
 
     /**
@@ -72,7 +73,7 @@ public class ServerMain extends AbstractVerticle {
         Router router = Router.router(vertx);
 
         // static web page router
-        router.route().handler(StaticHandler.create());
+        router.route("/static/*").handler(StaticHandler.create());
 
         server.requestHandler(router::accept);
     }

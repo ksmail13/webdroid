@@ -1,11 +1,15 @@
 package org.webdroid.util;
 
+import com.sun.istack.internal.Nullable;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,7 +20,7 @@ public class DBConnector {
 
 
     //private final static String DB_IP = "192.168.0.48";
-    private final static String DB_IP = "10.0.26.220";
+    private final static String DB_IP = "211.189.19.39";
     private final static String DB_PORT = "3306";
     private final static String DB_NAME = "webdroid";
     private final static String DB_ID = "webdroid";
@@ -44,26 +48,42 @@ public class DBConnector {
     }
 
     public void close() {
-        mSqlCommand.ifPresent(sqlConnection -> sqlConnection.close());
-        mJDBCClient.ifPresent(jdbcClient -> jdbcClient.close());
+        mSqlCommand.ifPresent(SQLConnection::close);
+        mJDBCClient.ifPresent(JDBCClient::close);
     }
 
-    public void insert(JsonObject data) {
+    public void query(String query, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
-            // TODO : insert
+            Log.logging("queryWithParam "+query);
+            sqlConnection.query(query, resultSetAsyncResult -> {
+                if (resultSetAsyncResult.succeeded()) {
+                    success.handle(resultSetAsyncResult.result());
+                } else {
+                    if (error != null)
+                        error.handle(resultSetAsyncResult.cause());
+                    else
+                        resultSetAsyncResult.cause().printStackTrace();
+                }
+            });
         });
+
     }
 
-    public void select(JsonObject data) {
+    public void queryWithParam(String query, JsonArray params, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
-            // TODO : select
+            Log.logging("queryWithParam "+query);
+            sqlConnection.queryWithParams(query, params, resultSetAsyncResult -> {
+                if (resultSetAsyncResult.succeeded()) {
+                    success.handle(resultSetAsyncResult.result());
+                } else {
+                    if(error != null)
+                        error.handle(resultSetAsyncResult.cause());
+                    else
+                        resultSetAsyncResult.cause().printStackTrace();
+                }
+            });
         });
-    }
 
-    public void update(JsonObject data) {
-        mSqlCommand.ifPresent(sqlConnection -> {
-            // TODO : update
-        });
     }
 
 
