@@ -48,7 +48,6 @@ public class ServerMain extends AbstractVerticle {
         mDBConnector = new DBConnector(vertx, aBoolean -> {
             Log.logging("DB " + (aBoolean ? "Connected":"Unconnected"));
             if(aBoolean) {
-                //mDBConnector.query();
             }
         });
 

@@ -50,11 +50,12 @@ public class DBConnector {
     public void close() {
         mSqlCommand.ifPresent(SQLConnection::close);
         mJDBCClient.ifPresent(JDBCClient::close);
+        isConnect = false;
     }
 
     public void query(String query, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
-            Log.logging("queryWithParam "+query);
+            Log.logging("query "+query);
             sqlConnection.query(query, resultSetAsyncResult -> {
                 if (resultSetAsyncResult.succeeded()) {
                     success.handle(resultSetAsyncResult.result());
