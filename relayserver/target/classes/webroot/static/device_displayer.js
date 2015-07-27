@@ -16,6 +16,8 @@ var	discs = [
 		{x:0, y:0}
 		];
 
+var sock = new SockJS('http://10.0.20.206:8080/myapp');
+
 //----------------------------------------function
 function windowToCanvas(displayer,x,y){
 	var bbox = displayer.getBoundingClientRect();
@@ -59,16 +61,26 @@ function updateReadout(x,y){
 function updateText(x,y){
 	xy_text.innerText = xy_text.value + '(' + x.toFixed(0) + ', ' + y.toFixed(0) + ')\n';	
 	xy_text.scrollTop = xy_text.scrollHeight;
+	var buf = mode + zeroPad(x.toFixed(0),100) + zeroPad(y.toFixed(0),1000);
+	send(buf);
 }
 
 function updateTextDouble(x1,y1,x2,y2){
 	xy_text.innerText = xy_text.value + '(' + x1.toFixed(0) + ', ' + y1.toFixed(0) + '), ('
 										 + x2.toFixed(0) + ', ' + y2.toFixed(0) + ')\n';	
 	xy_text.scrollTop = xy_text.scrollHeight;
+	var buf = mode + zeroPad(x1.toFixed(0),100) + zeroPad(y1.toFixed(0),1000)
+				 + zeroPad(x2.toFixed(0),100) + zeroPad(y2.toFixed(0),1000);
+	send(buf);
 }
 
 function clearText(){
 	xy_text.innerText = '';
+}
+
+function zeroPad(nr,base){
+  var  len = (String(base).length - String(nr).length)+1;
+  return len > 0? new Array(len).join('0')+nr : nr;
 }
 
 function drawHorizontalLine(y){
@@ -221,6 +233,29 @@ function displayerInit(displayer) {
 		dragging = false;
 	};
 }
+
+sock.onopen = function() {
+	console.log('open');
+};
+
+sock.onclose = function() {
+	console.log('close');
+};
+
+function send(message) {
+	if (sock.readyState === SockJS.OPEN) {
+		console.log("sending message")
+		sock.send(message);
+	} else {
+		console.log("The socket is not open.");
+	}
+}
+/*
+sock.onmessage = function(e) {
+	console.log('message', e.data);
+	alert('received message echoed from server: ' + e.data);
+};
+*/
 
 //----------------------------- initializing
 function makeDevice(target)  {
