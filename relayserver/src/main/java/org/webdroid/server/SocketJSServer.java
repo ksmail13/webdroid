@@ -8,7 +8,7 @@ import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import org.webdroid.util.Log;
 
 /**
- * Created by ±è¹Î¼ö on 2015-07-27.
+ * Created by ê¹€ë¯¼ìˆ˜ on 2015-07-27.
  */
 public class SocketJSServer extends AbstractVerticle {
 
