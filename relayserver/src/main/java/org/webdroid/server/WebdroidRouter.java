@@ -68,6 +68,6 @@ public class WebdroidRouter {
         });
     }
 
-    public void initRequest
+    public void initRequest(){}
 
 }

@@ -3,6 +3,7 @@ package org.webdroid.server;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import org.webdroid.util.Log;
@@ -32,17 +33,19 @@ public class SocketJSServer extends AbstractVerticle {
             sockJSSocket.handler(buffer -> {
 
                 sockJSSocket.write(buffer);
+                System.out.println(buffer);
 
             });
         });
         router.route("/myapp").handler(routingContext -> {
-            routingContext.response().sendFile("./webroot/static/12.html").end();
+            routingContext.response().sendFile("./webroot/static/device_displayer.html").end();
         });
 
         router.route("/myapp/*").handler(sockJSHandler);
         router.route("/sockjs-0.3.4.js").handler(routingContext -> {
             routingContext.response().sendFile("./webroot/static/sockjs-0.3.4.js").end();
         });
+        router.route().handler(StaticHandler.create("./webroot/static/"));
         server.requestHandler(router::accept);
         server.listen(8080);
     }
