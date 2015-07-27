@@ -1,0 +1,8 @@
+/* projectmain.css */
+.thumbnail a {color:#444;}
+
+.app-icon {width:100%; display: inline-block;}
+.app-icon img {width: 100%;}
+
+.app-descript {min-height: 4em; max-height: 5em;}
+.app-function {text-align: right;}
