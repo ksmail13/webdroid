@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> </link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+            <script type="text/javascript" src="js/jquery.js"></script>
+            <script type="text/javascript" src="js/jquery-ui.js"></script>
+            <script type="text/javascript" src="../source/stable/jquery.layout.js"></script>
+            <script type="text/javascript" src="../source/stable/callbacks/jquery.layout.resizePaneAccordions.js"></script>
+
+            <script type="text/javascript" src="js/themeswitchertool.js"></script> 
+            <script type="text/javascript" src="js/debug.js"></script>
+      
+        </script>
+		
+		<title>
+			samilgong settings
+		</title>
+    <link rel="stylesheet" href="basic.css" type="text/css"></link>
+    <link rel="stylesheet" href="androidproject.css" type="text/css"></link>
+	</head>
+	<body>
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home"></span></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <form class="navbar-form navbar-left" role="search">
+                  <div class="input-group">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                  </div>
+              </form>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">이름 <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+        
+<!--body-->
+       <div class="ui-layout-north ui-widget-content" style="display: none;">
+	<div style="float: right; margin-right: 160px;">
+		<button onClick="resizeWidgets()">Resize</button> &nbsp;
+		<button onClick="removeUITheme(); myLayout.resizeAll()">Remove Theme</button>
+	</div>
+	North Pane
+</div>
+
+<div class="ui-layout-south ui-widget-content ui-state-error" style="display: none;"> South Pane </div>
+
+<div class="ui-layout-center" style="display: none;"> 
+	<h3 class="ui-widget-header">Center Pane</h3>
+	<div class="ui-layout-content ui-widget-content">
+		<h2>Accordion Resizing Callbacks</h2>
+		<ul>
+			<li><a href="../source/stable/callbacks/jquery.layout.resizePaneAccordions-latest.js">Accordion Resizing Callback</a></li>
+			<li><a href="../source/stable/callbacks/jquery.layout.resizePaneAccordions-latest.min.js">Accordion Resizing Callback &ndash; Minified</a></li>
+		</ul>
+		<h5>Javascript used to create this page</h5>
+		<pre><code
+>$('body').layout({
+    west__size:      300
+,   east__size:      300
+    <i>// RESIZE Accordion widget when panes resize</i>
+,   west__onresize:  $.layout.callbacks.resizePaneAccordions
+,   east__onresize:  $.layout.callbacks.resizePaneAccordions
+});
+
+<i>// ACCORDION - in the West pane</i>
+$("#accordion1").accordion({ heightStyle: "fill" });
+
+<i>// ACCORDION - in the East pane - in a 'content-div'</i>
+$("#accordion2").accordion({
+    heightStyle: "fill"
+,   active:      1 <i>// set active accordion-panel</i>
+});
+		</code></pre>
+	</div>
+</div>
+
+<div class="ui-layout-west" style="display: none;">
+	<div id="accordion1" class="basic">
+
+			<h3><a href="#">Section 1</a></h3>
+			<div>
+				<h5>West Pane</h5>
+				<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. 
+					Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc.</p>
+				<p>Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. 
+					Vestibulum a velit eu ante scelerisque vulputate.</p>
+			</div>
+
+			<h3><a href="#">Section 2</a></h3>
+			<div>
+				<h5>Sed Non Urna</h5>
+				<p>Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus.
+					Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit,
+					faucibus interdum tellus libero ac justo.</p>
+				<p>Vivamus non quam. In suscipit faucibus urna.</p>
+			</div>
+
+			<h3><a href="#">Section 3</a></h3>
+			<div>
+				<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+					Phasellus pellentesque purus in massa. Aenean in pede.</p>
+				<p>Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, 
+					magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p>
+				<ul>
+					<li>List item one</li>
+					<li>List item two</li>
+					<li>List item three</li>
+				</ul>
+			</div>
+
+			<h3><a href="#">Section 4</a></h3>
+			<div>
+				<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames 
+					ac turpis egestas.</p>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+					Aenean lacinia mauris vel est.</p>
+				<p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+					Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+			</div>
+
+	</div>
+</div>
+
+<div class="ui-layout-east" style="display: none;">
+	<h3 class="ui-widget-header">East Pane</h3>
+
+	<div class="ui-layout-content">
+		<div id="accordion2" class="basic">
+
+			<h3><a href="#">Section 1</a></h3>
+			<div>
+				<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. 
+					Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc.</p>
+				<p>Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. 
+					Vestibulum a velit eu ante scelerisque vulputate.</p>
+			</div>
+
+			<h3><a href="#">Section 2</a></h3>
+			<div>
+				<h5>Sed Non Urna</h5>
+				<p>Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus.
+					Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit,
+					faucibus interdum tellus libero ac justo.</p>
+				<p>Vivamus non quam. In suscipit faucibus urna.</p>
+			</div>
+
+			<h3><a href="#">Section 3</a></h3>
+			<div>
+				<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+					Phasellus pellentesque purus in massa. Aenean in pede.</p>
+				<p>Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, 
+					magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p>
+				<ul>
+					<li>List item one</li>
+					<li>List item two</li>
+					<li>List item three</li>
+				</ul>
+			</div>
+
+			<h3><a href="#">Section 4</a></h3>
+			<div>
+				<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames 
+					ac turpis egestas.</p>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+					Aenean lacinia mauris vel est.</p>
+				<p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+					Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+			</div>
+
+		</div>
+	</div>
+
+	<h4 class="ui-widget-content ui-state-hover">Accordion inside DIV.ui-layout-content</h4>
+</div>
+        
+	</body>
+</html>

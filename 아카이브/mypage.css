@@ -1,0 +1,28 @@
+.profile-pic{
+    margin-top: 40px;
+}
+
+.profile-pro{
+    margin-top: 40px;
+}
+
+.project-list{
+    margin-top: 40px;
+}
+
+.setting_btn {
+    margin-left: 33%;
+    color: white; 
+    width: 30%; 
+    background-color: #B0E5A6; 
+    border-radius: 5px; 
+    border:#94C38D solid 1px; 
+    font-size: 1.3em;
+}
+
+
+.project-name   {
+    margin-top: 5px;
+   
+    height: 30px;    
+}
