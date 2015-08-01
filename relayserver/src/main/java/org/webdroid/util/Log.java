@@ -19,6 +19,10 @@ public class Log {
         logging(message, System.out, null);
     }
 
+    public static void errorLogging(String message) {
+        logging(message, System.err, null);
+    }
+
     public static void errorLogging(String message, Throwable t) {
         logging(message, System.err, t);
     }
@@ -31,7 +35,7 @@ public class Log {
 
         if(LOG_TYPE == LogType.TIME) {
             // if you want time log then use this format
-            DateFormat df = new SimpleDateFormat("MM / dd a hh:mm:ss");
+            DateFormat df = new SimpleDateFormat("MM/dd a hh:mm:ss");
             target.printf("[%s] %s", df.format(Calendar.getInstance().getTime()), message == null ? "" : message);
         }
         else if(LOG_TYPE == LogType.FILE_NAME){
@@ -41,7 +45,7 @@ public class Log {
             target.printf("[%s(%d)] %s", callMethod.getFileName(), callMethod.getLineNumber(), message);
         }
         if(t != null) {
-            target.println(t.getLocalizedMessage());
+            target.println(t.getMessage());
             //target.print(t.getStackTrace()[0].toString());
             t.printStackTrace();
         }
@@ -50,6 +54,10 @@ public class Log {
 
     public static void debugLogging(String message) {
         logging(message);
+    }
+
+    public static void debugLogging(String message, Throwable t) {
+        logging(message, t);
     }
 
 

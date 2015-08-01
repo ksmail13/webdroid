@@ -9,7 +9,7 @@ import org.webdroid.util.DBConnector;
 import org.webdroid.util.Log;
 
 /**
- * 서버의 메인 클래스
+ * 서버의 엔트리 클래스
  * Created by Micky Kim on 2015. 7. 17..
  */
 public class ServerMain extends AbstractVerticle {
@@ -30,7 +30,6 @@ public class ServerMain extends AbstractVerticle {
     }
 
     public void start() {
-
         vertx.deployVerticle(WebServer.class.getName());
         vertx.deployVerticle(SocketJSServer.class.getName());
     }

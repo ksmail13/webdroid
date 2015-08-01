@@ -1,6 +1,7 @@
 package org.webdroid.util;
 
 import com.sun.istack.internal.Nullable;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -20,9 +21,9 @@ public class DBConnector {
 
 
     //private final static String DB_IP = "192.168.0.48";
-    private final static String DB_IP = "211.189.19.39";
-    private final static String DB_PORT = "3306";
-    private final static String DB_NAME = "webdroid";
+    private final static String DB_IP = "127.0.0.1";
+    private final static String DB_PORT = "32123";
+    private final static String DB_NAME = "smartthing";
     private final static String DB_ID = "webdroid";
     private final static String DB_PW = "web321droid!@#";
 
@@ -53,6 +54,12 @@ public class DBConnector {
         isConnect = false;
     }
 
+    /**
+     * query sql query
+     * @param query sql query
+     * @param success success callback
+     * @param error fail callback
+     */
     public void query(String query, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
             Log.logging("query "+query);
@@ -77,7 +84,7 @@ public class DBConnector {
                 if (resultSetAsyncResult.succeeded()) {
                     success.handle(resultSetAsyncResult.result());
                 } else {
-                    if(error != null)
+                    if (error != null)
                         error.handle(resultSetAsyncResult.cause());
                     else
                         resultSetAsyncResult.cause().printStackTrace();
@@ -85,6 +92,15 @@ public class DBConnector {
             });
         });
 
+    }
+
+    public void execute(String query, Handler<AsyncResult<Void>> handler) {
+        mSqlCommand.ifPresent(sqlConn -> {
+            sqlConn.execute(query, handler);
+        });
+    }
+    public boolean isConnect() {
+        return isConnect;
     }
 
 
