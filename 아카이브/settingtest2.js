@@ -1,4 +1,4 @@
-(function($){
+(function($){ //테스트
 	$.fn.my_modal_box = function(prop){
 
 		var options = $.extend(prop);
