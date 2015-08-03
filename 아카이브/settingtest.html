@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko">  <!--  -->
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -10,7 +10,7 @@
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js"></script>
         <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js"></script>
-		<script src="settings.js"></script>
+		<script src="settingtest2.js"></script>
 		<title>
 			samilgong settings
 		</title>
@@ -61,39 +61,10 @@
         
 <!--body-->
         <div class ="container-setting" id="outside">
+            
             <div class="container">
-                <div class="padding20">
-                            <!-- Trigger the modal with a button -->
-                    <a class="setting-text" data-toggle="modal" data-target="#github-id-modal">
-                        <span class="glyphicon glyphicon-menu-right"></span> Github ID  등록</a>
-                    <!-- Modal -->
-                    <div class="modal fade" id="github-id-modal" >
-                        <div class="modal-dialog">
-                          <!-- Modal content-->
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" >&times;</button>
-                              <h4 class="modal-title">Git ID 등록 </h4>
-                            </div>
-
-                            <div class="modal-body">
-                              <div class="form-group">  
-                                    <label class="sr-only" for="txt_in_user_id">ID</label>
-                                    <input type="id" name="user_id" class="form-control input-lg" id="txt_in_user_id" placeholder="아이디">
-                              </div>
-                                
-                              <div class="form-group">
-                                    <input type="button" class="setting_btn padding5" id="gitsubmit" value="등록하기">
-                              </div>
-
-                            </div> <!--modalbody-->
-
-                          </div> <!--modalcontent-->
-
-                        </div><!--modal dialog-->
-                    </div> <!--modal fade-->
-
-                   
+                <div class="padding20" id="gitgit">
+                    <a class="setting-text" data-toggle="modal"><span class="glyphicon glyphicon-menu-right"></span> Github ID  등록</a>
                 </div>
             </div>
           
@@ -101,48 +72,10 @@
         
             <div class="container">
 
-                <div class="padding20">
+                <div class="padding20" id="pwpw">
                     <!-- Trigger the modal with a button -->
-                  <a class="setting-text" data-toggle="modal" data-target="#change-pw-modal">
+                  <a class="setting-text" data-toggle="modal">
                       <span class="glyphicon glyphicon-menu-right"></span> 비밀번호 변경</a>
-
-                  <!-- Modal -->
-                    <div class="modal fade" id="change-pw-modal" >
-                        <div class="modal-dialog">
-                          <!-- Modal content-->
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" >&times;</button>
-                              <h4 class="modal-title">비밀번호 변경 </h4>
-                            </div>
-
-                            <div class="modal-body">
-                            <form method="post" id="pw-form" name="pw-form" onsubmit="return validatePassword();">
-                              <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">oldPW</label>
-                                <input type="password" name="old-pw" class="form-control input-lg" id="old-pw" placeholder="이전 비밀번호 ">
-                              </div>
-
-                              <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">newPW</label>
-                                <input type="password" name="new-password" class="form-control input-lg" id="new-password" placeholder="새로운 비밀번호">
-                              </div>
-
-                              <div class="form-group">
-                                <label class="sr-only" for="txt_in_user_id">confirmPW</label> 
-                                <input type="password" name="confirm-new-password" class="form-control input-lg" id="confirm-new-pssword" placeholder="비밀번호 확인">
-                              </div>
-
-                              <div class="form-group">
-                                    <input type="submit" class="setting_btn padding5" id="pwsubmit" value="변경하기" onClick="validatePassword();">
-                              </div>
-
-                            </div> <!--modalbody-->
-
-                          </div> <!--modalcontent-->
-
-                        </div><!--modal dialog-->
-                    </div> <!--modal fade-->
                 </div>
         </div>
 
@@ -216,11 +149,32 @@
                 </div>
             </div>
             
-            
-                
-                
-                
         </div>
 
+        <script> 
+            
+             $('#gitgit').my_modal_box({
+                    title:'github 아이디 등록',
+                    label:'ID', 
+                    name:'user_id', 
+                    type:'id', 
+                    placeholder:"아이디",
+                    label:'ID', name:'user_id', type:'id', placeholder:"아이디",
+                    btnclass:'gitsubmit',
+                    button:'등록하기'
+                  });
+         
+               $('#pwpw').my_modal_box({
+                        title:'비밀번호 변경',
+                        label:'oldPW', 
+                        name:'old-pw', 
+                        type:'password', 
+                        placeholder:"이전비밀번호",  
+                        btnclass:'pwsubmit',                    
+                        button:'변경하기'
+                    });
+                    
+        </script>
+        
 	</body>
 </html>
