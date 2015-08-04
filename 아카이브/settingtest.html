@@ -71,109 +71,51 @@
         <div class="blank_10"><hr></div>
         
             <div class="container">
-
                 <div class="padding20" id="pwpw">
                     <!-- Trigger the modal with a button -->
                   <a class="setting-text" data-toggle="modal">
                       <span class="glyphicon glyphicon-menu-right"></span> 비밀번호 변경</a>
                 </div>
-        </div>
+            </div>
 
         <div class="blank_10"><hr></div>
         
             <div class="container">
-                <div class="padding20">
+                <div class="padding20" id="members">
                     <!-- Trigger the modal with a button -->
                   <a class="setting-text" data-toggle="modal" data-target="#unsubscribe-modal-1">
-                    <span class="glyphicon glyphicon-menu-right"></span> 회원 탈퇴</a>
-                    
-                    <div class="modal fade" id="unsubscribe-modal-1" tabindex="-1" data-focus-on="input:first">
-                        <div class="modal-dialog">
-                          <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">회원을 탈퇴 하시겠습니까  ? </h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <p align="center">회원 탈퇴시, 모든 정보 및 작업한 프로젝트를 잃게 됩니다.
-                                    <br > 정말 탈퇴하시겠습니까? </p>
-                                    <div class="form-group">
-                                        <input type="button" class="setting_btn padding5" data-toggle="modal" 
-                                            data-target="#unsubscribe-mordal-2"  value="탈퇴하기">
-                                    </div>
-                                </div> <!--modalbody-->
-                            </div> <!--modalcontent-->
-
-                        </div><!--modal dialog-->
-                    </div> <!--modal fade-->
-
-                    <div id="unsubscribe-mordal-2" class="modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" >&times;</button>
-                                    <h4 class="modal-title">탈퇴를 위한 비밀번호를 입력하세요</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label class="sr-only" for="txt_in_user_id">ID</label>
-                                        <input type="password"name="user_id" class="form-control input-lg" id="txt_in_user_id" placeholder="비밀번호 ">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="button" class="setting_btn padding5" data-toggle="modal"
-                                               data-target="#unsubscribe-mordal-3"  value="탈퇴하기">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="unsubscribe-mordal-3" class="modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" >&times;</button>
-                                    <h4 class="modal-title">탈퇴합니다</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p align = "center" > 탈퇴를 진행합니다. </p>
-                                    <div class="form-group">
-                                        <input type="button" class="setting_btn padding5" id="unsubscribe-submit" value="탈퇴하기">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <span class="glyphicon glyphicon-menu-right"></span>회원 탈퇴</a>
                 </div>
             </div>
             
         </div>
 
         <script> 
+
+        $('#gitgit').my_modal_box({
+            title:'github 아이디 등록',
+            contents:[{label:'ID', name:'user_id', type:'email', placeholder:"아이디"}],
+            btnclass:'gitsubmit',
+            button:'등록하기'
+          });
+
+        $('#pwpw').my_modal_box({
             
-             $('#gitgit').my_modal_box({
-                    title:'github 아이디 등록',
-                    label:'ID', 
-                    name:'user_id', 
-                    type:'id', 
-                    placeholder:"아이디",
-                    label:'ID', name:'user_id', type:'id', placeholder:"아이디",
-                    btnclass:'gitsubmit',
-                    button:'등록하기'
-                  });
-         
-               $('#pwpw').my_modal_box({
-                        title:'비밀번호 변경',
-                        label:'oldPW', 
-                        name:'old-pw', 
-                        type:'password', 
-                        placeholder:"이전비밀번호",  
-                        btnclass:'pwsubmit',                    
-                        button:'변경하기'
-                    });
-                    
+            title:'비밀번호 변경',
+            contents:[{label:'oldPW', name:'old-pw', type:'password', placeholder:"이전 비밀번호"},
+                      {label:'newPW', name:'new-pw', type:'password', placeholder:"새로운 비밀번호"},
+                      {label:'newPWconfirm', name:'new-pw-confirm', type:'password', placeholder:"비밀번호 확인"}],
+
+            btnclass:'pwsubmit',                  
+            button:'변경하기'
+        });
+        
+        $('#members').click(function(){
+             window.layerAlert('회원을 탈퇴 하시겠습니까  ?',
+                               '회원 탈퇴시, 모든 정보 및 작업한 프로젝트를 잃게 됩니다.<br > 정말 탈퇴하시겠습니까?',
+                               'members-submit','탈퇴하기');
+         });
+        
         </script>
         
 	</body>
