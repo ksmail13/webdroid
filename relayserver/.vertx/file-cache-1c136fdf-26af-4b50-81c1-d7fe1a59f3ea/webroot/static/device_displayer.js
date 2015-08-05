@@ -260,7 +260,6 @@ sock.onmessage = function(e) {
 	console.log('message', e.data);
 	img.src = 'data:image/jpg;base64,' + e.data;
 	//alert('received message echoed from server: ' + e.data);
-	drawBackground();
 };
 
 
