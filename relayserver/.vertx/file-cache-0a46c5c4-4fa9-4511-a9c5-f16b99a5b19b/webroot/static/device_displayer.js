@@ -2,7 +2,7 @@ var displayer = null;
 var	xy_field = null;
 var	xy_text = null;
 var	context = null;
-var	img = new Image();
+var	spritesheet = new Image();
 
 var	mode = 0;
 var	dragging = false;
@@ -27,7 +27,6 @@ function windowToCanvas(displayer,x,y){
 }
 
 function drawBackground(){
-	/*
 	var VERTICAL_LINE_SPACING = 12;
 	var	i = context.canvas.height;
 
@@ -42,10 +41,6 @@ function drawBackground(){
 		context.stroke();
 		i -= VERTICAL_LINE_SPACING;
 	}
-	*/
-
-	context.clearRect(0,0,displayer.width,displayer.height);
-	context.drawImage(img,0,0);
 }
 /*
 function drawSpritesheet(){
@@ -255,14 +250,12 @@ function send(message) {
 		console.log("The socket is not open.");
 	}
 }
-
+/*
 sock.onmessage = function(e) {
 	console.log('message', e.data);
-	img.src = 'data:image/jpg;base64,' + e.data;
-	//alert('received message echoed from server: ' + e.data);
-	drawBackground();
+	alert('received message echoed from server: ' + e.data);
 };
-
+*/
 
 //----------------------------- initializing
 function makeDevice(target)  {
