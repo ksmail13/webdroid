@@ -18,7 +18,7 @@
 		}
 		 		
 		 function add_popup_box(options){
-             var myModal=$('<div class="modal-dialog"><div class="modal-content"></div></div>');
+             var myModal=$('<div class="modal-dialog"><div class="modal-content content"></div></div>');
              $(myModal).appendTo('.modal_block_page');
                       
              var myModal_header ='<div class="modal-header">';
@@ -47,8 +47,8 @@
                  myModal_body += '</div>';
                  myModal_body +='</div>';
 
-			 $(myModal_header).appendTo('.modal-content');
-             $(myModal_body).appendTo('.modal-content');
+			 $(myModal_header).appendTo('.content');
+             $(myModal_body).appendTo('.content');
              
              $('.close').click(function(){
                  $('.modal-dialog').remove();
