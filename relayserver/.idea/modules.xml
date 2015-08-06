@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/relayserver.iml" filepath="$PROJECT_DIR$/relayserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webdroid.iml" filepath="$PROJECT_DIR$/webdroid.iml" />
     </modules>
   </component>
 </project>

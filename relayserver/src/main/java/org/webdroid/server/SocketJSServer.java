@@ -25,6 +25,8 @@ import java.io.*;
  */
 public class SocketJSServer extends AbstractVerticle {
 
+    public int j=0;
+
     public static String encodeToString(BufferedImage image, String type) {
         String imageString = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -60,27 +62,33 @@ public class SocketJSServer extends AbstractVerticle {
 
         sockJSHandler.socketHandler(sockJSSocket -> {
             Log.logging(sockJSSocket.remoteAddress().host());
+            vertx.setPeriodic(33, id -> {
+                Buffer buffer = Buffer.buffer();
+                String buf = null;
+                try {
+                    j = j % 60 + 1;
+                    String adrr = "C:\\Users\\Owner\\Documents\\webdroid_IDE\\relayserver\\wildlife\\" + Integer.toString(j) + ".jpg";
+                    BufferedImage image1 = ImageIO.read(new File(adrr));
+                    buf = encodeToString(image1, "jpg");
+                }catch (IOException e){
+                }
+                buffer.setString(0,buf);
+                sockJSSocket.write(buffer);
+            });
             sockJSSocket.handler(buffer -> {
 
                // sockJSSocket.write(buffer);
                 System.out.println(buffer.getByte(0)-48);
-
+                /*
                 int i;
                 String buf = "0";
-
+                String adrr = "";
 
                 i = buffer.getByte(0)-48;
 
-
                 if(i == 0)
                 {
-                    try {
-                        BufferedImage image1 = ImageIO.read(new File("C:\\Users\\김민수\\Desktop\\iu1.jpg"));
-                        buf = encodeToString(image1,"jpg");
-                    }catch (IOException e){
-                    }
-                    buffer.setString(0,buf);
-                   sockJSSocket.write(buffer);//BufferedWriter);
+
                 }
                 else if(i==1)
                 {
@@ -101,14 +109,14 @@ public class SocketJSServer extends AbstractVerticle {
                     }
                     buffer.setString(0,buf);
                     sockJSSocket.write(buffer);
-                }
+                }*/
 
 
 
             });
         });
         router.route("/myapp").handler(routingContext -> {
-            routingContext.response().sendFile("./webroot/static/device_displayer.html").end();
+            routingContext.response().sendFile("./webroot/static/device_displayer.html");
         });
 
         router.route("/myapp/*").handler(sockJSHandler);
