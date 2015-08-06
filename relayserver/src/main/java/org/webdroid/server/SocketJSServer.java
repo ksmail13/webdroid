@@ -23,7 +23,7 @@ import java.io.*;
 /**
  * Created by 김민수 on 2015-07-27.
  */
-public class SocketJSServer extends AbstractVerticle {
+public class SocketJSServer extends WebdroidVerticle {
 
     public int j=0;
 
