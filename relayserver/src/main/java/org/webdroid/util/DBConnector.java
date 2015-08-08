@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
+import io.vertx.ext.sql.UpdateResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,13 @@ import java.util.Optional;
  * Created by micky on 2015. 7. 22..
  */
 public class DBConnector {
-    private static DBConnector instance = null;
 
+    private ConsoleLogger logger = ConsoleLogger.createLogger(getClass());
 
     //private final static String DB_IP = "192.168.0.48";
     private final static String DB_IP = "127.0.0.1";
     private final static String DB_PORT = "32123";
-    private final static String DB_NAME = "smartthing";
+    private final static String DB_NAME = "webdroid";
     private final static String DB_ID = "webdroid";
     private final static String DB_PW = "web321droid!@#";
 
@@ -48,6 +49,9 @@ public class DBConnector {
         });
     }
 
+    /**
+     * Close database connection
+     */
     public void close() {
         mSqlCommand.ifPresent(SQLConnection::close);
         mJDBCClient.ifPresent(JDBCClient::close);
@@ -55,14 +59,14 @@ public class DBConnector {
     }
 
     /**
-     * query sql query
+     * Execute read(select) queries
      * @param query sql query
      * @param success success callback
      * @param error fail callback
      */
     public void query(String query, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
-            Log.logging("query "+query);
+            logger.info("query " + query);
             sqlConnection.query(query, resultSetAsyncResult -> {
                 if (resultSetAsyncResult.succeeded()) {
                     success.handle(resultSetAsyncResult.result());
@@ -77,9 +81,16 @@ public class DBConnector {
 
     }
 
-    public void queryWithParam(String query, JsonArray params, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
+    /**
+     * Execute read(select) queries with parameters
+     * @param query select query
+     * @param params parameters
+     * @param success success callback
+     * @param error fail callback
+     */
+    public void query(String query, JsonArray params, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
         mSqlCommand.ifPresent(sqlConnection -> {
-            Log.logging("queryWithParam "+query);
+            logger.info("query " + query);
             sqlConnection.queryWithParams(query, params, resultSetAsyncResult -> {
                 if (resultSetAsyncResult.succeeded()) {
                     success.handle(resultSetAsyncResult.result());
@@ -94,11 +105,47 @@ public class DBConnector {
 
     }
 
+    /**
+     * Execute update(insert, update, delete) query
+     * @param query query
+     * @param handler callback
+     */
+    public void update(String query, Handler<AsyncResult<UpdateResult>> handler) {
+        mSqlCommand.ifPresent(sqlConnection -> {
+            logger.info("update "+query);
+            sqlConnection.update(query, handler);
+        });
+    }
+
+    /**
+     * Execute update(insert, update, delete) query with parameters
+     * @param query query
+     * @param params parameters
+     * @param handler callback
+     */
+    public void update(String query, JsonArray params, Handler<AsyncResult<UpdateResult>> handler) {
+        mSqlCommand.ifPresent(sqlConnection -> {
+            logger.info("update "+query +" with params " + params);
+            sqlConnection.updateWithParams(query, params, handler);
+        });
+    }
+
+    /**
+     * Execute query that exclude CRUD
+     * @param query query
+     * @param handler callback
+     */
     public void execute(String query, Handler<AsyncResult<Void>> handler) {
         mSqlCommand.ifPresent(sqlConn -> {
+            logger.info("execute "+query);
             sqlConn.execute(query, handler);
         });
     }
+
+    /**
+     * Check connect status
+     * @return connect status
+     */
     public boolean isConnect() {
         return isConnect;
     }
