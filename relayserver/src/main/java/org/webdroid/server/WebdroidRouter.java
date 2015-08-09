@@ -60,7 +60,7 @@ public class WebdroidRouter {
         // for javascript and style sheet route
         router.route().pathRegex(CSS_JS).handler(routingContext -> {
             HttpServerResponse res = routingContext.response();
-            res.sendFile(WebdroidServerConstant.Path.WEBROOT + WebdroidServerConstant.Path.STATIC + routingContext.normalisedPath());
+            res.sendFile(WebdroidServerConstant.Path.STATIC + routingContext.normalisedPath());
         });
         
         // for image route
@@ -69,7 +69,7 @@ public class WebdroidRouter {
             //res.putHeader("content-type", "image/"+routingContext.normalisedPath().split(".")[1]);
             //Log.logging("request image "+ routingContext.normalisedPath());
 
-            res.sendFile(WebdroidServerConstant.Path.WEBROOT+ WebdroidServerConstant.Path.IMG_PATH+routingContext.normalisedPath());
+            res.sendFile(WebdroidServerConstant.Path.IMG_PATH+routingContext.normalisedPath());
         });
     }
 
