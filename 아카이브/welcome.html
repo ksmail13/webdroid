@@ -5,9 +5,10 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> </link>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="welcome.js"></script>
         </script>
 		
 		<title>
@@ -45,10 +46,11 @@
                                         <label class="sr-only" for="txt-user-id">
                                         Email address
                                         </label>
-                                        <input type="email" name="user-id" class="form-control input-lg" id="txt-user-id" maxlength="30" placeholder="Email"/>
+                                        <input type="email" name="user-id" class="form-control input-lg" id="txt-user-id user-id" maxlength="30" 
+                                               placeholder="이메일주소"/>
                                     </td>
                                     <td rowspan="2">
-                                        <input type="submit" class="login-btn height90" value="Login"></input>
+                                        <input type="submit" class="login-btn height90" value="Login" id="loginbtn"></input>
 
                                     </td>
                                 </tr>
@@ -57,7 +59,8 @@
                                         <label class="sr-only" for="txt-user-pw">
                                         Password
                                         </label>
-                                        <input type="password" name="user-pw" class="form-control  input-lg" id="txt-user-pw" maxlength="30" placeholder="Password" ></input>
+                                        <input type="password" name="user-pw" class="form-control  input-lg" id="txt-user-pw user-pw" maxlength="30"
+                                               placeholder="비밀번호" ></input>
                                     </td>
                                 </tr>
                                 <tr>
