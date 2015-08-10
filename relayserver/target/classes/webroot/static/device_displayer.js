@@ -16,7 +16,7 @@ var	discs = [
 		{x:0, y:0}
 		];
 
-var sock = new SockJS('http://10.0.18.145:8080/myapp');
+var sock = new SockJS('http://192.168.0.51:8080/myapp');
 
 //----------------------------------------function
 function windowToCanvas(displayer,x,y){
@@ -249,7 +249,7 @@ sock.onclose = function() {
 
 function send(message) {
 	if (sock.readyState === SockJS.OPEN) {
-		console.log("sending message")
+		console.log("sending message");
 		sock.send(message);
 	} else {
 		console.log("The socket is not open.");
@@ -258,8 +258,8 @@ function send(message) {
 
 sock.onmessage = function(e) {
 	console.log('message', e.data);
-	img.src = 'data:image/jpg;base64,' + e.data;
-	//alert('received message echoed from server: ' + e.data);
+	if(e.data)	img.src = 'data:image/jpg;base64,' + e.data;
+	else console.log("empty response");
 	drawBackground();
 };
 
