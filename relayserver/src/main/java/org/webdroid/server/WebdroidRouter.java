@@ -54,37 +54,41 @@ public class WebdroidRouter {
      * static resource routing
      */
     public void initStaticResource() {
+        final String BOOTSTRAP = "/bootstrap/(css|fonts|js)/\\S+.\\S+";
         final String CSS = "/css/\\S+.(css)";
         final String JS = "/js/\\S+.(js)";
         final String IMG = "/images/\\S+.(jpeg|png|jpg|ico)";
 
         StaticHandler staticHandler = StaticHandler.create(WebdroidConstant.Path.STATIC);
 
+        router.route().pathRegex(BOOTSTRAP).handler(staticHandler);
         router.route().pathRegex(JS).handler(staticHandler);
         router.route().pathRegex(CSS).handler(staticHandler);
         router.route().pathRegex(IMG).handler(staticHandler);
 
-        /*
-        // for javascript and style sheet route
-        router.route().pathRegex(CSS_JS).handler(routingContext -> {
-            HttpServerResponse res = routingContext.response();
-            res.sendFile(WebdroidConstant.Path.STATIC + routingContext.normalisedPath());
-        });
 
-        // for image route
-        router.route().pathRegex(IMG).handler(routingContext -> {
-            HttpServerResponse res = routingContext.response();
-            //res.putHeader("content-type", "image/"+routingContext.normalisedPath().split(".")[1]);
-            //Log.logging("request image "+ routingContext.normalisedPath());
-
-            res.sendFile(WebdroidConstant.Path.IMG_PATH+routingContext.normalisedPath());
-        });
-        */
     }
 
     public void initBasicRouterhandler(Vertx vertx) {
-        Route route = router.route();
-        route.handler(CookieHandler.create());
+
+        /**
+         * request logging
+         */
+        router.route().handler(LoggerHandler.create());
+
+        /**
+         * when error
+         */
+        router.route().failureHandler(ErrorHandler.create(true));
+
+
+        /**
+         * for post request handling
+         */
+        router.route().handler(BodyHandler.create());
+
+
+        router.route().handler(CookieHandler.create());
 
         SessionStore ss = null;
         if(IS_CLUSTERRED) {
@@ -93,21 +97,6 @@ public class WebdroidRouter {
             ss = LocalSessionStore.create(vertx, WebdroidConstant.ID.SESSION_MAP_NAME);
         }
 
-        route.handler(SessionHandler.create(ss));
-
-        /**
-         * for post request handling
-         */
-        route.handler(BodyHandler.create());
-
-        /**
-         * request logging
-         */
-        route.handler(LoggerHandler.create());
-
-        /**
-         * when error
-         */
-        route.failureHandler(ErrorHandler.create(true));
+        router.route().handler(SessionHandler.create(ss));
     }
 }

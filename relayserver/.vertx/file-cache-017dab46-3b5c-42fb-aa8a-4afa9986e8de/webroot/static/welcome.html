@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+        @include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonheader.html'}
+		<link rel="stylesheet" href="./css/welcome.css" type="text/css"></link>
+    
+    <script>
+        $(function () {
+            $('#frm-singin').submit(function (e) {
+                return formRequest(this, onReqSuccess, onReqFailed);
+            });
+        });
+    function onReqSuccess(data) {
+        if(data.result) {
+            modalAlert('success');
+            location.href = '/projectmain';   
+        } else {
+            modalAlert(data.message);   
+        }
+    }
+        
+    function onReqFailed(data) {
+        modalAlert(data);
+    }
+    </script>
+		<title>
+			Webdroid
+		</title>
+	</head>
+	<body>
+        <div class="container main-container screen-center">
+            <div class="padding15">
+                <div class="row">
+                    <div class="col-sm-7 col-md-7">
+                        <div class="padding15">
+                            <div class="row">
+                                <h1>Webdroid</h1>
+                            </div>
+                            <div class="row">
+                                <h4>Gorgeous Android Web IDE</h4>
+                                <p>
+                                build your own app!
+                                </p>
+                                <p class="text-justify">
+                                <iframe style="width:100%; height:300px;" src="https://www.youtube.com/embed/wIK0JKTQcI8" frameborder="0" allowfullscreen></iframe>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 col-md-5 vert-center">
+                        <div class="row">
+                            <form action="/signin" method="post" id="frm-signin">
+                            <table class="login-table">
+                                <tr>
+                                    <td class="form-group">
+                                        <label class="sr-only" for="txt-user-id">
+                                        Email address
+                                        </label>
+                                        <input type="email" name="user-id" class="form-control input-lg" id="txt-user-id" maxlength="30" placeholder="Email" tabindex="1"/>
+                                    </td>
+                                    <td rowspan="2">
+                                        <input type="submit" class="login-btn height90" value="Login" tabindex="3"></input>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="from-group">
+                                        <label class="sr-only" for="txt-user-pw">
+                                        Password
+                                        </label>
+                                        <input type="password" name="user-pw" class="form-control  input-lg" id="txt-user-pw" maxlength="30" placeholder="Password" tabindex="2"></input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form-group">
+                                        <span><input type="checkbox" id="chk-save-id"> <label for="chk-save-id">ID 저장</label></span>
+                                    </td>
+                                    <td class="form-group text-center">
+                                        <a href="#" class="btn btn-link">아이디 / 비밀번호 찾기</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            </form>
+                        </div>
+                        <div class="blank10">
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <p>가입하기</p> 
+                            <form action="#" class="">
+                                <div class="form-group">
+                                    <label class="sr-only" for="txt-in-user-id">Email address</label>
+                                    <input type="email" name="user-id" class="form-control input-lg" id="txt-in-user-id" placeholder="Email" ></input>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="txt_in_user_name">Name</label>
+                                    <input type="name" name="user_name" class="form-control input-lg" id="txt_in_user_id" placeholder="이름">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="txt-in-user-pw">Password</label>
+                                    <input type="password" name="user-pw" class="form-control input-lg" id="txt-in-user-pw" placeholder="Password" ></input>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="txt-in-user-pw-re">Password repeat</label>
+                                    <input type="password" name="user-pw-re" class="form-control input-lg" id="txt-in-user-pw-re" placeholder="Password repeat" ></input>
+                                </div>
+                                <div class="form-group">
+                                        <input type="submit" class="login-btn padding5" value="Sign Up"></input>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</body>
+</html>

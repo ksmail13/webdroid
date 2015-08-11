@@ -11,9 +11,27 @@ public class Query {
             "(?,?,now(),?)";
 
     public final static String SIGN_IN =
-            "select" +
-            "u_id," +
-            "name" +
-            "from user" +
+            "select " +
+            "u_id, " +
+            "name " +
+            "from user " +
             "where id=? and passwd=?";
+
+    public final static String NEW_PROJECT =
+            "insert into project\n" +
+            "(p_name, p_descript, p_path, p_is_important, p_creator, create_date)\n" +
+            "value\n" +
+            "(?, ?, ?, ?, ?, now());";
+
+    public final static String MY_PROJECT =
+            "select\n" +
+            "p.p_id as id,\n" +
+            "p.p_name as name,\n" +
+            "p.p_descript as description,\n" +
+            "p.p_path as path,\n" +
+            "p.p_is_important as isImportant,\n" +
+            "p.create_date as createDate,\n" +
+            "up.u_id as userId\n" +
+            "from project as p, USER_PROJECT as up\n" +
+            "where p.p_id = up.p_id and up.u_id = ?;";
 }

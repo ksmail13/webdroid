@@ -15,8 +15,12 @@ import io.vertx.ext.web.templ.MVELTemplateEngine;
 import org.webdroid.constant.Query;
 import org.webdroid.constant.WebdroidConstant;
 import org.webdroid.util.DBConnector;
+import org.webdroid.util.JsonUtil;
 import org.webdroid.util.Log;
 import org.webdroid.util.RequestResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by micky on 2015. 7. 27..
@@ -59,9 +63,11 @@ public class WebServer extends WebdroidVerticle {
      */
     protected void initRouter(HttpServer server) {
         Router router = WebdroidRouter.createRoute(vertx).getRouter();
-        server.requestHandler(router::accept);
+
 
         requestHandling(router);
+
+        server.requestHandler(router::accept);
     }
 
 
@@ -77,18 +83,56 @@ public class WebServer extends WebdroidVerticle {
         router.route().path("/").handler(new RouteHandler() {
             @Override
             public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                //context.put("name", session.get("name"));
+                if(session.get("id") != null) {
+                    redirectTo("/projectmain");
+                    return;
+                }
 
-                templEngine.render(context, WebdroidConstant.Path.HTML+"/welcome", renderRes-> {
-                    if(renderRes.succeeded()) {
+
+                templEngine.render(context, WebdroidConstant.Path.HTML + "/welcome", renderRes -> {
+                    if (renderRes.succeeded()) {
                         res.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
                         res.setStatusCode(200);
                         res.end(renderRes.result().toString());
-                    }
-                    else {
+                    } else {
                         sendErrorResponse(500, renderRes.cause());
                     }
                 });
+            }
+        });
+
+        // main page
+        router.route().path("/projectmain").handler(new RouteHandler() {
+            @Override
+            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
+                if (session.get("id") == null) {
+                    redirectTo("/");
+                    return;
+                }
+                context.put("name", session.get("name"));
+                JsonArray params = JsonUtil.createJsonArray((Integer)session.get("id"));
+                mDBConnector.query(Query.MY_PROJECT, params, resultSet -> {
+                    List<JsonObject> resultList = resultSet.getRows();
+                    List<JsonObject> filteredList = new ArrayList<JsonObject>(resultList);
+
+                    context.put("projects", resultList);
+
+                    filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
+                    context.put("favorates", filteredList);
+
+                    templEngine.render(context, WebdroidConstant.Path.HTML + "/projectmain", renderRes -> {
+                        if (renderRes.succeeded()) {
+                            res.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
+                            res.setStatusCode(200);
+                            res.end(renderRes.result().toString());
+                        } else {
+                            sendErrorResponse(500, renderRes.cause());
+                        }
+                    });
+
+                }, error -> {
+                });
+
             }
         });
 
@@ -96,12 +140,20 @@ public class WebServer extends WebdroidVerticle {
         router.post("/signin").handler(new RouteHandler() {
             @Override
             public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                String id = req.getParam("user_id");
-                String pw = req.getParam("user_pw");
+                String id = req.getFormAttribute("user-id");
+                String pw = req.getParam("user-pw");
+
+
+                if (id == null || pw == null) {
+                    sendJsonResult(200, false, "no parameter");
+                    return;
+                }
+
                 JsonArray params = new JsonArray().add(id).add(pw);
                 mDBConnector.query(Query.SIGN_IN, params, resultSet -> {
                     if (resultSet.getNumRows() > 0) {
                         JsonObject userInfo = resultSet.getRows().get(0);
+                        logger.debug(userInfo.toString());
                         session.put("id", userInfo.getInteger("u_id"));
                         session.put("name", userInfo.getString("name"));
 
@@ -164,6 +216,12 @@ public class WebServer extends WebdroidVerticle {
             response.setStatusCode(statusCode);
             response.putHeader(HttpHeaders.CONTENT_TYPE, "text/json");
             response.end(RequestResult.result(result, message).toString());
+        }
+
+        public final void redirectTo(String url) {
+            response.setStatusCode(302);
+            response.putHeader("location", url);
+            response.end();
         }
 
         public final void sendErrorResponse(int statusCode, Throwable cause) {
