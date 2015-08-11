@@ -11,8 +11,9 @@ import io.vertx.ext.sql.UpdateResult;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
+import io.vertx.ext.web.templ.MVELTemplateEngine;
 import org.webdroid.constant.Query;
-import org.webdroid.constant.WebdroidServerConstant;
+import org.webdroid.constant.WebdroidConstant;
 import org.webdroid.util.DBConnector;
 import org.webdroid.util.Log;
 import org.webdroid.util.RequestResult;
@@ -68,20 +69,33 @@ public class WebServer extends WebdroidVerticle {
      * template resource routing also handling client request
      */
     public void requestHandling(Router router) {
+        MVELTemplateEngine templEngine = MVELTemplateEngine.create();
+        templEngine.setExtension(".html");
+
 
         // main page
         router.route().path("/").handler(new RouteHandler() {
             @Override
-            public void handling(Session session, HttpServerRequest req, HttpServerResponse res) {
-                res.putHeader("content-type", "text/html");
-                res.sendFile(WebdroidServerConstant.Path.STATIC + "/welcome.html");
+            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
+                //context.put("name", session.get("name"));
+
+                templEngine.render(context, WebdroidConstant.Path.HTML+"/welcome", renderRes-> {
+                    if(renderRes.succeeded()) {
+                        res.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
+                        res.setStatusCode(200);
+                        res.end(renderRes.result().toString());
+                    }
+                    else {
+                        sendErrorResponse(500, renderRes.cause());
+                    }
+                });
             }
         });
 
         // sign in
         router.post("/signin").handler(new RouteHandler() {
             @Override
-            public void handling(Session session, HttpServerRequest req, HttpServerResponse res) {
+            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
                 String id = req.getParam("user_id");
                 String pw = req.getParam("user_pw");
                 JsonArray params = new JsonArray().add(id).add(pw);
@@ -91,18 +105,18 @@ public class WebServer extends WebdroidVerticle {
                         session.put("id", userInfo.getInteger("u_id"));
                         session.put("name", userInfo.getString("name"));
 
-                        sendResult(WebdroidServerConstant.StatusCode.SUCCESS, true, WebdroidServerConstant.Message.SIGNED_IN);
+                        sendJsonResult(WebdroidConstant.StatusCode.SUCCESS, true, WebdroidConstant.Message.SIGNED_IN);
                     } else {
-                        sendResult(WebdroidServerConstant.StatusCode.SUCCESS, false, WebdroidServerConstant.Message.CHECK_ID_PW);
+                        sendJsonResult(WebdroidConstant.StatusCode.SUCCESS, false, WebdroidConstant.Message.CHECK_ID_PW);
                     }
-                }, error -> sendResult(WebdroidServerConstant.StatusCode.RUNTIME_ERROR, false, error.getMessage()));
+                }, error -> sendJsonResult(WebdroidConstant.StatusCode.RUNTIME_ERROR, false, error.getMessage()));
             }
         });
 
         // sign up
         router.post("/signup").handler(new RouteHandler() {
             @Override
-            public void handling(Session session, HttpServerRequest req, HttpServerResponse res) {
+            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
                 String id = req.getParam("user_id");
                 String name = req.getParam("user_name");
                 String password = req.getParam("user_pw");
@@ -112,13 +126,13 @@ public class WebServer extends WebdroidVerticle {
                     if (updateResult.succeeded()) {
                         UpdateResult result = updateResult.result();
                         if(result.getUpdated() > 0) {
-                            sendResult(200, true, WebdroidServerConstant.Message.SIGNED_UP);
+                            sendJsonResult(200, true, WebdroidConstant.Message.SIGNED_UP);
                         }
                         else
-                            sendResult(200, false, WebdroidServerConstant.Message.SINGED_UP_FAIL);
+                            sendJsonResult(200, false, WebdroidConstant.Message.SINGED_UP_FAIL);
                     }
                     else {
-                        sendResult(WebdroidServerConstant.StatusCode.RUNTIME_ERROR, false, updateResult.cause().getMessage());
+                        sendJsonResult(WebdroidConstant.StatusCode.RUNTIME_ERROR, false, updateResult.cause().getMessage());
                     }
                 });
             }
@@ -136,8 +150,8 @@ public class WebServer extends WebdroidVerticle {
         public void handle(RoutingContext routingContext) {
             response = routingContext.response();
             // set character set utf-8
-            response.putHeader(HttpHeaders.ACCEPT_CHARSET, WebdroidServerConstant.Conf.SERVER_ENCODING);
-            handling(routingContext.session(), routingContext.request(), routingContext.response());
+            response.putHeader(HttpHeaders.ACCEPT_CHARSET, WebdroidConstant.Conf.SERVER_ENCODING);
+            handling(routingContext, routingContext.session(), routingContext.request(), routingContext.response());
         }
 
         /**
@@ -146,18 +160,37 @@ public class WebServer extends WebdroidVerticle {
          * @param result request result
          * @param message request message
          */
-        public final void sendResult(int statusCode, boolean result, String message) {
+        public final void sendJsonResult(int statusCode, boolean result, String message) {
             response.setStatusCode(statusCode);
             response.putHeader(HttpHeaders.CONTENT_TYPE, "text/json");
             response.end(RequestResult.result(result, message).toString());
         }
 
+        public final void sendErrorResponse(int statusCode, Throwable cause) {
+            response.setStatusCode(statusCode);
+            response.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
+            if(WebdroidConstant.Conf.DEBUG) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(statusCode + " " + cause.getMessage() + "<br/><br/>");
+                for (StackTraceElement ste : cause.getStackTrace()) {
+                    sb.append(String.format("%s.%s(%s:%d)<br/>", ste.getClassName(), ste.getMethodName(), ste.getFileName(), ste.getLineNumber()));
+                }
+
+                response.end(sb.toString());
+            }
+            else {
+                //TODO error page
+                response.end(statusCode + " Error");
+            }
+        }
+
         /**
          * routing handling
+         * @param context
          * @param session
          * @param req
          * @param res
          */
-        public abstract void handling(Session session, HttpServerRequest req, HttpServerResponse res);
+        public abstract void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res);
     }
 }

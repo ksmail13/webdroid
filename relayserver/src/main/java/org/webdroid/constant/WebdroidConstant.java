@@ -3,22 +3,26 @@ package org.webdroid.constant;
 /**
  * Created by 민규 on 2015-08-07.
  */
-public abstract class WebdroidServerConstant {
+public abstract class WebdroidConstant {
     public static class Path {
 
         /**
          * resource path
          */
         public final static String WEBROOT = "./webroot";
+        public final static String TEMPL_WEBROOT = "./target/classes/webroot/";
+
         /**
          * static resource path
          */
         public final static String STATIC = WEBROOT + "/static";
+        public final static String TEMPL_STATIC = TEMPL_WEBROOT+"/static";
 
         /**
          * html file path
          */
         public final static String HTML = STATIC;
+        public final static String TEMPL_HTML = TEMPL_STATIC;
 
         /**
          * image resource path
@@ -34,6 +38,8 @@ public abstract class WebdroidServerConstant {
     public static class Conf {
         public static final boolean IS_CLUSTERED = false;
         public static final String SERVER_ENCODING = "utf-8";
+
+        public static final boolean DEBUG = true;
     }
 
     public static class Message {

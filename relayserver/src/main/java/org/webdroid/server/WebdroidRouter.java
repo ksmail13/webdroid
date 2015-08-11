@@ -1,14 +1,13 @@
 package org.webdroid.server;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
-import org.webdroid.constant.WebdroidServerConstant;
+import org.webdroid.constant.WebdroidConstant;
 
 /**
  * Router for page route
@@ -16,7 +15,7 @@ import org.webdroid.constant.WebdroidServerConstant;
  */
 public class WebdroidRouter {
 
-    private final static boolean IS_CLUSTERRED = WebdroidServerConstant.Conf.IS_CLUSTERED;
+    private final static boolean IS_CLUSTERRED = WebdroidConstant.Conf.IS_CLUSTERED;
 
     /**
      * generate webserver route
@@ -55,22 +54,32 @@ public class WebdroidRouter {
      * static resource routing
      */
     public void initStaticResource() {
-        final String CSS_JS = "/\\S+.(css|js)";
-        final String IMG = "/\\S+.(jpeg|png|jpg|ico)";
+        final String CSS = "/css/\\S+.(css)";
+        final String JS = "/js/\\S+.(js)";
+        final String IMG = "/images/\\S+.(jpeg|png|jpg|ico)";
+
+        StaticHandler staticHandler = StaticHandler.create(WebdroidConstant.Path.STATIC);
+
+        router.route().pathRegex(JS).handler(staticHandler);
+        router.route().pathRegex(CSS).handler(staticHandler);
+        router.route().pathRegex(IMG).handler(staticHandler);
+
+        /*
         // for javascript and style sheet route
         router.route().pathRegex(CSS_JS).handler(routingContext -> {
             HttpServerResponse res = routingContext.response();
-            res.sendFile(WebdroidServerConstant.Path.STATIC + routingContext.normalisedPath());
+            res.sendFile(WebdroidConstant.Path.STATIC + routingContext.normalisedPath());
         });
-        
+
         // for image route
         router.route().pathRegex(IMG).handler(routingContext -> {
             HttpServerResponse res = routingContext.response();
             //res.putHeader("content-type", "image/"+routingContext.normalisedPath().split(".")[1]);
             //Log.logging("request image "+ routingContext.normalisedPath());
 
-            res.sendFile(WebdroidServerConstant.Path.IMG_PATH+routingContext.normalisedPath());
+            res.sendFile(WebdroidConstant.Path.IMG_PATH+routingContext.normalisedPath());
         });
+        */
     }
 
     public void initBasicRouterhandler(Vertx vertx) {
@@ -79,9 +88,9 @@ public class WebdroidRouter {
 
         SessionStore ss = null;
         if(IS_CLUSTERRED) {
-            ss = ClusteredSessionStore.create(vertx, WebdroidServerConstant.ID.SESSION_MAP_NAME);
+            ss = ClusteredSessionStore.create(vertx, WebdroidConstant.ID.SESSION_MAP_NAME);
         } else {
-            ss = LocalSessionStore.create(vertx, WebdroidServerConstant.ID.SESSION_MAP_NAME);
+            ss = LocalSessionStore.create(vertx, WebdroidConstant.ID.SESSION_MAP_NAME);
         }
 
         route.handler(SessionHandler.create(ss));

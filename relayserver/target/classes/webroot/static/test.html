@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<head>
-		<meta charset="utf-8" />
+        <meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> </link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         
-		
+        <link rel="stylesheet" href="./css/basic.css" type="text/css"></link>
+        <script src="./js/web_base.js"></script>
+
 		<title>
 			samilgong main
 		</title>
         
-        <style>
-            .float {position:absolute; top:100px;} 
-        </style>
+<script>
+$(document).ready(function() {
+    
+    var modal_option = {
+        title:'테스트',
+        contents:[{ name:'test', 'placeholder':'테스트', 'id':'txt_id', 'type':'text'}],
+        buttons:[{'type':'success', 'id':'test-btn','text':'버튼1','onclick':buttonClick},
+                 {'id':'test-btn2', text:'button2', 'onclick':buttonClick2}]
+        
+    };
+    
+    $("#test").common_modal_box(modal_option);
+    
+});
+                 
+function buttonClick2(e) {
+    modalConfirm('확인', '테스트', function() {alert('ok');}, function() {alert('cancel');});
+}
+function buttonClick(e) {
+    modalAlert('얼럿', '테스트',function() {alert('alert');});
+}
+</script>
+
 	</head>
 	<body>
-        sadlkfj;aslkdjf;laskdjf<br>
-        sadlkfj;aslkdjf;laskdjf<br>
-        <p class="float">
-            test
-        </p>
-        <div style="height:100000000px;">
-            
-        </div>
-        
+        <button id="test" value="">테스트</button>
         
 	</body>
 </html>
