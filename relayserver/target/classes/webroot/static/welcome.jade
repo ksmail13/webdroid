@@ -1,0 +1,115 @@
+doctype html
+head
+  include commonheader
+  link(rel='stylesheet', href='./css/welcome.css', type='text/css')
+  script.
+    $(document).ready(function () {
+    var isSavedId = getCookie('saveId');
+    var savedId  = getCookie('id');
+    if(isSavedId) {
+        $('#chk-save-id').attr('checked', true);
+        $('#txt-user-id').val(savedId);
+    }
+    
+    $('#frm-signin').submit(function (e) {
+    //alert();
+    if($('#chk-save-id').is(':checked')) {
+        setCookie('saveId', 'true', 10000000);
+        setCookie('id', $('#txt-user-id').val(), 10000000);
+    }
+    return formRequest(this, onReqSuccess, onReqFailed);
+    });
+    });
+    function onReqSuccess(data) {
+    if(data.result) {
+    //modalAlert('success');
+    location.replace('/projectmain');
+    } else {
+    modalAlert("로그인 실패", data.message);
+    }
+    }
+    function onReqFailed(data) {
+    var res = $.parseJSON(data.responseText);
+    modalAlert('요청 실패', res.message);
+    }
+  title
+    | Webdroid
+body
+    .padding15.hidden-xs
+    .container.main-container
+      .padding15
+        .row
+          .col-xs-12.col-sm-7.col-md-7
+            .padding15
+              .row
+                h1 Webdroid
+              .row
+                h4 Gorgeous Android Web IDE
+                p
+                  | build your own app!
+                p.text-justify
+                    .embed-responsive.embed-responsive-16by9
+                        iframe.embed-responsive-item(src='https://www.youtube.com/embed/wIK0JKTQcI8')
+          .col-xs-12.col-sm-5.col-md-5.vert-center
+            .row
+              form#frm-signin(action='/signin', method='post')
+                .form-group
+                  label.sr-only(for='txt-user-id')
+                    | Email address
+                  input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1')
+                .form-group
+                  label.sr-only(for='txt-user-pw')
+                    | Password
+                  input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='비밀번호', maxlength='30', placeholder='Password', tabindex='2')
+                .form-group
+                    input.btn.btn-success.btn-block.btn-lg(type='submit', value='Login', tabindex='3')
+                .form-group
+                    .col-xs-6.col-sm-6.col-md-6
+                        label
+                            input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
+                            | ID 저장
+                    .col-xs-6.col-sm-6.col-md-6.text-right
+                        a(href='#') 비밀번호 찾기
+                    
+
+              //
+                table.login-table
+                  tr
+                    td.form-group
+                      label.sr-only(for='txt-user-id')
+                        | Email address
+                      input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1')
+                    td(rowspan='2')
+                      input.login-btn.height90(type='submit', value='Login', tabindex='3')
+                  tr
+                    td.from-group
+                      label.sr-only(for='txt-user-pw')
+                        | Password
+                      input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='비밀번호', maxlength='30', placeholder='Password', tabindex='2')
+                  tr
+                    td.form-group
+                      span
+                        input#chk-save-id(type='checkbox', name='save_id')
+                        label(for='chk-save-id') ID 저장
+                    td.form-group.text-center
+                      a.btn.btn-link(href='#') 아이디 / 비밀번호 찾기
+            .blank10
+              hr
+            .row
+              p 
+                h4 가입하기
+              form(action='#')
+                .form-group
+                  label.sr-only(for='txt-in-user-id') Email address
+                  input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
+                .form-group
+                  label.sr-only(for='txt_in_user_name') Name
+                  input#txt_in_user_id.form-control.input-lg(type='name', name='user_name', placeholder='이름')
+                .form-group
+                  label.sr-only(for='txt-in-user-pw') Password
+                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password')
+                .form-group
+                  label.sr-only(for='txt-in-user-pw-re') Password repeat
+                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat')
+                .form-group
+                  input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign Up')

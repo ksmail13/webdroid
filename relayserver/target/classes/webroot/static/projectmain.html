@@ -12,7 +12,7 @@
         @include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonnavbar.html'}
         <div class="container">
             <ul>
-                <li><h2 class="section-title"><span class="glyphicon glyphicon-star"></span> 즐겨찾기</h2></li>
+                <li><h2 class="section-title"><span class="glyphicon glyphicon-star"></span> 즐겨찾기${context.get('logout')}</h2></li>
                 <li>
                     <div class="row">
                         @foreach{project : context.get('favorates')}

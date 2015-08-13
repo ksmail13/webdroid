@@ -30,6 +30,7 @@ public class ServerMain extends AbstractVerticle {
     }
 
     public void start() {
+
         vertx.deployVerticle(WebServer.class.getName());
         vertx.deployVerticle(SocketJSServer.class.getName());
     }

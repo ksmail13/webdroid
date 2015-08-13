@@ -142,7 +142,7 @@ function isValid(variable) {
 
 function modalAlert(title, msg, callback) {
     var myHTML ='<div class="modal-back-dark modal-alert-back ">';
-        myHTML += '<div class="modal-dialog modal-alert screen-center"><div class="modal-content">';
+        myHTML += '<div class="modal-dialog modal-alert screen-center" role="alert"><div class="modal-content">';
 
         myHTML += '<div class="modal-header">';
         //myHTML += '<button type="button" class="close alert-close" data-dismiss="modal" >&times;</button>'
@@ -201,32 +201,41 @@ function modalConfirm(title, msg, okCallback, cancelCallback) {
         $('.modal-alert-back').remove();
     });
 }
-/*
-window.layerAlert = function(title,msg,btnclass, btnvalue, callback) {
 
-    
-
-    ///////////////////회원탈퇴//////////////////////
-
-    $('.members-submit').my_modal_box({
-            title:'탈퇴를 위한 비밀번호 확인',
-            contents:[{label:'confirmPW', name:'confrim-pw', type:'password', placeholder:"비밀번호"}],
-            btnclass:'members-pw-submit',                  
-            button:'탈퇴하기'
+$(document).ready(function () {
+    $('#a-signout').click(function() {
+        requestAysnc('/signout', 'post', {}, signoutSuccess, signoutFailed);
     });
-    //////////////////////////////////////////////
-
-    $('.'+btnclass).click(function(){
-        if(btnclass!='members-submit'){
-            $('.modal-dialog').remove();
-            if(callback != null && callback != undefined)
-                callback();
-            }
-        });
+});
 
 
-     $('.close').click(function(event){
-        $('.modal-dialog').remove();
-    });
-};
-*/
+function signoutSuccess(result) {
+    if(result.result) {
+        location.reload();
+    }
+}
+
+function signoutFailed(result) {
+    modalAlert(result.responseText);
+}
+
+
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}

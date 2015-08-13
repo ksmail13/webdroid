@@ -13,7 +13,7 @@
         });
     function onReqSuccess(data) {
         if(data.result) {
-            modalAlert('success');
+            //modalAlert('success');
             location.href = '/projectmain';   
         } else {
             modalAlert("로그인 실패", data.message);   
@@ -52,13 +52,33 @@
                     <div class="col-sm-5 col-md-5 vert-center">
                         <div class="row">
                             <form action="/signin" method="post" id="frm-signin">
+                            <div>
+                                <div class="col-sm-8 col-md-8">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="txt-user-id">
+                                        Email address
+                                        </label>
+                                        <input type="email" name="user_id" class="form-control input-lg" id="txt-user-id" knownname="이메일" maxlength="30" placeholder="Email" tabindex="1"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="sr-only" for="txt-user-pw">
+                                        Password
+                                        </label>
+                                        <input type="password" name="user_pw" class="form-control  input-lg" id="txt-user-pw" knownname="비밀번호" maxlength="30" placeholder="Password" tabindex="2"></input>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <input type="submit" class="login-btn height90" value="Login" tabindex="3"></input>
+                                </div>
+                            </div>
+                                <!--
                             <table class="login-table">
                                 <tr>
                                     <td class="form-group">
                                         <label class="sr-only" for="txt-user-id">
                                         Email address
                                         </label>
-                                        <input type="email" name="user-id" class="form-control input-lg" id="txt-user-id" knownname="이메일" maxlength="30" placeholder="Email" tabindex="1"/>
+                                        <input type="email" name="user_id" class="form-control input-lg" id="txt-user-id" knownname="이메일" maxlength="30" placeholder="Email" tabindex="1"/>
                                     </td>
                                     <td rowspan="2">
                                         <input type="submit" class="login-btn height90" value="Login" tabindex="3"></input>
@@ -70,7 +90,7 @@
                                         <label class="sr-only" for="txt-user-pw">
                                         Password
                                         </label>
-                                        <input type="password" name="user-pw" class="form-control  input-lg" id="txt-user-pw" knownname="비밀번호" maxlength="30" placeholder="Password" tabindex="2"></input>
+                                        <input type="password" name="user_pw" class="form-control  input-lg" id="txt-user-pw" knownname="비밀번호" maxlength="30" placeholder="Password" tabindex="2"></input>
                                     </td>
                                 </tr>
                                 <tr>
@@ -81,7 +101,7 @@
                                         <a href="#" class="btn btn-link">아이디 / 비밀번호 찾기</a>
                                     </td>
                                 </tr>
-                            </table>
+                            </table>-->
                             </form>
                         </div>
                         <div class="blank10">

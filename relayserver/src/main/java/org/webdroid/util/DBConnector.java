@@ -11,7 +11,6 @@ import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.sql.UpdateResult;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,6 +46,11 @@ public class DBConnector {
                 callback.handle(isConnect);
             });
         });
+    }
+
+    public JDBCClient getDBClient() {
+
+        return mJDBCClient.get();
     }
 
     /**
@@ -85,21 +89,13 @@ public class DBConnector {
      * Execute read(select) queries with parameters
      * @param query select query
      * @param params parameters
-     * @param success success callback
-     * @param error fail callback
+     * @param queryResult success callback
      */
-    public void query(String query, JsonArray params, Handler<ResultSet> success, @Nullable Handler<Throwable> error) {
+    public void query(String query, JsonArray params, Handler<AsyncResult<ResultSet>> queryResult) {
         mSqlCommand.ifPresent(sqlConnection -> {
             logger.info("query " + query);
             sqlConnection.queryWithParams(query, params, resultSetAsyncResult -> {
-                if (resultSetAsyncResult.succeeded()) {
-                    success.handle(resultSetAsyncResult.result());
-                } else {
-                    if (error != null)
-                        error.handle(resultSetAsyncResult.cause());
-                    else
-                        resultSetAsyncResult.cause().printStackTrace();
-                }
+                queryResult.handle(resultSetAsyncResult);
             });
         });
 

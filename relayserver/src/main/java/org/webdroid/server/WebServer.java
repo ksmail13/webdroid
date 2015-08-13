@@ -7,22 +7,25 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
+import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
-import io.vertx.ext.web.templ.MVELTemplateEngine;
-import org.webdroid.constant.Query;
-import org.webdroid.constant.WebdroidConstant;
+import io.vertx.ext.web.templ.JadeTemplateEngine;
+import org.webdroid.constant.*;
 import org.webdroid.util.DBConnector;
 import org.webdroid.util.JsonUtil;
 import org.webdroid.util.Log;
-import org.webdroid.util.RequestResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * Webdroid Web Server
  * Created by micky on 2015. 7. 27..
  */
 public class WebServer extends WebdroidVerticle {
@@ -39,10 +42,16 @@ public class WebServer extends WebdroidVerticle {
         Log.logging("Begin server");
 
         HttpServer server = vertx.createHttpServer();
-        initRouter(server);
-        server.listen(WEB_PORT);
 
-        mDBConnector = new DBConnector(vertx, aBoolean -> Log.logging("DB " + (aBoolean ? "Connected":"fail connect")));
+        mDBConnector = new DBConnector(vertx, aBoolean -> {
+            if(aBoolean) {
+                Log.logging("DB " + (aBoolean ? "Connected":"fail connect"));
+
+                initRouter(server);
+                server.listen(WEB_PORT);
+            }
+
+        });
 
     }
 
@@ -66,30 +75,24 @@ public class WebServer extends WebdroidVerticle {
 
 
         requestHandling(router);
-
+        pageRoute(router);
         server.requestHandler(router::accept);
     }
 
+    private void pageRoute(Router router) {
 
-    /**
-     * template resource routing also handling client request
-     */
-    public void requestHandling(Router router) {
-        MVELTemplateEngine templEngine = MVELTemplateEngine.create();
-        templEngine.setExtension(".html");
-
+        JadeTemplateEngine jadeTemplateEngine = JadeTemplateEngine.create();
 
         // main page
         router.route().path("/").handler(new RouteHandler() {
             @Override
-            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                if(session.get("id") != null) {
+            public void handling() {
+                if (isLogin()) {
                     redirectTo("/projectmain");
                     return;
                 }
 
-
-                templEngine.render(context, WebdroidConstant.Path.HTML + "/welcome", renderRes -> {
+                jadeTemplateEngine.render(context, WebdroidConstant.Path.HTML + "/welcome", renderRes -> {
                     if (renderRes.succeeded()) {
                         res.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
                         res.setStatusCode(200);
@@ -104,87 +107,127 @@ public class WebServer extends WebdroidVerticle {
         // main page
         router.route().path("/projectmain").handler(new RouteHandler() {
             @Override
-            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                if (session.get("id") == null) {
+            public void handling() {
+                if (!isLogin()) {
                     redirectTo("/");
                     return;
                 }
                 context.put("name", session.get("name"));
-                JsonArray params = JsonUtil.createJsonArray((Integer)session.get("id"));
-                mDBConnector.query(Query.MY_PROJECT, params, resultSet -> {
+                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
+                mDBConnector.query(Query.MY_PROJECT, params, queryResult -> {
+                    ResultSet resultSet = queryResult.result();
+
                     List<JsonObject> resultList = resultSet.getRows();
-                    List<JsonObject> filteredList = new ArrayList<JsonObject>(resultList);
+                    List<JsonObject> filteredList = new ArrayList<>(resultList);
 
                     context.put("projects", resultList);
 
                     filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
                     context.put("favorates", filteredList);
 
-                    templEngine.render(context, WebdroidConstant.Path.HTML + "/projectmain", renderRes -> {
+                    jadeTemplateEngine.render(context, WebdroidConstant.Path.HTML + "/projectmain", renderRes -> {
                         if (renderRes.succeeded()) {
                             res.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
                             res.setStatusCode(200);
-                            res.end(renderRes.result().toString());
+
+                            res.end(renderRes.result().toString("utf8"));
                         } else {
                             sendErrorResponse(500, renderRes.cause());
                         }
                     });
 
-                }, error -> {
                 });
 
             }
         });
+    }
 
+
+    /**
+     * template resource routing also handling client req
+     */
+    public void requestHandling(Router router) {
         // sign in
-        router.post("/signin").handler(new RouteHandler() {
+        String[] signinParams = {"user_id", "user_pw"};
+        router.post("/signin").handler(new RequestHandler(false, signinParams) {
             @Override
-            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                String id = req.getFormAttribute("user-id");
-                String pw = req.getParam("user-pw");
+            public void reqRecvParams(Map<String, Object> params) {
 
+                if(isLogin())
+                    session.destroy();
+                logger.debug(req.params().toString());
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get(signinParams[0]), params.get(signinParams[1]));
 
-                if (id == null || pw == null) {
-                    sendJsonResult(200, false, "no parameter");
-                    return;
+                if("true".equals(req.getParam("save_id"))) {
+                    context.addCookie(Cookie.cookie("saveID", req.getParam("save_id")));
+                    context.addCookie(Cookie.cookie("id", params.get("user_id").toString()));
                 }
 
-                JsonArray params = new JsonArray().add(id).add(pw);
-                mDBConnector.query(Query.SIGN_IN, params, resultSet -> {
+                mDBConnector.query(Query.SIGN_IN, dbParams, queryResult -> {
+                    ResultSet resultSet = queryResult.result();
+
                     if (resultSet.getNumRows() > 0) {
                         JsonObject userInfo = resultSet.getRows().get(0);
                         logger.debug(userInfo.toString());
                         session.put("id", userInfo.getInteger("u_id"));
                         session.put("name", userInfo.getString("name"));
 
-                        sendJsonResult(WebdroidConstant.StatusCode.SUCCESS, true, WebdroidConstant.Message.SIGNED_IN);
+
+                        sendJsonResult(HttpStatusCode.SUCCESS, true,
+                                ResultMessage.SIGNED_IN);
                     } else {
-                        sendJsonResult(WebdroidConstant.StatusCode.SUCCESS, false, WebdroidConstant.Message.CHECK_ID_PW);
+                        sendJsonResult(HttpStatusCode.SUCCESS, false,
+                                ResultMessage.CHECK_ID_PW);
                     }
-                }, error -> sendJsonResult(WebdroidConstant.StatusCode.RUNTIME_ERROR, false, error.getMessage()));
+                });
             }
         });
 
         // sign up
-        router.post("/signup").handler(new RouteHandler() {
+        String[] signupParams = {"user_id", "user_name", "user_pw"};
+        router.post("/signup").handler(new RequestHandler(false, signupParams) {
             @Override
-            public void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res) {
-                String id = req.getParam("user_id");
-                String name = req.getParam("user_name");
-                String password = req.getParam("user_pw");
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get(signupParams[0]),
+                        params.get(signupParams[1]),
+                        params.get(signupParams[2]));
 
-                JsonArray params = new JsonArray().add(id).add(password).add(name);
-                mDBConnector.update(Query.SIGN_UP, params, updateResult -> {
+                mDBConnector.update(Query.SIGN_UP, dbParams, updateResult -> {
                     if (updateResult.succeeded()) {
                         UpdateResult result = updateResult.result();
-                        if(result.getUpdated() > 0) {
-                            sendJsonResult(200, true, WebdroidConstant.Message.SIGNED_UP);
-                        }
-                        else
-                            sendJsonResult(200, false, WebdroidConstant.Message.SINGED_UP_FAIL);
+                        if (result.getUpdated() > 0) {
+                            sendJsonResult(200, true, ResultMessage.SIGNED_UP);
+                        } else
+                            sendJsonResult(200, false, ResultMessage.SINGED_UP_FAIL);
+                    } else {
+                        sendJsonResult(HttpStatusCode.RUNTIME_ERROR,
+                                false, ResultMessage.INTERNAL_SERVER_ERROR);
                     }
-                    else {
-                        sendJsonResult(WebdroidConstant.StatusCode.RUNTIME_ERROR, false, updateResult.cause().getMessage());
+                });
+            }
+        });
+
+        router.route("/signout").handler(new RequestHandler(false) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                session.destroy();
+                context.clearUser();
+                redirectTo("/");
+                //sendJsonResult(HttpStatusCode.FOUND, true, "sign out");
+            }
+        });
+
+        router.post("/createproject").handler(new RequestHandler(true, "project_name", "project_desc", "project_target_ver") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("project_name"),
+                        params.get("project_desc"), params.get("project_target_ver"));
+                mDBConnector.update(Query.NEW_PROJECT, dbParams, updateResult -> {
+                    if (updateResult.succeeded()) {
+                        sendJsonResult(200, true, ResultMessage.SUCCESS);
+                    } else {
+                        sendErrorResponse(HttpStatusCode.RUNTIME_ERROR,
+                                updateResult.cause());
                     }
                 });
             }
@@ -196,59 +239,133 @@ public class WebServer extends WebdroidVerticle {
      */
     private abstract class RouteHandler implements Handler<RoutingContext> {
 
-        private HttpServerResponse response;
+        protected HttpServerRequest req;
+        protected HttpServerResponse res;
+        protected Session session;
+        protected RoutingContext context = null;
 
         @Override
         public void handle(RoutingContext routingContext) {
-            response = routingContext.response();
+            this.context = routingContext;
+            res = routingContext.response();
+            session = routingContext.session();
+            req = routingContext.request();
             // set character set utf-8
-            response.putHeader(HttpHeaders.ACCEPT_CHARSET, WebdroidConstant.Conf.SERVER_ENCODING);
-            handling(routingContext, routingContext.session(), routingContext.request(), routingContext.response());
+            res.putHeader(HttpHeaders.ACCEPT_CHARSET, ServerConfigure.SERVER_ENCODING);
+            handling();
         }
 
         /**
-         * response json result
-         * @param statusCode request result code
-         * @param result request result
-         * @param message request message
+         * res json createJsonResult
+         * @param statusCode req createJsonResult code
+         * @param result req createJsonResult
+         * @param message req message
          */
         public final void sendJsonResult(int statusCode, boolean result, String message) {
-            response.setStatusCode(statusCode);
-            response.putHeader(HttpHeaders.CONTENT_TYPE, "text/json");
-            response.end(RequestResult.result(result, message).toString());
+            res.setStatusCode(statusCode);
+            res.putHeader(HttpHeaders.CONTENT_TYPE, "text/json");
+            res.end(JsonUtil.createJsonResult(result, message).toString());
         }
 
         public final void redirectTo(String url) {
-            response.setStatusCode(302);
-            response.putHeader("location", url);
-            response.end();
+            logger.debug("redirect to " +url);
+            res.setStatusCode(HttpStatusCode.FOUND);
+            res.putHeader("location", url);
+            res.end();
         }
 
         public final void sendErrorResponse(int statusCode, Throwable cause) {
-            response.setStatusCode(statusCode);
-            response.putHeader(HttpHeaders.CONTENT_TYPE, "text/html");
-            if(WebdroidConstant.Conf.DEBUG) {
-                StringBuffer sb = new StringBuffer();
-                sb.append(statusCode + " " + cause.getMessage() + "<br/><br/>");
+            res.setStatusCode(statusCode);
+            res.putHeader(HttpHeaders.CONTENT_TYPE, "text/json");
+
+            if(ServerConfigure.DEBUG) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(String.format("%d %s<br/><br/>",statusCode, cause.getMessage()));
                 for (StackTraceElement ste : cause.getStackTrace()) {
                     sb.append(String.format("%s.%s(%s:%d)<br/>", ste.getClassName(), ste.getMethodName(), ste.getFileName(), ste.getLineNumber()));
                 }
 
-                response.end(sb.toString());
+                res.end(JsonUtil.createJsonResult(false, sb.toString()).toString());
             }
             else {
                 //TODO error page
-                response.end(statusCode + " Error");
+                res.end(JsonUtil.createJsonResult(false, statusCode + " Error").toString());
             }
+        }
+
+        public final boolean isLogin() {
+            return session.data().size() > 0;
         }
 
         /**
          * routing handling
-         * @param context
-         * @param session
-         * @param req
-         * @param res
          */
-        public abstract void handling(RoutingContext context, Session session, HttpServerRequest req, HttpServerResponse res);
+        public abstract void handling();
+    }
+
+
+    public abstract class RequestHandler extends RouteHandler {
+        protected String[] requestParameters = null;
+        protected boolean chkLogin = false;
+
+        private RequestHandler() {}
+
+        /**
+         * Request handler not web page
+         * @param checkLogin this request need auth
+         * @param params parameter names.
+         */
+        public RequestHandler (boolean checkLogin, String... params) {
+            chkLogin = checkLogin;
+            requestParameters = params;
+        }
+
+        /**
+         * Reqeust handler not web page
+         * @param checkLogin this request need auth
+         */
+        public RequestHandler (boolean checkLogin) {
+            chkLogin = checkLogin;
+        }
+
+        @Override
+        public void handling() {
+            if(chkLogin && !isLogin()) {
+                sendJsonResult(401, false, "This operation will sign in");
+                return ;
+            }
+
+
+            if(requestParameters == null) {
+                reqRecvParams(null);
+                return ;
+            }
+
+            HashMap<String, Object> params = new HashMap<>();
+            // Check each parameters
+            for (String requestParameter : requestParameters) {
+                String receiveParam = req.getParam(requestParameter);
+                if(receiveParam != null)
+                    params.put(requestParameter, receiveParam);
+                else {
+                    reqRecvParamsLess(requestParameter);
+                    return ;
+                }
+            }
+            reqRecvParams(params);
+        }
+
+        /**
+         * This method will execute when parameter is not enough
+         */
+        public void reqRecvParamsLess(String paramKey) {
+            sendJsonResult(200, false, "you should include parameter "+paramKey);
+        }
+
+        /**
+         * request handling
+         * @param params parameters from client
+         */
+        public abstract void reqRecvParams(Map<String, Object> params);
     }
 }

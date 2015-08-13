@@ -1,21 +1,22 @@
 package org.webdroid.constant;
 
 /**
- * Created by ¹Î±Ô on 2015-08-07.
+ * Database queries
+ * Created by ë¯¼ê·œ on 2015-08-07.
  */
 public class Query {
     public final static String SIGN_UP =
             "insert into user" +
             "(id, passwd, join_time, name)" +
             "value" +
-            "(?,?,now(),?)";
+            "(?,password(?),now(),?)";
 
     public final static String SIGN_IN =
             "select " +
             "u_id, " +
             "name " +
             "from user " +
-            "where id=? and passwd=?";
+            "where id=? and passwd=password(?)";
 
     public final static String NEW_PROJECT =
             "insert into project\n" +

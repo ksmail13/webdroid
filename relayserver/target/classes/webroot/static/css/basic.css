@@ -1,7 +1,7 @@
 /* basic.css */
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
-body {font-family: 'Nanum Gothic', sans-serif;}
+body {font-family: Ubuntu, 'Nanum Gothic', sans-serif;}
 li {list-style-type: none;}
 p {font-size: inherit;}
 h1, h2, h3, h4, h5, h6 {font-weight: 500; font-family: inherit;}

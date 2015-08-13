@@ -1,12 +1,12 @@
 package org.webdroid.server;
 
 import io.vertx.core.Vertx;
-import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
+import org.webdroid.constant.ServerConfigure;
 import org.webdroid.constant.WebdroidConstant;
 
 /**
@@ -15,7 +15,7 @@ import org.webdroid.constant.WebdroidConstant;
  */
 public class WebdroidRouter {
 
-    private final static boolean IS_CLUSTERRED = WebdroidConstant.Conf.IS_CLUSTERED;
+    private final static boolean IS_CLUSTERRED = ServerConfigure.IS_CLUSTERED;
 
     /**
      * generate webserver route
@@ -72,7 +72,7 @@ public class WebdroidRouter {
     public void initBasicRouterhandler(Vertx vertx) {
 
         /**
-         * request logging
+         * req logging
          */
         router.route().handler(LoggerHandler.create());
 
@@ -83,7 +83,7 @@ public class WebdroidRouter {
 
 
         /**
-         * for post request handling
+         * for post req handling
          */
         router.route().handler(BodyHandler.create());
 

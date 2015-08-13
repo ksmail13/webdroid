@@ -39,9 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mvel</groupId>
-            <artifactId>mvel2</artifactId>
-            <version>2.2.2.Final</version>
+            <groupId>de.neuland-bfi</groupId>
+            <artifactId>jade4j</artifactId>
+            <version>0.4.3</version>
         </dependency>
 
     </dependencies>
