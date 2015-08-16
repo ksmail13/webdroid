@@ -64,6 +64,10 @@ function isValid(variable) {
     return variable != null && variable != undefined;   
 }
 
+function validString(variable) {
+    return isValid(variable) ? variable : '';   
+}
+
 //**************************Modal-alert****************************************//
 (function($){ //modal alert
     $.fn.modal_opts = [];
@@ -77,6 +81,13 @@ function isValid(variable) {
             //add_block_page();
             //add_popup_box(opt);
             $('body').append(createModalTag(opt));
+            
+            if(isValid(opt.form)) {
+                $('#'+opt.form.id).submit(function(e) {
+                    return formRequest(this, opt.form.success, opt.form.error);
+                });
+            }
+            
             setModalEvent(opt);
         });
         function setModalEvent(options) {
@@ -102,6 +113,10 @@ function isValid(variable) {
                                 '<h4 class="modal-title">'+options.title+'</h4>'+
                             '</div>'+
                             '<div class="modal-body">';
+            if(isValid(options.form)) {
+                    html += '<form id="'+options.form.id+'" action="'+options.form.action+'" method="'+options.form.method+'" '+
+                                'enctype="'+validString(options.form.enctype)+'" >';
+            }
             for(var i=0; i<options.contents.length;i++) {
                     var content = options.contents[i];
                         html += '<div class="form-group">'+
@@ -112,11 +127,16 @@ function isValid(variable) {
                         html +='<div class="form-group text-center">';
             for(var i=0; i<options.buttons.length;i++) {
                     var button = options.buttons[i];
-                if(button.type == null || button.type == undefined) button.type = 'default';
-                            html += '<button class="btn btn-'+button.type+'" id="'+button.id+'" type="submit">'+button.text+'</button> ';
+                    var btnActionType = isValid(button.actiontype)?button.actionType:'button';
+                if(!isValid(button.type)) button.type = 'default';
+                            html += '<button class="btn btn-'+button.type+'" id="'+button.id+'"'+
+                                ' type="'+btnActionType+'">'+button.text+'</button> ';
             }
-                        html += '</div>'+
-                            '</div>'+
+                        html += '</div>';
+            if(isValid(options.form)) {
+                        html += '</form>';
+            }
+                    html += '</div>'+
                         '</div>'+
                     '</div>'+
                 '</div>'+
@@ -141,6 +161,7 @@ function isValid(variable) {
 //**************************확인alert****************************************//
 
 function modalAlert(title, msg, callback) {
+    msg = msg.replace(/\n/gi, '<br />');
     var myHTML ='<div class="modal-back-dark modal-alert-back ">';
         myHTML += '<div class="modal-dialog modal-alert screen-center" role="alert"><div class="modal-content">';
 
@@ -160,7 +181,9 @@ function modalAlert(title, msg, callback) {
         myHTML += '</div>';
         myHTML += '</div>';
 
+    $('.modal-alert-back').remove();
     $('body').append(myHTML);
+    $('#btn-alert').focus();
     $('#btn-alert').click(function (e) {
         if(isValid(callback))
             callback.call(this, e);
@@ -169,6 +192,7 @@ function modalAlert(title, msg, callback) {
 }
 
 function modalConfirm(title, msg, okCallback, cancelCallback) {
+    msg = msg.replace(/\n/gi, '<br />');
     var myHTML ='<div class="modal-back-dark modal-alert-back ">';
         myHTML += '<div class="modal-dialog modal-alert screen-center"><div class="modal-content">';
 
@@ -190,6 +214,7 @@ function modalConfirm(title, msg, okCallback, cancelCallback) {
         myHTML += '</div>';
 
     $('body').append(myHTML);
+    $('#btn-alert-ok').focus();
     $('#btn-alert-ok').click(function (e) {
         if(isValid(okCallback))
             okCallback.call(this, e);

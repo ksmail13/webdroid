@@ -21,16 +21,28 @@ $(document).ready(function() {
     
     var modal_option = {
         title:'테스트',
+        form:{action:'#', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
         contents:[{ name:'test', 'placeholder':'테스트', 'id':'txt_id', 'type':'text'}],
         buttons:[{'type':'success', 'id':'test-btn','text':'버튼1','onclick':buttonClick},
-                 {'id':'test-btn2', text:'button2', 'onclick':buttonClick2}]
+                 {'id':'test-btn2', text:'button2', 'onclick':buttonClick2},
+                 {'id':'text-btn3', text:'submit', type:'primary', actiontype:'submit'}]
         
     };
     
     $("#test").common_modal_box(modal_option);
     
 });
-                 
+
+function frmsuccess(result) {
+    modalAlert('성공', result);
+}
+
+function frmfailed(error) {
+    // error 내용 {readyState: 4, responseText: "Cannot POST /test.html", status: 404, statusText: "Not Found"}
+    modalAlert('실패', error.status+' '+error.statusText);
+}
+    
+    
 function buttonClick2(e) {
     modalConfirm('확인', '테스트', function() {alert('ok');}, function() {alert('cancel');});
 }

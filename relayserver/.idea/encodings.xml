@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/src/main/java/org/webdroid/constant/Query.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/org/webdroid/server/WebdroidRouter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/webdroid/server/RequestHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/webdroid/server/RouteHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/webdroid/server/WebdroidRouterFactory.java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
