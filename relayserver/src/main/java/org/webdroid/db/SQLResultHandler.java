@@ -1,14 +1,11 @@
-package org.webdroid.util;
+package org.webdroid.db;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import io.vertx.ext.sql.ResultSet;
-import io.vertx.ext.sql.UpdateResult;
-import io.vertx.ext.web.Route;
-import io.vertx.ext.web.RoutingContext;
 import org.webdroid.constant.HttpStatusCode;
 import org.webdroid.constant.ResultMessage;
-import org.webdroid.server.RouteHandler;
+import org.webdroid.server.handler.RouteHandler;
+import org.webdroid.util.ConsoleLogger;
 
 /**
  * Created by 민규 on 2015-08-17.

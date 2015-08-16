@@ -13,9 +13,11 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
 import io.vertx.ext.web.templ.JadeTemplateEngine;
 import org.webdroid.constant.*;
-import org.webdroid.util.DBConnector;
+import org.webdroid.server.handler.PageHandler;
+import org.webdroid.server.handler.RequestHandler;
+import org.webdroid.db.DBConnector;
 import org.webdroid.util.JsonUtil;
-import org.webdroid.util.SQLResultHandler;
+import org.webdroid.db.SQLResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;

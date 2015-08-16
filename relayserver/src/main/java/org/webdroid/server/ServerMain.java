@@ -2,11 +2,6 @@ package org.webdroid.server;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Starter;
-import io.vertx.core.http.HttpServer;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.StaticHandler;
-import org.webdroid.util.DBConnector;
-import org.webdroid.util.Log;
 
 /**
  * 서버의 엔트리 클래스

@@ -1,4 +1,4 @@
-package org.webdroid.server;
+package org.webdroid.server.handler;
 
 import io.vertx.ext.web.templ.TemplateEngine;
 import org.webdroid.constant.HttpStatusCode;

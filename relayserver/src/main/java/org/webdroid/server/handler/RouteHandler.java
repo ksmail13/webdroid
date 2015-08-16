@@ -1,4 +1,4 @@
-package org.webdroid.server;
+package org.webdroid.server.handler;
 
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;

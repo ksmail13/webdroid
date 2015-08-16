@@ -1,4 +1,4 @@
-package org.webdroid.server;
+package org.webdroid.server.handler;
 
 import java.util.HashMap;
 import java.util.Map;

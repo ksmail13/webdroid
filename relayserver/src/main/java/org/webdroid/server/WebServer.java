@@ -2,7 +2,7 @@ package org.webdroid.server;
 
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
-import org.webdroid.util.DBConnector;
+import org.webdroid.db.DBConnector;
 import org.webdroid.util.Log;
 
 /**
