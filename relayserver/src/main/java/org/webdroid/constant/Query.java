@@ -20,9 +20,9 @@ public class Query {
 
     public final static String NEW_PROJECT =
             "insert into project\n" +
-            "(p_name, p_descript, p_path, p_is_important, p_creator, create_date)\n" +
+            "(p_name, p_descript, p_creator, create_date)\n" +
             "value\n" +
-            "(?, ?, ?, ?, ?, now());";
+            "(?, ?, ?, now());";
 
     public final static String MY_PROJECT =
             "select\n" +

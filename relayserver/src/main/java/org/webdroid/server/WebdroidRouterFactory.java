@@ -93,7 +93,7 @@ public class WebdroidRouterFactory {
                     redirectTo("/");
                     return;
                 }
-                context.put("name", session.get("name"));
+                context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
                 JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
 
                 mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
@@ -106,7 +106,7 @@ public class WebdroidRouterFactory {
 
                         filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
                         context.put("favorates", filteredList);
-                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectmain");
+                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectmain");  //jade변환한 파일이름
                     }
                 });
             }
@@ -191,7 +191,7 @@ public class WebdroidRouterFactory {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(params.get("project_name"),
-                        params.get("project_desc"), params.get("project_target_ver"));
+                        params.get("project_desc"), session.get("id"));
                 mDBConnector.update(Query.NEW_PROJECT, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
