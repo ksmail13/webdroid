@@ -3,6 +3,29 @@ head
   include commonheader
   title= context.get('name')+"'s Projects"
   link(rel='stylesheet', href='css/projectmain.css', type='text/css')
+  script.
+    $(document).ready(function(){
+        var modal_option = {
+            title:'Add Project',
+            form:{action:'/createproject', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+            contents:[{ name:'project_name', 'placeholder':'Project name', 'id':'txt-project-name', 'type':'text'},
+                  { name:'project_desc', 'placeholder':'Description', 'id':'txt-project-desc', 'type':'text'},
+                  { name:'project_target_ver', 'placeholder':'Target version', 'id':'txt-project-ver', 'type':'text'}],
+            buttons:[{'type':'success', 'id':'test-btn','text':'Add',actiontype:'submit'}]
+        };
+        $("#btn-plus").common_modal_box(modal_option);
+    });
+    function frmsuccess(result) {
+      location.reload();
+      //modalAlert('성공', result);
+    }
+    function frmfailed(error) {
+    // error 내용 {readyState: 4, responseText: "Cannot POST /test.html", status: 404, statusText: "Not Found"}
+      modalAlert('실패', error.status+' '+error.statusText);
+    }
+    function buttonClick(e) {
+      modalAlert('얼럿', '테스트',function() {alert('alert');});
+    }
 include commonnavbar
 .container
   ul
@@ -42,7 +65,7 @@ include commonnavbar
           .blank20
           .btn-toolbar(role='toolbar', style='display:inline-block;')
             .btn-group(role='group')
-                a.btn.btn-default
+                a#btn-plus.btn.btn-default
                   span.glyphicon.glyphicon-plus
             .btn-group(role='group')
                 a.btn.btn-default

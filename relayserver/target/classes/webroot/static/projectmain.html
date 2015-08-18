@@ -2,11 +2,27 @@
 <html lang="ko">
 	<head>
 		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonheader.html'}
+        <title>
+			@{context.get('name')}'s Projects
+		</title>
+        <link rel="stylesheet" href="css/projectmain.css" type="text/css"></link>
+        <script>
+            $(document).ready(function(){
+                var modal_option = {
+                    title:'Add Project',
+                    form:{action:'#', method:'post', id:'frm-test', 'success':frmsuccess, 'error': frmfailed},
+                    contents:[{ name:'test', 'placeholder':'테스트', 'id':'txt_id', 'type':'text'}],
+                    buttons:[{'type':'success', 'id':'test-btn','text':'버튼1','onclick':buttonClick},
+                             {'id':'test-btn2', text:'button2', 'onclick':buttonClick2},
+                             {'id':'text-btn3', text:'submit', type:'primary', actiontype:'submit'}]
+                };
+                $("#btn-plus").common_modal_box(modal_option);
+            });
+        </script>
 		<title>
 			@{context.get('name')}'s Projects
 		</title>
         <link rel="stylesheet" href="css/projectmain.css" type="text/css"></link>
-    
 	</head>
 	<body>
         @include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonnavbar.html'}
@@ -48,6 +64,19 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        @end{}
+                    </div>
+                </li>
+                <li>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                        <h2 class="section-title"><span class="glyphicon glyphicon-option-horizontal"></span> 내 프로젝트</h2> 
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 text-right">
+                            <div class="blank20"></div>
+                            <div class="btn-group" role="group"> 
+                                <a class="btn btn-default" id="btn-plus">
                         </div>
                         @end{}
                     </div>
