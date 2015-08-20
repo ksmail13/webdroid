@@ -1,6 +1,6 @@
 
 *.class
-
-relayserver/.idea/workspace.xml
+*.iml
+relayserver/.idea/*.*
 Thumbs.db
-relayserver/.idea/vcs.xml
+relayserver/.vertx/
