@@ -9,7 +9,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="./css/basic.css" type="text/css"> </link>
-        <link rel="stylesheet" href="./css/basic.css" type="text/css"></link>
         <script src="./js/web_base.js"></script>
 
 		<title>
@@ -22,7 +21,7 @@ $(document).ready(function() {
     var modal_option = {
         title:'테스트',
         form:{action:'#', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-        contents:[{ name:'test', 'placeholder':'테스트', 'id':'txt_id', 'type':'text'}],
+        contents:[{ name:'test', 'placeholder':'테스트', 'id':'txt_id', 'type':'text', 'knownname':'테스트'}],
         buttons:[{'type':'success', 'id':'test-btn','text':'버튼1','onclick':buttonClick},
                  {'id':'test-btn2', text:'button2', 'onclick':buttonClick2},
                  {'id':'text-btn3', text:'submit', type:'primary', actiontype:'submit'}]

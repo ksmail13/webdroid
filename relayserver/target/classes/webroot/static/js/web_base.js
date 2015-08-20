@@ -121,7 +121,7 @@ function validString(variable) {
                     var content = options.contents[i];
                         html += '<div class="form-group">'+
                                     '<label class="sr-only" for="'+content.id+'">'+content.placeholder+'</label>'+
-                                    '<input type="'+content.type+'" name="'+content.name+'" class="form-control input-lg" id="'+content.id+'" placeholder="'+content.placeholder+'"/>'+
+                                    '<input type="'+content.type+'" name="'+content.name+'" class="form-control input-lg" id="'+content.id+'" placeholder="'+content.placeholder+'" knownname="'+content.knownname+'"/>'+
                                 '</div>';
             }
                         html +='<div class="form-group text-center">';
