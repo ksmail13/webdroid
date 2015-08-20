@@ -15,52 +15,91 @@ class AdbController :
         self.port = port
 
     def killServer(self) :
-        """
-        pipe = subprocess.Popen("ipconfig",
+        pipe = subprocess.Popen(self.adbString + " kill-server",
                                 shell = True,
                                 stdin = subprocess.PIPE,
                                 stdout = subprocess.PIPE,
                                 stderr = subprocess.PIPE)
         pipe.stdin.close()
-        
-        retOutputList = []
-        retCode = None
+        stdout, stderr = pipe.communicate()
 
-        while True :
-            pipe.poll()
-            out = pipe.stdout.readline()
-            
-            if(out) :
-                retOutputList.append(out)
+        print stdout
 
-                retCode = pipe.returncode
-                if(out == "" and retCode != None) :
-                    break
+        #return stdout, stderr
 
-        return (retCode,retOutputList)
-        """
-        os.system(self.adbString + " kill-server")
 
     def startServer(self) :
-        os.system(self.adbString + " start-server")
+        pipe = subprocess.Popen(self.adbString + " start-server",
+                                shell = True,
+                                stdin = subprocess.PIPE,
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.PIPE)
+        pipe.stdin.close()
+        stdout, stderr = pipe.communicate()
+
+        print stdout
+        #return stdout, stderr
 
     def setTcpip(self) :
-        os.system(self.adbString + " tcpip " + self.port)
+        pipe = subprocess.Popen(self.adbString + " tcpip " + self.port,
+                                shell = True,
+                                stdin = subprocess.PIPE,
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.PIPE)
+        pipe.stdin.close()
+        stdout, stderr = pipe.communicate()
+
+        if stderr is None :
+            print stdout
+        else :
+            print stderr
+
+        #return stdout, stderr
 
     def connectVirtualbox(self) :
-        result = os.popen(self.adbString + " connect " + self.virtualmachinIp).read()
+        pipe = subprocess.Popen(self.adbString + " connect " + self.virtualmachinIp,
+                                shell = True,
+                                stdin = subprocess.PIPE,
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.PIPE)
+        pipe.stdin.close()
+        stdout, stderr = pipe.communicate()
 
-        if "unable" not in result :
+        print stdout
+
+        if "unable" not in stdout :
             return True
         else :
             return False
 
     def checkConnectDevices(self) :
-        os.system(self.adbString + " devices")
+        pipe = subprocess.Popen(self.adbString + " devices",
+                                shell = True,
+                                stdin = subprocess.PIPE,
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.PIPE)
+        pipe.stdin.close()
+
+        stdout, stderr = pipe.communicate()
+
+        print stdout
+
+        #return stdout, stderr
 
     def installApkInVirtualmachine(self,apkPath) :
         print self.adbString + ' install ' + apkPath
-        os.system(self.adbString + " install " + apkPath)
+
+        pipe = subprocess.Popen(self.adbString + " install " + apkPath,
+                                shell = True,
+                                stdin = subprocess.PIPE,
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.PIPE)
+        pipe.stdin.close()
+
+        stdout, stderr = pipe.communicate()
+
+        print stdout
+        #return stdout, stderr
 
 
 
