@@ -1,0 +1,74 @@
+doctype html
+head
+  include commonheader
+  title= context.get('name')+"'s Projects"
+  link(rel='stylesheet', href='css/projectmain.css', type='text/css')
+include commonnavbar
+.container
+  ul
+    li
+      h2.section-title
+        span.glyphicon.glyphicon-star
+        |  즐겨찾기
+    li
+      .row
+        each project in context.get('favorates')
+            .col-md-4.col-sm-4.project-block
+              .thumbnail(pid="#{project.getInteger('id')}")
+                .row.margin0
+                  .col-xs-5
+                    .app-icon
+                      img(src='/images/apple-touch-icon@2.png')
+                  .col-xs-7
+                    .text-center.app-title
+                      h4 #{project.getString('name')}
+                    .app-descript
+                      p #{project.getString('description')}
+                    .app-function
+                      .btn-group.btn-group-xs
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-minus
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-star
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-info-sign
+    li
+      .row
+        .col-sm-8.col-md-8.col-lg-8
+          h2.section-title
+            span.glyphicon.glyphicon-option-horizontal
+            |  내 프로젝트
+        .col-sm-4.col-md-4.col-lg-4.text-right
+          .blank20
+          .btn-toolbar(role='toolbar', style='display:inline-block;')
+            .btn-group(role='group')
+                a.btn.btn-default
+                  span.glyphicon.glyphicon-plus
+            .btn-group(role='group')
+                a.btn.btn-default
+                    span.glyphicon.glyphicon-th
+                a.btn.btn-default
+                    span.glyphicon.glyphicon-th-list
+    li
+      .row
+        each project in context.get('projects')
+            .col-md-4.col-sm-4.project-block
+              .thumbnail(pid="#{project.getInteger('id')}")
+                .row.margin0
+                  .col-xs-5
+                    .app-icon
+                      img(src='/images/apple-touch-icon@2.png')
+                  .col-xs-7
+                    .text-center.app-title
+                      h4 #{project.getString('name')}
+                    .app-descript
+                      p #{project.getString('description')}
+                    .app-function
+                      .btn-group.btn-group-xs
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-minus
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-star
+                        a.btn.btn-default(pid="#{project.getInteger('id')}", href='#')
+                          span.glyphicon.glyphicon-info-sign
+div
