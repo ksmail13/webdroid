@@ -2,6 +2,7 @@ var displayer = null;
 var	xy_field = null;
 var	xy_text = null;
 var	context = null;
+var log_table = null;
 var	img = new Image();
 
 var	mode = 0;
@@ -16,7 +17,7 @@ var	discs = [
 		{x:0, y:0}
 		];
 
-var sock = new SockJS('http://192.168.0.51:8080/myapp');
+var sock = new SockJS('http://172.30.1.20:8080/myapp');
 
 //----------------------------------------function
 function windowToCanvas(displayer,x,y){
@@ -27,30 +28,9 @@ function windowToCanvas(displayer,x,y){
 }
 
 function drawBackground(){
-	/*
-	var VERTICAL_LINE_SPACING = 12;
-	var	i = context.canvas.height;
-
-	context.clearRect(0,0,displayer.width,displayer.height);
-	context.strokeStyle = 'lightgray';
-	context.lineWidth = 0.5;
-
-	while(i > VERTICAL_LINE_SPACING){
-		context.beginPath();
-		context.moveTo(0,i);
-		context.lineTo(context.canvas.width,i);
-		context.stroke();
-		i -= VERTICAL_LINE_SPACING;
-	}
-	*/
-
 	context.clearRect(0,0,displayer.width,displayer.height);
 	context.drawImage(img,0,0);
 }
-/*
-function drawSpritesheet(){
-	context.drawImage(spritesheet,0,0);
-}*/
 
 function drawGuidelines(x,y){
 	context.strokeStyle = 'rgba(0,180,0,0.8)';
@@ -187,6 +167,24 @@ function draw(loc){
 	updateTextDouble(loc[0].x*2,loc[0].y*2,loc[1].x*2,loc[1].y*2);
 }
 
+function makeRandom(){
+	var i = Math.floor((Math.random() * 100) + 1);
+	return i.toFixed(0);
+}
+
+function addLog(log_msg){
+	log_table.row.add([
+		makeRandom(),
+		makeRandom(),
+		makeRandom(),
+		makeRandom(),
+		makeRandom()
+	]).draw();
+
+	//var rows = document.getElementById(tableId).getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+	log_table.row(10).scrollTo();
+}
+
 //-------------------------------event handler
 function displayerInit(displayer) {
 	displayer.onmousemove = function (e){
@@ -195,7 +193,6 @@ function displayerInit(displayer) {
 		e.preventDefault();
 
 		drawBackground();
-		//drawSpritesheet();
 		drawGuidelines(loc.x,loc.y);
 		updateReadout(loc.x*2,loc.y*2);	
 		
@@ -210,6 +207,7 @@ function displayerInit(displayer) {
 	};
 
 	displayer.onmousedown = function (e){
+		addLog("0");
 		var loc = windowToCanvas(displayer, e.clientX, e.clientY);
 
 		e.preventDefault();
@@ -239,6 +237,7 @@ function displayerInit(displayer) {
 	};
 }
 
+//-------------------------------socket function
 sock.onopen = function() {
 	console.log('open');
 };
@@ -266,17 +265,50 @@ sock.onmessage = function(e) {
 
 //----------------------------- initializing
 function makeDevice(target)  {
-	var html = "<div id='xy_field'></div>";
-	html += "<canvas id='displayer' width='360' height='640'> \
+	var html = "<div class='container screen-center'>";
+	html += "<div class='row'>";
+	
+	html += "<div class='col-md-4'>";
+	html += "<div id='xy_field'></div>";
+	html += "<canvas id='displayer' class='canvas-border' width='360' height='640'> \
 		Canvas not supported \
-		</canvas>";
-	html += "<textarea id='xy_text' cols='30' rows='30' readonly></textarea>";
-	html += "<table id='table'><tr><td><input type='button' value = 'Clear' onclick='clearText();'></td></tr> \
+		</canvas></div>";
+
+	html += "<div class='col-md-8'> \
+			<textarea id='xy_text' cols='30' rows='10' readonly></textarea>";
+	html += "<table id='btn_table'><tr><td><input type='button' value = 'Clear' onclick='clearText();'></td></tr> \
 		<tr><td><input name='mode' type='radio' onclick='changeMode(0);' checked='checked'>Default</td></tr> \
 		<tr><td><input name='mode' type='radio' onclick='changeMode(1);'>Zoom in</td></tr> \
 		<tr><td><input name='mode' type='radio' onclick='changeMode(2);'>Zoom out</td></tr> \
 		</table>";
+	html += "<table id='log_table' class='table-bordered table-striped table-hover'> \
+		<thead> \
+			<tr> \
+			<th width='25%'>Time</th> \
+			<th width='5%'> </th> \
+			<th width='8%'>pid</th> \
+			<th width='17%'>tag</th> \
+			<th width='45%'>Message</th> \
+			</tr> \
+		</thead> \
+		<tbody> \
+		</tbody> \
+		</table> \
+		</div></div></div>";
+
 	$(target).html(html);
+	log_table = $('#log_table').DataTable( {
+		deferRender: true,
+		scrollY: '25vh',
+		scrollCollapse: true,
+		scroller: true,
+		animate: false,
+		//paging: false,
+		info: false,
+		dom: 't<"bottom"f>',
+		language: {"emptyTable": " "},
+		aaSorting: []
+	});
 
 	displayer = document.getElementById('displayer');
 	xy_field = document.getElementById('xy_field');
@@ -286,10 +318,5 @@ function makeDevice(target)  {
 	drawBackground();
 	displayerInit(displayer);
 	xy_field.innerText = '( , )';
-}
 
-/*
-spritesheet.src = 'test1.jpg';
-spritesheet.onload = function(e){
-	drawSpritesheet();
-};*/
+}
