@@ -242,17 +242,52 @@ public class WebdroidRouterFactory {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
 
                         } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false,ResultMessage.CHECK_ID_PW);
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.CHECK_ID_PW);
                         }
                     }
                 });
             }
         });
 
-        router.post("/new_pwsubmit").handler(new RequestHandler(true, "passwd") {
+        router.post("/new_pwsubmit").handler(new RequestHandler(true) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("passwd"),session.get("id") );
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id") );
+                mDBConnector.update(Query.UNSUBSCRIBE, dbParams,
+                        new SQLResultHandler<UpdateResult>(this) {
+                            @Override
+                            public void success(UpdateResult resultSet) {
+                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            }
+                        });
+            }
+        });
+
+        router.post("/unsubscribe").handler(new RequestHandler(true, "passwd") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
+
+
+                mDBConnector.query(Query.OLD_PW, dbParams, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+
+                        if (resultSet.getNumRows() == 1) {
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+
+                        } else {
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.CHECK_ID_PW);
+                        }
+                    }
+                });
+            }
+        });
+
+        router.post("/final_unsubscribe").handler(new RequestHandler(true) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id") );
                 mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override

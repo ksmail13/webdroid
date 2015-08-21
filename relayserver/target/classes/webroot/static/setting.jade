@@ -43,20 +43,27 @@ script.
 
     var member_modal_option={
       title:'회원을 탈퇴하시겠습니까? ',
-      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-      contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
-                { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
-                { name:'new_pw', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-      buttons:[{'id':'membersubmit', text:'변경하기', 'onclick':memberClick}]
+      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': frmfailed},
+      contents:[{ name:'check_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password'}],
+      buttons:[{'id':'membersubmit', text:'탈퇴하기'}]
     };
     
+    function member_frmsuccess(result) {
+      function memberClick(e) {
+        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',function() {
+        requestAysnc('/final_unsubscribe', 'get', null, function(){
+        modalAlert('탈퇴하기', '탈퇴되었습니다',function() {alert('성공쓰');});}, failed);}, function() {alert('cancel');});
+      }
+      memberClick();
+    }
+   
     $("#gitgit").common_modal_box(git_modal_option);
     $("#pwpw").common_modal_box(old_pw_modal_option);
-   
+    $("#members").common_modal_box(member_modal_option);
+    
     function pw_frmsuccess(result) {
       $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
     }
-    
     
     function frmsuccess(result) {
       location.reload();
@@ -75,9 +82,10 @@ script.
       modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
     }
     
-    function memberClick(e) {
-      modalAlert('탈퇴하기', '탈퇴되었습니다',function() {alert('성공쓰');});
-    }
+    
+    
+    
+    
     
     });
 

@@ -53,4 +53,9 @@ public class Query {
             "SET passwd=? \n"+
             "where u_id=?";
 
+    public final static String  UNSUBSCRIBE=
+            "update user\n" +
+            "set is_enable='0' \n"+
+            "where u_id=? ";
+
 }
