@@ -35,4 +35,10 @@ public class Query {
             "up.u_id as userId\n" +
             "from project as p, USER_PROJECT as up\n" +
             "where p.p_id = up.p_id and up.u_id = ?;";
+
+    public final static String  NEW_GIT=
+            "update user\n" +
+            "(git_id)\n" +
+            "value\n" +
+            "(?);";
 }

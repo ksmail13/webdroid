@@ -1,49 +1,66 @@
 doctype html
 // 
 head    
-    include commonheader
-    script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js')
-    script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js')
-    script(src='settingtest2.js')
-    title=context.get('name')+"'s Settings"
+  include commonheader
+  // script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js')
+  script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js')
+  script(src='./js/settingtest2.js')
+  title=context.get('name')+"'s Settings"
 
-    link(rel='stylesheet', href='basic.css', type='text/css')
-    link(rel='stylesheet', href='settings.css', type='text/css')
+ 
+  link(rel='stylesheet', href='./css/settings.css', type='text/css')
 
 include commonnavbar
 
 script.
-    $(document).ready(function(){
-        var git_modal_option = {
-            title:'GitHub 아이디 등록',
-            form:{action:'#', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-            contents:[{ name:'git_id', 'placeholder':'아이디', 'id':'git_id', 'type':'email'}],
-            buttons:[{'id':'gitsubmit', text:'등록하기', 'onclick':gitClick}]
- 
-        };
-        
-        var pw_modal_option={
-            title:'비밀번호 변경',
-            form:{action:'#', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-            contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
-                      { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
-                      { name:'new_pw', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-            buttons:[{'id':'pwsubmit', text:'변경하기', 'onclick':pwClick}]
-        };
-        
-        var member_modal_option={
-            title:'회원을 탈퇴하시겠습니까? ',
-            form:{action:'#', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-            contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
-                      { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
-                      { name:'new_pw', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-            buttons:[{'id':'pwsubmit', text:'변경하기', 'onclick':pwClick}]
-        };
-        
- 
+  $(document).ready(function(){
+  
+    var git_modal_option = {
+      title:'GitHub 아이디 등록',
+      form:{action:'/gitsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+      contents:[{ name:'git_id', 'placeholder':'아이디', 'id':'git_id', 'type':'email'}],
+      buttons:[{'id':'gitsubmit', text:'등록하기', 'onclick':gitClick}]
+
+    };
+    
+   
+
+    var pw_modal_option={
+      title:'비밀번호 변경',
+      form:{action:'/pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+      contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
+                { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
+                { name:'new_pw', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
+      buttons:[{'id':'pwsubmit', text:'변경하기', 'onclick':pwClick}]
+    };
+
+    var member_modal_option={
+      title:'회원을 탈퇴하시겠습니까? ',
+      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+      contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
+                { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
+                { name:'new_pw', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
+      buttons:[{'id':'pwsubmit', text:'변경하기', 'onclick':pwClick}]
+    };
     
     $("#gitgit").common_modal_box(git_modal_option);
     $("#pwpw").common_modal_box(pw_modal_option);
+    
+    function frmsuccess(result) {
+      location.reload();
+      //modalAlert('성공', result);
+    }
+    function frmfailed(error) {
+    // error 내용 {readyState: 4, responseText: "Cannot POST /test.html", status: 404, statusText: "Not Found"}
+      modalAlert('실패', error.status+' '+error.statusText);
+    }
+    function gitClick(e) {
+      modalAlert('GitHub 아이디 등록', '등록되었습니다',function() {alert('성공쓰');});
+    }
+    
+    function pwClick(e) {
+      modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
+    }
     
     });
 

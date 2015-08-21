@@ -111,6 +111,17 @@ public class WebdroidRouterFactory {
                 });
             }
         });
+
+        // setting page
+        router.route().path("/setting").handler(new PageHandler() {
+            @Override
+            public void handling() {
+
+                context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
+                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
+                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/setting");
+            }
+        });
     }
 
     /**
@@ -187,15 +198,6 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.route("/setting").handler(new RequestHandler(false) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                session.destroy();
-                context.clearUser();
-                redirectTo("/");
-                //sendJsonResult(HttpStatusCode.FOUND, true, "sign out");
-            }
-        });
 
         router.post("/createproject").handler(new RequestHandler(true, "project_name", "project_desc", "project_target_ver") {
             @Override
@@ -203,6 +205,20 @@ public class WebdroidRouterFactory {
                 JsonArray dbParams = JsonUtil.createJsonArray(params.get("project_name"),
                         params.get("project_desc"), session.get("id"));
                 mDBConnector.update(Query.NEW_PROJECT, dbParams,
+                        new SQLResultHandler<UpdateResult>(this) {
+                            @Override
+                            public void success(UpdateResult resultSet) {
+                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            }
+                        });
+            }
+        });
+
+        router.post("/gitsubmit").handler(new RequestHandler(true, "git_id") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("git_id"));
+                mDBConnector.update(Query.NEW_GIT, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
                             public void success(UpdateResult resultSet) {
