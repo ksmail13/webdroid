@@ -180,9 +180,9 @@ public class WebdroidRouterFactory {
                     @Override
                     public void success(UpdateResult result) {
                         if (result.getUpdated() > 0) {
-                            sendJsonResult(200, true, ResultMessage.SIGNED_UP);
+                            sendJsonResult(200, true, ResultMessage.OLD_PW);
                         } else
-                            sendJsonResult(200, false, ResultMessage.SINGED_UP_FAIL);
+                            sendJsonResult(200, false, ResultMessage.OLD_PW_FAIL);
                     }
                 });
             }
@@ -217,8 +217,43 @@ public class WebdroidRouterFactory {
         router.post("/gitsubmit").handler(new RequestHandler(true, "git_id") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("git_id"));
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("git_id"), session.get("id"));
                 mDBConnector.update(Query.NEW_GIT, dbParams,
+                        new SQLResultHandler<UpdateResult>(this) {
+                            @Override
+                            public void success(UpdateResult resultSet) {
+                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            }
+                        });
+            }
+        });
+
+        router.post("/old_pwsubmit").handler(new RequestHandler(true, "passwd") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
+
+
+                mDBConnector.query(Query.OLD_PW, dbParams, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+
+                        if (resultSet.getNumRows() == 1) {
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+
+                        } else {
+                            sendJsonResult(HttpStatusCode.SUCCESS, false,ResultMessage.CHECK_ID_PW);
+                        }
+                    }
+                });
+            }
+        });
+
+        router.post("/new_pwsubmit").handler(new RequestHandler(true, "passwd") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("passwd"),session.get("id") );
+                mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
                             public void success(UpdateResult resultSet) {

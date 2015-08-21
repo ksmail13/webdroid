@@ -38,7 +38,19 @@ public class Query {
 
     public final static String  NEW_GIT=
             "update user\n" +
-            "(git_id)\n" +
-            "value\n" +
-            "(?);";
+            "set git_id=? \n"+
+            "where u_id=? ";
+
+
+    public final static String  OLD_PW=
+            "SELECT count(*)\n"+
+            "FROM user \n"+
+            "where u_id=? and passwd=password(?)";
+
+
+    public final static String  NEW_PW=
+            "UPDATE user\n"+
+            "SET passwd=? \n"+
+            "where u_id=?";
+
 }

@@ -1,7 +1,7 @@
 package org.webdroid.constant;
 
 /**
- * Created by ¹Î±Ô on 2015-08-13.
+ * Created by ï¿½Î±ï¿½ on 2015-08-13.
  */
 public class ResultMessage {
     public static final String SUCCESS = "success";
@@ -12,4 +12,7 @@ public class ResultMessage {
 
     public static final String SIGNED_UP = "sign up";
     public static final String SINGED_UP_FAIL = "Fail sign up";
+
+    public static final String OLD_PW = "password checked";
+    public static final String OLD_PW_FAIL = "Fail password";
 }
