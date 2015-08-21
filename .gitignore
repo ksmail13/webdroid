@@ -2,5 +2,6 @@
 *.class
 *.iml
 relayserver/.idea/*.*
+relayserver/.idea/compile.xml
 Thumbs.db
 relayserver/.vertx/
