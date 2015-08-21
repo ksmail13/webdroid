@@ -5,3 +5,5 @@ relayserver/.idea/*.*
 relayserver/.idea/compile.xml
 Thumbs.db
 relayserver/.vertx/
+
+relayserver/src/main/java/org/webdroid/db/DBConnector.java
