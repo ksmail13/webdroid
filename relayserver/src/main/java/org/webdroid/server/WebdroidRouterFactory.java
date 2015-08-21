@@ -187,6 +187,16 @@ public class WebdroidRouterFactory {
             }
         });
 
+        router.route("/setting").handler(new RequestHandler(false) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                session.destroy();
+                context.clearUser();
+                redirectTo("/");
+                //sendJsonResult(HttpStatusCode.FOUND, true, "sign out");
+            }
+        });
+
         router.post("/createproject").handler(new RequestHandler(true, "project_name", "project_desc", "project_target_ver") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {

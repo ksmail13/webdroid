@@ -1,7 +1,7 @@
  $('#loginbtn').click( function() {
                 var loginData{
                     user-id: $("#user-id").val(),
-                    user-pw: $("user-pw").val()
+                    user-pw: $("#user-pw").val()
                 };
                 $.ajax({
                     url:'/signin',

@@ -24,7 +24,7 @@ public class DBConnector {
 
     //private final static String DB_IP = "192.168.0.48";
     private final static String DB_IP = "127.0.0.1";
-    private final static String DB_PORT = "32123";
+    private final static String DB_PORT = "3306";
     private final static String DB_NAME = "webdroid";
     private final static String DB_ID = "webdroid";
     private final static String DB_PW = "web321droid!@#";

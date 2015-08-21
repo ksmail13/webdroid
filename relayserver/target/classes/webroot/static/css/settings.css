@@ -1,0 +1,59 @@
+/** projectmain.css **/
+
+.project-block {height:100px; padding:10px; background-color: blanchedalmond}
+
+
+.container-setting{
+    margin-top: 200px;    
+   margin-left: 42%;  
+    width: 6em
+}
+
+
+hr {
+width: 220%;
+height: 1px;
+text-align:left;
+    align:left;
+
+background-color:#C0EAB8;
+
+}
+
+.setting-text{
+    color: #8DB785;
+}
+
+.close {
+	background: #000;
+	color: #000;
+	line-height: 25px;
+	position: relative;
+	right: -12px;
+	text-align: center;
+	top: -10px;
+	width: 24px;
+	text-decoration: none;
+	font-weight: bold;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
+}
+
+.close:hover { background: #B0E5A6; }
+
+
+
+.setting_btn {
+    margin-left: 33%;
+    color: white; 
+    width: 30%; 
+    background-color: #B0E5A6; 
+    border-radius: 5px; 
+    border:#94C38D solid 1px; 
+    font-size: 1.3em;
+}
+

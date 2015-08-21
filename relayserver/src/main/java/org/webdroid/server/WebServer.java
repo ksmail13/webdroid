@@ -54,9 +54,4 @@ public class WebServer extends WebdroidVerticle {
         Router router = WebdroidRouterFactory.createRouter(vertx, mDBConnector);
         server.requestHandler(router::accept);
     }
-
-
-
-
-
 }
