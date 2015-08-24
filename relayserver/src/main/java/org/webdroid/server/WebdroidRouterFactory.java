@@ -217,6 +217,7 @@ public class WebdroidRouterFactory {
         router.post("/gitsubmit").handler(new RequestHandler(true, "git_id") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
+                System.out.println("gitsubmit");
                 JsonArray dbParams = JsonUtil.createJsonArray(params.get("git_id"), session.get("id"));
                 mDBConnector.update(Query.NEW_GIT, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
@@ -253,7 +254,7 @@ public class WebdroidRouterFactory {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id") );
-                mDBConnector.update(Query.UNSUBSCRIBE, dbParams,
+                mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
                             public void success(UpdateResult resultSet) {

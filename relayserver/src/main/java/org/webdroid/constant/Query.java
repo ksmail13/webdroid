@@ -39,7 +39,7 @@ public class Query {
     public final static String  NEW_GIT=
             "update user\n" +
             "set git_id=? \n"+
-            "where u_id=? ";
+            "where u_id=? ;";
 
 
     public final static String  PW_CHECK=

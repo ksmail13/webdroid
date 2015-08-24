@@ -19,8 +19,7 @@ script.
       title:'GitHub 아이디 등록',
       form:{action:'/gitsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
       contents:[{ name:'git_id', 'placeholder':'아이디', 'id':'git_id', 'type':'email'}],
-      buttons:[{'id':'gitsubmit', text:'등록하기', 'onclick':gitClick}]
-
+      buttons:[{'type':'success', 'id':'gitsubmit', text:'등록하기', actiontype:'submit'}]
     };
     
 
@@ -51,23 +50,23 @@ script.
     function member_frmsuccess(result) {
       alert("dd");
       function memberClick(e) {
-        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',function(e) {
-        requestAysnc('/final_unsubscribe', 'get', null, function(e){modalAlert('탈퇴하기', '탈퇴되었습니다',function() {alert('성공쓰');});}, failed);},             function() {alert('cancel');});
+        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',
+        function(){requestAysnc('/final_unsubscribe', 'get', null, function(){modalAlert('탈퇴하기', '탈퇴되었습니다',function(){});}, failed);},
+        function() {alert('cancel');});
       }
-      memberClick();
-      
-    }
+      memberClick(e);
+    };
    
     $("#gitgit").common_modal_box(git_modal_option);
     $("#pwpw").common_modal_box(old_pw_modal_option);
     $("#members").common_modal_box(member_modal_option);
     
-    function pw_frmsuccess(result) {
-      alert("dd");
+    function pw_frmsuccess(result){
       $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
     }
     
     function pw_frmfailed(error){
+      alert("실패");
       modalAlert('실패', error.status+' '+error.statusText);
     }
     
@@ -83,6 +82,15 @@ script.
     function gitClick(e) {
       modalAlert('GitHub 아이디 등록', '등록되었습니다',function() {alert('성공쓰');});
     }
+    
+    function git_frmsuccess(result) {
+      alert("dd");
+      function gitClick(e) {
+        modalAlert('GitHub 아이디 등록', '등록되었습니다',function() {alert('성공쓰');});
+      }
+      gitClick();
+    };
+    
     
     function new_pwClick(e) {
       modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
