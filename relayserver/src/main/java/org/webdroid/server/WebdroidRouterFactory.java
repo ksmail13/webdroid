@@ -234,7 +234,7 @@ public class WebdroidRouterFactory {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
 
 
-                mDBConnector.query(Query.OLD_PW, dbParams, new SQLResultHandler<ResultSet>(this) {
+                mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
 
@@ -242,7 +242,7 @@ public class WebdroidRouterFactory {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
 
                         } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.CHECK_ID_PW);
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
                     }
                 });
@@ -269,7 +269,7 @@ public class WebdroidRouterFactory {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
 
 
-                mDBConnector.query(Query.OLD_PW, dbParams, new SQLResultHandler<ResultSet>(this) {
+                mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
 
@@ -277,7 +277,7 @@ public class WebdroidRouterFactory {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
 
                         } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.CHECK_ID_PW);
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
                     }
                 });

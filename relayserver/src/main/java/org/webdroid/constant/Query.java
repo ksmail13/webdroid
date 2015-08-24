@@ -42,7 +42,7 @@ public class Query {
             "where u_id=? ";
 
 
-    public final static String  OLD_PW=
+    public final static String  PW_CHECK=
             "SELECT count(*)\n"+
             "FROM user \n"+
             "where u_id=? and passwd=password(?)";

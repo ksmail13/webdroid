@@ -26,7 +26,7 @@ script.
 
     var old_pw_modal_option={
       title:'비밀번호 변경',
-      form:{action:'/old_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': frmfailed},
+      form:{action:'/old_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'}],
       buttons:[{'id':'old_pwsubmit', text:'비밀번호 확인'}]
     };
@@ -43,18 +43,19 @@ script.
 
     var member_modal_option={
       title:'회원을 탈퇴하시겠습니까? ',
-      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': frmfailed},
+      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'check_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password'}],
       buttons:[{'id':'membersubmit', text:'탈퇴하기'}]
     };
     
     function member_frmsuccess(result) {
+      alert("dd");
       function memberClick(e) {
-        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',function() {
-        requestAysnc('/final_unsubscribe', 'get', null, function(){
-        modalAlert('탈퇴하기', '탈퇴되었습니다',function() {alert('성공쓰');});}, failed);}, function() {alert('cancel');});
+        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',function(e) {
+        requestAysnc('/final_unsubscribe', 'get', null, function(e){modalAlert('탈퇴하기', '탈퇴되었습니다',function() {alert('성공쓰');});}, failed);},             function() {alert('cancel');});
       }
       memberClick();
+      
     }
    
     $("#gitgit").common_modal_box(git_modal_option);
@@ -62,7 +63,12 @@ script.
     $("#members").common_modal_box(member_modal_option);
     
     function pw_frmsuccess(result) {
+      alert("dd");
       $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+    }
+    
+    function pw_frmfailed(error){
+      modalAlert('실패', error.status+' '+error.statusText);
     }
     
     function frmsuccess(result) {
@@ -81,11 +87,6 @@ script.
     function new_pwClick(e) {
       modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
     }
-    
-    
-    
-    
-    
     
     });
 
