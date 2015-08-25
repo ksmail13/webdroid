@@ -234,7 +234,6 @@ public class WebdroidRouterFactory {
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
 
-
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
@@ -269,7 +268,6 @@ public class WebdroidRouterFactory {
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
 
-
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
@@ -288,8 +286,8 @@ public class WebdroidRouterFactory {
         router.post("/final_unsubscribe").handler(new RequestHandler(true) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id") );
-                mDBConnector.update(Query.NEW_PW, dbParams,
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"));
+                mDBConnector.update(Query.UNSUBSCRIBE, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
                             public void success(UpdateResult resultSet) {
@@ -298,6 +296,8 @@ public class WebdroidRouterFactory {
                         });
             }
         });
+
+
     }
 
 

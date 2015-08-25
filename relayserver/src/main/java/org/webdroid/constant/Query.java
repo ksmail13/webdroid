@@ -50,7 +50,7 @@ public class Query {
 
     public final static String  NEW_PW=
             "UPDATE user\n"+
-            "SET passwd=? \n"+
+            "SET passwd=password(?) \n"+
             "where u_id=?";
 
     public final static String  UNSUBSCRIBE=
