@@ -4,7 +4,7 @@ head
   include commonheader
   // script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js')
   script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js')
-  script(src='./js/settingtest2.js')
+  //script(src='./js/settingtest2.js')
   title=context.get('name')+"'s Settings"
 
  
@@ -49,23 +49,27 @@ script.
       contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'}],
       buttons:[{'id':'old_pwsubmit', text:'비밀번호 확인',actiontype:'submit'}]
     };
+    
+    function pw_frmsuccess(result){
+      alert("");
+      $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+    };
+    
+    $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+    
+    function pw_frmfailed(error){
+      alert("실패");
+      //modalAlert('실패', error.status+' '+error.statusText);
+    }
         
     var new_pw_modal_option={
       title:'새로운 비밀번호 등록',
-      form:{action:'/new_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+      form:{action:'/new_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
                 { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
       buttons:[{'type':'success','id':'pwsubmit', text:'변경하기', 'onclick':new_pwClick , actiontype:'submit'}]
       };
       
-    function pw_frmsuccess(result){
-      $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
-    }
-    
-    function pw_frmfailed(error){
-      alert("실패");
-      modalAlert('실패', error.status+' '+error.statusText);
-    }
     
     function new_pwClick(e) {
       modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
@@ -98,8 +102,8 @@ script.
     
     
     function frmsuccess(result) {
-      location.reload();
-      //modalAlert('성공', result);
+      //location.reload();
+      modalAlert('성공', result);
     }
     
     function frmfailed(error) {

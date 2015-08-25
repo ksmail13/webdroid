@@ -51,7 +51,7 @@ public class Query {
     public final static String  NEW_PW=
             "UPDATE user\n"+
             "SET passwd=password(?) \n"+
-            "where u_id=?";
+            "where u_id=?;";
 
     public final static String  UNSUBSCRIBE=
             "update user\n" +

@@ -180,9 +180,9 @@ public class WebdroidRouterFactory {
                     @Override
                     public void success(UpdateResult result) {
                         if (result.getUpdated() > 0) {
-                            sendJsonResult(200, true, ResultMessage.OLD_PW);
+                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
                         } else
-                            sendJsonResult(200, false, ResultMessage.OLD_PW_FAIL);
+                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
                     }
                 });
             }
@@ -239,8 +239,8 @@ public class WebdroidRouterFactory {
                     public void success(ResultSet resultSet) {
 
                         if (resultSet.getNumRows() == 1) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
+                            System.out.println("assaas");
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
@@ -256,8 +256,11 @@ public class WebdroidRouterFactory {
                 mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
-                            public void success(UpdateResult resultSet) {
-                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            public void success(UpdateResult result) {
+                                if (result.getUpdated() > 0) {
+                                    sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                                } else
+                                    sendJsonResult(200, false, ResultMessage.PW_FAIL);
                             }
                         });
             }
