@@ -229,16 +229,16 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/old_pwsubmit").handler(new RequestHandler(true, "passwd") {
+        router.post("/old_pwsubmit").handler(new RequestHandler(true, "old_pw") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
 
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
 
-                        if (resultSet.getNumRows() == 1) {
+                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
@@ -248,10 +248,10 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/new_pwsubmit").handler(new RequestHandler(true) {
+        router.post("/new_pwsubmit").handler(new RequestHandler(true, "new_pw") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id") );
+                JsonArray dbParams = JsonUtil.createJsonArray( params.get("new_pw"),session.get("id") );
                 mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
@@ -265,10 +265,10 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/unsubscribe").handler(new RequestHandler(true, "passwd") {
+        router.post("/unsubscribe").handler(new RequestHandler(true, "check_pw") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("passwd"));
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("check_pw"));
 
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override

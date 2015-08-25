@@ -28,7 +28,8 @@ script.
         modalAlert('GitHub 아이디 등록', '등록되었습니다',function(){});
       }
       gitClick();
-      //$('.modal-dialog').remove();
+      
+      $('.modal-back').remove();
     };
     
     function git_frmfailed(error) {
@@ -51,29 +52,34 @@ script.
     };
     
     function pw_frmsuccess(result){
-      alert("");
-      $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+      if(result.result) {
+        $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+      } else {
+        modalAlert('확인 실패', result.message);
+      }
     };
-    
-    $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
     
     function pw_frmfailed(error){
       alert("실패");
       //modalAlert('실패', error.status+' '+error.statusText);
     }
+    
+    function pwUpsuccess(result) {
+      modalAlert('성공', '수정되었습니다.');
+    }
+    
+    function pwUpFail(error) {
+      modalAlert('실패', error.status+' '+error.statusText);
+    }
         
     var new_pw_modal_option={
       title:'새로운 비밀번호 등록',
-      form:{action:'/new_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': pw_frmfailed},
+      form:{action:'/new_pwsubmit', method:'post', id:'frm-update', enctype:'multipart/form-data', 'success':pwUpsuccess, 'error': pwUpFail},
       contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
                 { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기', 'onclick':new_pwClick , actiontype:'submit'}]
+      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기',  actiontype:'submit'}]
       };
       
-    
-    function new_pwClick(e) {
-      modalAlert('비밀번호 변경', '변경되었습니다',function() {alert('성공쓰');});
-    }
       
     $("#pwpw").common_modal_box(old_pw_modal_option);
     
@@ -103,7 +109,8 @@ script.
     
     function frmsuccess(result) {
       //location.reload();
-      modalAlert('성공', result);
+      if(!result.result)
+        modalAlert('실패', result.message);
     }
     
     function frmfailed(error) {
