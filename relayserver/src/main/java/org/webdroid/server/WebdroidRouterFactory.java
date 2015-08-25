@@ -240,7 +240,6 @@ public class WebdroidRouterFactory {
 
                         if (resultSet.getNumRows() == 1) {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-                            System.out.println("assaas");
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
@@ -258,9 +257,9 @@ public class WebdroidRouterFactory {
                             @Override
                             public void success(UpdateResult result) {
                                 if (result.getUpdated() > 0) {
-                                    sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
                                 } else
-                                    sendJsonResult(200, false, ResultMessage.PW_FAIL);
+                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                             }
                         });
             }
