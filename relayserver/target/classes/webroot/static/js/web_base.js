@@ -38,6 +38,22 @@ function formRequest(frm, success, failed) {
 
             data[key+''] = val;
         });
+        
+        $frm.find('textarea').each(function () {
+            var $this = $(this);
+            var key = $this.attr('name');
+            var val = $this.val().trim();
+            var knownname = $this.attr('knownname');
+
+            if(val.length == 0) {
+                //modalAlert();
+                breakInfo.breakName = knownname;
+                breakInfo.breakObj = $this;
+                return false; // same as break;
+            }
+
+            data[key+''] = val;
+        });
 
         if(isValid(breakInfo.breakName)) {
             modalAlert('확인해주세요',  breakInfo.breakName + '를 입력하셔야 합니다.', function () {breakInfo.breakObj.focus();});
