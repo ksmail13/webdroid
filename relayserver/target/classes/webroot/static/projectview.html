@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonheader.html'}
+	<link rel="stylesheet" href="css/projectview.css" type="text/css"></link>
+	<link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js"></script>
+	<script src="js/jqueryFileTree.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonnavbar.html'}
+
+		<div class='container-fluid'>
+			<div class='row'>
+				<div class='col-md-3 tree_wrap' id='projectTree'>
+				</div>
+				<div class='col-md-9' id='editor'>
+				</div>
+			</div>
+		</div>
+
+		<script>
+		    var editor = ace.edit("editor");
+		    editor.setTheme("ace/theme/monokai");
+		    editor.getSession().setMode("ace/mode/java");
+			function resizeBrowser() {
+				return $('#editor').height($(window).height()/100*85)
+				,$('#projectTree').height($(window).height()/100*85);
+			};
+			$(window).resize(resizeBrowser);
+			resizeBrowser();
+
+			$(document).ready( function(){
+				$('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/', script: 'connector' }, function(file) {
+				});
+			});
+		</script>
+	</body>
+</html>

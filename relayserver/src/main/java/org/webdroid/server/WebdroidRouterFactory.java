@@ -1,6 +1,7 @@
 package org.webdroid.server;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.ResultSet;
@@ -17,6 +18,7 @@ import org.webdroid.server.handler.PageHandler;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.db.DBConnector;
 import org.webdroid.util.JsonUtil;
+import org.webdroid.util.JqueryFileTree;
 import org.webdroid.db.SQLResultHandler;
 
 import java.util.ArrayList;
@@ -120,6 +122,39 @@ public class WebdroidRouterFactory {
                 context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
                 JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
                 rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/setting");
+            }
+        });
+
+        // project viewer page
+        router.route().path("/projectview").handler(new PageHandler() {
+            @Override
+            public void handling() {
+                if (!isLogin()) {
+                    redirectTo("/");
+                    return;
+                }
+
+                context.put("name", session.get("name"));
+                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
+
+                mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+                        List<JsonObject> resultList = resultSet.getRows();
+                        List<JsonObject> filteredList = new ArrayList<>(resultList);
+
+                        filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
+                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectview");
+                    }
+                });
+            }
+        });
+
+        router.route(HttpMethod.POST,"/connector").handler(new PageHandler() {
+            @Override
+            public void handling() {
+                res.setChunked(true);
+                res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
             }
         });
     }

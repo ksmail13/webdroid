@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    include commonheader
+    link(href='css/projectview.css', rel='stylesheet', type='text/css')
+    link(href='css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js')
+    script(src='js/jqueryFileTree.js', type='text/javascript')
+  body
+    include commonnavbar
+    .container-fluid
+      .row
+        #projectTree.col-md-3.tree_wrap
+        #editor.col-md-9
+    script.
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.getSession().setMode("ace/mode/java");
+      function resizeBrowser() {
+      return $('#editor').height($(window).height()/100*85),$('#projectTree').height($(window).height()/100*85);
+      };
+      $(window).resize(resizeBrowser);
+      resizeBrowser();
+      $(document).ready( function(){
+      $('#projectTree').fileTree({ root: '/', script: 'connector' }, function(file) {
+      });
+      });
