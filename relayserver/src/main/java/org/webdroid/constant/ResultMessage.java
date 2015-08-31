@@ -16,4 +16,8 @@ public class ResultMessage {
     public static final String PW_CHECKED = "password checked";
     public static final String OLD_PW_FAIL = "Fail password";
     public static final String PW_FAIL = "Fail password";
+
+    public static final String MEMBER_CHECKED = "member checked";
+    public static final String MEMBER_FAIL = "member Failed";
 }
+

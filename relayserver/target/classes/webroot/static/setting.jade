@@ -51,6 +51,16 @@ script.
       buttons:[{'id':'old_pwsubmit', text:'비밀번호 확인',actiontype:'submit'}]
     };
     
+    var new_pw_modal_option={
+      title:'새로운 비밀번호 등록',
+      form:{action:'/new_pwsubmit', method:'post', id:'frm-update', enctype:'multipart/form-data', 'success':pwUpsuccess, 'error': pwUpFail},
+      contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
+                { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
+      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기',  actiontype:'submit'}]
+    };
+    
+    $("#pwpw").common_modal_box(old_pw_modal_option);
+    
     function pw_frmsuccess(result){
       if(result.result) {
         $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
@@ -66,22 +76,17 @@ script.
     
     function pwUpsuccess(result) {
       modalAlert('성공', '수정되었습니다.');
+      $('.modal-back').remove();
     }
     
     function pwUpFail(error) {
       modalAlert('실패', error.status+' '+error.statusText);
     }
         
-    var new_pw_modal_option={
-      title:'새로운 비밀번호 등록',
-      form:{action:'/new_pwsubmit', method:'post', id:'frm-update', enctype:'multipart/form-data', 'success':pwUpsuccess, 'error': pwUpFail},
-      contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
-                { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기',  actiontype:'submit'}]
-      };
+   
       
       
-    $("#pwpw").common_modal_box(old_pw_modal_option);
+    
     
     
     /////////////////회원탈퇴////////////////
@@ -89,23 +94,26 @@ script.
     var member_modal_option={
       title:'회원을 탈퇴하시겠습니까? ',
       form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': pw_frmfailed},
-      contents:[{ name:'check_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password'}],
+      contents:[{ name:'old_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password'}],
       buttons:[{'type':'success','id':'membersubmit', text:'탈퇴하기', actiontype:'submit'}]
     };
     
-    function member_frmsuccess(result) {
-      function memberClick(e) {
-        modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',
-        function(){requestAysnc('/final_unsubscribe', 'post', null, function(){modalAlert('탈퇴하기', '탈퇴되었습니다',function(){});}, function(){});},
-        function() {alert('cancel');});
-      }
-      memberClick();
-    };
-   
-    
+       
     $("#members").common_modal_box(member_modal_option);
     
-    
+    function member_frmsuccess(result){
+      
+      if(result.result) {
+        function memberClick(e) {
+          modalConfirm('탈퇴하기', '정말 탈퇴하시겠습니까',
+          function(){requestAysnc('/final_unsubscribe', 'post', null, function(){modalAlert('탈퇴하기', '탈퇴되었습니다',function(){});}, function(){});},
+          function() {alert('cancel');});
+        }
+        memberClick();
+      } else {
+        modalAlert('확인 실패', result.message);
+      }
+    };
     
     function frmsuccess(result) {
       //location.reload();

@@ -300,18 +300,17 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/unsubscribe").handler(new RequestHandler(true, "check_pw") {
+        router.post("/unsubscribe").handler(new RequestHandler(true, "old_pw") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("check_pw"));
+                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
 
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
 
-                        if (resultSet.getNumRows() == 1) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-
+                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
@@ -323,12 +322,15 @@ public class WebdroidRouterFactory {
         router.post("/final_unsubscribe").handler(new RequestHandler(true) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"));
+                JsonArray dbParams = JsonUtil.createJsonArray((Integer)session.get("id"));
                 mDBConnector.update(Query.UNSUBSCRIBE, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
-                            public void success(UpdateResult resultSet) {
-                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            public void success(UpdateResult result) {
+                                if (result.getUpdated() > 0) {
+                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.MEMBER_CHECKED);
+                                } else
+                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.MEMBER_FAIL);
                             }
                         });
             }
