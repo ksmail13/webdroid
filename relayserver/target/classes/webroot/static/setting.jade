@@ -110,6 +110,7 @@ script.
           function() {alert('cancel');});
         }
         memberClick();
+        $('.modal-back').remove();
       } else {
         modalAlert('확인 실패', result.message);
       }

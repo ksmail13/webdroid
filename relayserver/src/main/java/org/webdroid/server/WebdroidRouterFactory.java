@@ -355,8 +355,6 @@ public class WebdroidRouterFactory {
         router.route().pathRegex(JS).handler(staticHandler);
         router.route().pathRegex(CSS).handler(staticHandler);
         router.route().pathRegex(IMG).handler(staticHandler);
-
-
     }
 
     public void initBasicRouterhandler(Vertx vertx) {
