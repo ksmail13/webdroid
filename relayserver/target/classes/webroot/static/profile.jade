@@ -1,0 +1,99 @@
+doctype html
+head
+  include commonheader
+  title
+    | samilgong mypage
+  link(rel='stylesheet', href='/css/profile.css', type='text/css')
+  script.
+    $(document).ready(function() {
+      $('#frm-update-introduce').submit(function() {
+        return formRequest('#frm-update-introduce', function(data){
+          if(data.result){
+
+            modalAlert("자기소개", '자기소개가 수정 되었습니다.', function() {location.reload();});
+        }
+      });
+      });
+      
+    });
+
+include commonnavbar
+// body
+.container
+  .padding10
+    .row
+      .col-sm-2.col-md-2
+        span.glyphicon.glyphicon-user
+        |  My profile 
+        .profile-pic.padding5
+          .row
+            img.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')
+            span.glyphicon.glyphicon-cog(data-toggle='modal', data-target='#myprofile')
+      .col-sm-3.col-md-3
+        .profile-pro.padding5
+          .row
+            .panel-body
+              span.glyphicon.glyphicon-menu-right
+              | #{context.get('name')}
+            .panel-body
+              span.glyphicon.glyphicon-menu-right
+              | #{context.get('show_id')}
+            .panel-body
+              span.glyphicon.glyphicon-menu-right
+              | #{context.get('show_git_id')}
+            .panel-body
+              span.glyphicon.glyphicon-menu-right
+              | #{context.get('show_introduce')}
+              span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
+              // Modal
+              #myprofile.modal.fade
+                .modal-dialog
+                  // Modal content
+                  .modal-content
+                    .modal-header
+                      button.close(type='button', data-dismiss='modal') ×
+                      h4.modal-title 자기소개를 입력하세요 
+                    .modal-body
+                      form#frm-update-introduce(action="/update_introduce", method='post')
+                        .form-group
+                          label.sr-only(for='txt-profile') Profile
+                          textarea#comment.form-control(rows='5', name='introduce')
+                        .form-group
+                          input.setting_btn.padding5(type='submit', value='입력하기')
+                    // modalbody
+                  // modalcontent
+                // modal dialog
+              // modal fade
+      .col-sm-7.col-md-7
+        .padding5
+          span.glyphicon.glyphicon-list
+          |  My project
+          .row
+            ul.project-list.nav.nav-tabs(role='tablist')
+              li.active
+                a(href='#private', role='tab', data-toggle='tab') Private
+              li
+                a(href='#public', role='tab', data-toggle='tab') Public
+            // Tab panes
+            .tab-content
+              #private.tab-pane.fade.active.in
+                .project-name.col-sm-7.col-md-7
+                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                  a(href='#') 앱1
+                .project-name.col-sm-7.col-md-7
+                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                  a(href='#') 앱2
+                .project-name.col-sm-7.col-md-7
+                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                  a(href='#') 앱3
+              #public.tab-pane.fade
+                ul.list.list-public
+                  .project-name.col-sm-7.col-md-7
+                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                    a(href='#') 앱1
+                  .project-name.col-sm-7.col-md-7
+                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                    a(href='#') 앱2
+                  .project-name.col-sm-7.col-md-7
+                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
+                    a(href='#') 앱3

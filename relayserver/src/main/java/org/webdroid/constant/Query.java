@@ -58,4 +58,15 @@ public class Query {
             "set is_enable='0' \n"+
             "where u_id=?;";
 
+        public final static String USERALINFOPROFILE =
+
+                "SELECT id, passwd, name, git_id, introduce\n" +
+                        "FROM user\n" +
+                        "WHERE u_id = ?\n";
+
+        public final static String NEW_INTRODUCE =
+                "update user " +
+                        "set introduce = ? " +
+                        "where u_id = ?";
+
 }

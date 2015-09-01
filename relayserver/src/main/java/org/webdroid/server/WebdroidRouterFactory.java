@@ -1,7 +1,6 @@
 package org.webdroid.server;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.ResultSet;
@@ -18,7 +17,6 @@ import org.webdroid.server.handler.PageHandler;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.db.DBConnector;
 import org.webdroid.util.JsonUtil;
-import org.webdroid.util.JqueryFileTree;
 import org.webdroid.db.SQLResultHandler;
 
 import java.util.ArrayList;
@@ -114,6 +112,52 @@ public class WebdroidRouterFactory {
             }
         });
 
+        router.route().path("/profile").handler(new PageHandler() {
+            @Override
+            public void handling() {
+                if (!isLogin()) {
+                    redirectTo("/");
+                    return;
+                }
+                context.put("name", session.get("name"));
+                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
+
+                mDBConnector.query(Query.USERALINFOPROFILE,params , new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+                        JsonObject row = resultSet.getRows().get(0);
+                        if(row.getString("id")==null)
+                        {
+                            context.put("show_id",ResultMessage.ID_ERROR);
+                        }
+                        else
+                        {
+                            context.put("show_id",row.getString("id"));
+                        }
+
+                        if(row.getString("git_id")==null)
+                        {
+                            context.put("show_git_id",ResultMessage.GIT_ERROR);
+                        }
+                        else
+                        {
+                            context.put("show_git_id",row.getString("git_id"));
+                        }
+
+                        if(row.getString("introduce")==null)
+                        {
+                            context.put("show_introduce",ResultMessage.INTRODUCE_ERROR);
+                        }
+                        else
+                        {
+                            context.put("show_introduce",row.getString("introduce"));
+                        }
+                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/profile");  //jade변환한 파일이름
+                    }
+                });
+            }
+        });
+
         // setting page
         router.route().path("/setting").handler(new PageHandler() {
             @Override
@@ -122,31 +166,6 @@ public class WebdroidRouterFactory {
                 context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
                 JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
                 rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/setting");
-            }
-        });
-
-        // project viewer page
-        router.route().path("/projectview").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                if (!isLogin()) {
-                    redirectTo("/");
-                    return;
-                }
-
-                context.put("name", session.get("name"));
-                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-
-                mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-                        List<JsonObject> resultList = resultSet.getRows();
-
-                        context.put("projects", resultList);
-
-                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectview");
-                    }
-                });
             }
         });
     }
@@ -256,10 +275,27 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/old_pwsubmit").handler(new RequestHandler(true, "old_pw") {
+
+        router.post("/update_introduce").handler(new RequestHandler(true, "introduce") {
+            @Override
+
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("introduce"), session.get("id"));
+                mDBConnector.update(Query.NEW_INTRODUCE, dbParams,
+                        new SQLResultHandler<UpdateResult>(this) {
+                            @Override
+                            public void success(UpdateResult resultSet) {
+                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                            }
+                        });
+            }
+        });
+
+        router.post("/old_pwsubmit").handler(new RequestHandler(true, "passwd") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
+
 
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
@@ -267,6 +303,7 @@ public class WebdroidRouterFactory {
 
                         if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
+
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
@@ -297,12 +334,14 @@ public class WebdroidRouterFactory {
             public void reqRecvParams(Map<String, Object> params) {
                 JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
 
+
                 mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
 
                         if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
+
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
                         }
@@ -327,7 +366,7 @@ public class WebdroidRouterFactory {
                         });
             }
         });
-
+        
         router.route("/make_filetree").handler(new RequestHandler(true) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
@@ -335,6 +374,7 @@ public class WebdroidRouterFactory {
                 res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
             }
         });
+
     }
 
 

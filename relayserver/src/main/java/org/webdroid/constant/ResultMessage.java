@@ -19,5 +19,9 @@ public class ResultMessage {
 
     public static final String MEMBER_CHECKED = "member checked";
     public static final String MEMBER_FAIL = "member Failed";
-}
 
+
+    public  static  final String ID_ERROR = "please input your id";
+    public  static  final String GIT_ERROR = "please input your github id";
+    public  static  final String INTRODUCE_ERROR = "please input your introduce";
+}
