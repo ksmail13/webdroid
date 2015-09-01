@@ -229,7 +229,7 @@ public class WebdroidRouterFactory {
         });
 
         // sign up
-        String[] signupParams = {"user_id", "user_name", "user_pw"};
+        String[] signupParams = {"user_id", "user_pw", "user_name"};
         router.post("/signup").handler(new RequestHandler(false, signupParams) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
