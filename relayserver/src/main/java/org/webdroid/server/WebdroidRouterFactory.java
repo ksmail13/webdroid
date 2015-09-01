@@ -17,6 +17,7 @@ import org.webdroid.server.handler.PageHandler;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.db.DBConnector;
 import org.webdroid.util.JsonUtil;
+import org.webdroid.util.JqueryFileTree;
 import org.webdroid.db.SQLResultHandler;
 
 import java.util.ArrayList;
@@ -122,37 +123,53 @@ public class WebdroidRouterFactory {
                 context.put("name", session.get("name"));
                 JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
 
-                mDBConnector.query(Query.USERALINFOPROFILE,params , new SQLResultHandler<ResultSet>(this) {
+                mDBConnector.query(Query.USERALINFOPROFILE, params, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
                         JsonObject row = resultSet.getRows().get(0);
-                        if(row.getString("id")==null)
-                        {
-                            context.put("show_id",ResultMessage.ID_ERROR);
-                        }
-                        else
-                        {
-                            context.put("show_id",row.getString("id"));
+                        if (row.getString("id") == null) {
+                            context.put("show_id", ResultMessage.ID_ERROR);
+                        } else {
+                            context.put("show_id", row.getString("id"));
                         }
 
-                        if(row.getString("git_id")==null)
-                        {
-                            context.put("show_git_id",ResultMessage.GIT_ERROR);
-                        }
-                        else
-                        {
-                            context.put("show_git_id",row.getString("git_id"));
+                        if (row.getString("git_id") == null) {
+                            context.put("show_git_id", ResultMessage.GIT_ERROR);
+                        } else {
+                            context.put("show_git_id", row.getString("git_id"));
                         }
 
-                        if(row.getString("introduce")==null)
-                        {
-                            context.put("show_introduce",ResultMessage.INTRODUCE_ERROR);
-                        }
-                        else
-                        {
-                            context.put("show_introduce",row.getString("introduce"));
+                        if (row.getString("introduce") == null) {
+                            context.put("show_introduce", ResultMessage.INTRODUCE_ERROR);
+                        } else {
+                            context.put("show_introduce", row.getString("introduce"));
                         }
                         rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/profile");  //jade변환한 파일이름
+                    }
+                });
+            }
+        });
+
+        // project viewer page
+        router.route().path("/projectview").handler(new PageHandler() {
+            @Override
+            public void handling() {
+                if (!isLogin()) {
+                    redirectTo("/");
+                    return;
+                }
+
+                context.put("name", session.get("name"));
+                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
+
+                mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+                        List<JsonObject> resultList = resultSet.getRows();
+
+                        context.put("projects", resultList);
+
+                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectview");
                     }
                 });
             }
