@@ -2,6 +2,9 @@
 <html>
 	<head>
 		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonheader.html'}
+	<title>
+			@{project.getString('name')}
+	</title>
 	<link rel="stylesheet" href="css/projectview.css" type="text/css"></link>
 	<link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js"></script>
@@ -13,9 +16,9 @@
 
 		<div class='container-fluid'>
 			<div class='row'>
-				<div class='col-md-3 tree_wrap' id='projectTree'>
+				<div class='col-md-2 tree_wrap' id='projectTree'>
 				</div>
-				<div class='col-md-9' id='editor'>
+				<div class='col-md-10' id='editor'>
 				</div>
 			</div>
 		</div>
@@ -32,7 +35,7 @@
 			resizeBrowser();
 
 			$(document).ready( function(){
-				$('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/', script: 'connector' }, function(file) {
+				$('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
 				});
 			});
 		</script>

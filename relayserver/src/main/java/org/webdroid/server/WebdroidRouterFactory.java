@@ -141,20 +141,12 @@ public class WebdroidRouterFactory {
                     @Override
                     public void success(ResultSet resultSet) {
                         List<JsonObject> resultList = resultSet.getRows();
-                        List<JsonObject> filteredList = new ArrayList<>(resultList);
 
-                        filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
+                        context.put("projects", resultList);
+
                         rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectview");
                     }
                 });
-            }
-        });
-
-        router.route(HttpMethod.POST,"/connector").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                res.setChunked(true);
-                res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
             }
         });
     }
@@ -336,7 +328,13 @@ public class WebdroidRouterFactory {
             }
         });
 
-
+        router.route("/make_filetree").handler(new RequestHandler(true) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                res.setChunked(true);
+                res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
+            }
+        });
     }
 
 
@@ -355,6 +353,8 @@ public class WebdroidRouterFactory {
         router.route().pathRegex(JS).handler(staticHandler);
         router.route().pathRegex(CSS).handler(staticHandler);
         router.route().pathRegex(IMG).handler(staticHandler);
+
+
     }
 
     public void initBasicRouterhandler(Vertx vertx) {

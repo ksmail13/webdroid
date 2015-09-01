@@ -2,6 +2,7 @@ doctype html
 html
   head
     include commonheader
+    title= context.get('p_id')
     link(href='css/projectview.css', rel='stylesheet', type='text/css')
     link(href='css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
     script(src='http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js')
@@ -10,8 +11,8 @@ html
     include commonnavbar
     .container-fluid
       .row
-        #projectTree.col-md-3.tree_wrap
-        #editor.col-md-9
+        #projectTree.col-md-2.tree_wrap
+        #editor.col-md-10
     script.
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/monokai");
@@ -22,6 +23,6 @@ html
       $(window).resize(resizeBrowser);
       resizeBrowser();
       $(document).ready( function(){
-      $('#projectTree').fileTree({ root: '/', script: 'connector' }, function(file) {
+      $('#projectTree').fileTree({ root: '/' }, function(file) {
       });
       });

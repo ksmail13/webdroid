@@ -37,7 +37,7 @@ if(jQuery) (function($){
 			// Defaults
 			if( !o ) var o = {};
 			if( o.root == undefined ) o.root = '/';
-			if( o.script == undefined ) o.script = 'jqueryFileTree.php';
+			if( o.script == undefined ) o.script = 'make_filetree';
 			if( o.folderEvent == undefined ) o.folderEvent = 'dblclick';
 			if( o.expandSpeed == undefined ) o.expandSpeed= 100;
 			if( o.collapseSpeed == undefined ) o.collapseSpeed= 100;
@@ -51,13 +51,14 @@ if(jQuery) (function($){
 				function showTree(c, t) {
 					$(c).addClass('wait');
 					$(".jqueryFileTree.start").remove();
-					$.post(o.script, { dir: t }, function(data, status) {
+
+					requestAysnc(o.script,'post',{dir: t}, function(data, status) { //function from web_base.js
 						$(c).find('.start').html('');
 						$(c).removeClass('wait').append(data);
 						if( o.root == t ) $(c).find('UL:hidden').show();
 						else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
 						bindTree(c);
-					});
+					}, function(){});
 				}
 				
 				function bindTree(t) {
