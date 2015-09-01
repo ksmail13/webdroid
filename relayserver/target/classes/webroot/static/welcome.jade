@@ -98,7 +98,7 @@ body
             .row
               p 
                 h4 가입하기
-              form(action='#')
+              form#frm-signup(action='/signup', method='post')
                 .form-group
                   label.sr-only(for='txt-in-user-id') Email address
                   input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
