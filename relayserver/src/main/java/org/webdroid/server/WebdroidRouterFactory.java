@@ -185,6 +185,14 @@ public class WebdroidRouterFactory {
                 rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/setting");
             }
         });
+
+        router.route().path("/signup_original").handler(new PageHandler() {
+            @Override
+            public void handling() {
+
+                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/signup_original");
+            }
+        });
     }
 
     /**
@@ -238,6 +246,28 @@ public class WebdroidRouterFactory {
                         params.get(signupParams[0]),
                         params.get(signupParams[1]),
                         params.get(signupParams[2]));
+
+                mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
+                    @Override
+                    public void success(UpdateResult result) {
+                        if (result.getUpdated() > 0) {
+                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                        } else
+                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
+                    }
+                });
+            }
+        });
+
+        String[] signup_originalParams = {"user_id", "user_pw", "user_name"};
+        router.post("/signup_original").handler(new RequestHandler(false, signupParams) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+
+                JsonArray dbParams = JsonUtil.createJsonArray(
+                        params.get(signup_originalParams[0]),
+                        params.get(signup_originalParams[1]),
+                        params.get(signup_originalParams[2]));
 
                 mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
                     @Override

@@ -18,49 +18,9 @@
     <link rel="stylesheet" href="settings.css" type="text/css"></link>
 	</head>
 	<body>
-        <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home"></span></a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <form class="navbar-form navbar-left" role="search">
-                  <div class="input-group">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                  </div>
-              </form>
-              <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">이름 <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
         
 <!--body-->
-        <div class ="container-setting" id="outside">
+        <div class="col-sm-5 col-md-5 vert-center">
             
             <div class="container">
                 <div class="padding20" id="gitgit">
@@ -90,33 +50,7 @@
             
         </div>
 
-        <script> 
-
-        $('#gitgit').my_modal_box({
-            title:'github 아이디 등록',
-            contents:[{label:'ID', name:'user_id', type:'email', placeholder:"아이디"}],
-            btnclass:'gitsubmit',
-            button:'등록하기'
-          });
-
-        $('#pwpw').my_modal_box({
-            
-            title:'비밀번호 변경',
-            contents:[{label:'oldPW', name:'old-pw', type:'password', placeholder:"이전 비밀번호"},
-                      {label:'newPW', name:'new-pw', type:'password', placeholder:"새로운 비밀번호"},
-                      {label:'newPWconfirm', name:'new-pw-confirm', type:'password', placeholder:"비밀번호 확인"}],
-
-            btnclass:'pwsubmit',                  
-            button:'변경하기'
-        });
         
-        $('#members').click(function(){
-             window.layerAlert('회원을 탈퇴 하시겠습니까  ?',
-                               '회원 탈퇴시, 모든 정보 및 작업한 프로젝트를 잃게 됩니다.<br > 정말 탈퇴하시겠습니까?',
-                               'members-submit','탈퇴하기');
-         });
-        
-        </script>
         
 	</body>
 </html>
