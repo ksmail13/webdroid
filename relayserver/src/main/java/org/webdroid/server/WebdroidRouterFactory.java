@@ -193,6 +193,22 @@ public class WebdroidRouterFactory {
                 rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/signup_original");
             }
         });
+
+        router.route().path("/signin_original").handler(new PageHandler() {
+            @Override
+            public void handling() {
+
+                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/signin_original");
+            }
+        });
+
+        router.route().path("/pwfind").handler(new PageHandler() {
+            @Override
+            public void handling() {
+
+                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/pwfind");
+            }
+        });
     }
 
     /**
@@ -225,8 +241,9 @@ public class WebdroidRouterFactory {
                             session.put("name", userInfo.getString("name"));
 
 
-                            sendJsonResult(HttpStatusCode.SUCCESS, true,
-                                    ResultMessage.SIGNED_IN);
+                            //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
+                            redirectTo("/projectmain");
+
                         } else {
                             sendJsonResult(HttpStatusCode.SUCCESS, false,
                                     ResultMessage.CHECK_ID_PW);
@@ -237,7 +254,7 @@ public class WebdroidRouterFactory {
         });
 
         // sign up
-        String[] signupParams = {"user_id", "user_pw", "user_name"};
+        String[] signupParams = {"user_id",  "user_pw","user_name"};
         router.post("/signup").handler(new RequestHandler(false, signupParams) {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
@@ -251,29 +268,8 @@ public class WebdroidRouterFactory {
                     @Override
                     public void success(UpdateResult result) {
                         if (result.getUpdated() > 0) {
-                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
-                        } else
-                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
-                    }
-                });
-            }
-        });
-
-        String[] signup_originalParams = {"user_id", "user_pw", "user_name"};
-        router.post("/signup_original").handler(new RequestHandler(false, signupParams) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-
-                JsonArray dbParams = JsonUtil.createJsonArray(
-                        params.get(signup_originalParams[0]),
-                        params.get(signup_originalParams[1]),
-                        params.get(signup_originalParams[2]));
-
-                mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
-                    @Override
-                    public void success(UpdateResult result) {
-                        if (result.getUpdated() > 0) {
-                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                            //sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                            redirectTo("/");
                         } else
                             sendJsonResult(200, false, ResultMessage.PW_FAIL);
                     }
@@ -419,6 +415,24 @@ public class WebdroidRouterFactory {
             public void reqRecvParams(Map<String, Object> params) {
                 res.setChunked(true);
                 res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
+            }
+        });
+
+        router.post("/pwfind").handler(new RequestHandler(true,"user_id") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray( session.get("id"), params.get("user_id"));
+
+                mDBConnector.update(Query.SET_RANDOM_PW, dbParams,
+                        new SQLResultHandler<UpdateResult>(this) {
+                            @Override
+                            public void success(UpdateResult result) {
+                                if (result.getUpdated() > 0) {
+                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SET_RANDOM_PW);
+                                } else
+                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.SET_RANDOM_PW_FAIL);
+                            }
+                        });
             }
         });
 

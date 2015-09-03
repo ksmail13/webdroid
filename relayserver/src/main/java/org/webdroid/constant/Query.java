@@ -58,15 +58,21 @@ public class Query {
             "set is_enable='0' \n"+
             "where u_id=?;";
 
-        public final static String USERALINFOPROFILE =
+    public final static String USERALINFOPROFILE =
 
-                "SELECT id, passwd, name, git_id, introduce\n" +
-                        "FROM user\n" +
-                        "WHERE u_id = ?\n";
+            "SELECT id, passwd, name, git_id, introduce\n" +
+            "FROM user\n" +
+            "WHERE u_id = ?\n";
 
-        public final static String NEW_INTRODUCE =
-                "update user " +
-                        "set introduce = ? " +
-                        "where u_id = ?";
+    public final static String NEW_INTRODUCE =
+            "update user " +
+            "set introduce = ? " +
+            "where u_id = ?";
+
+
+    public final static String SET_RANDOM_PW=
+            "UPDATE user\n"+
+            "SET passwd=password(FLOOR('10000' + rand() * '90000')) \n"+
+            "where u_id=? and id=?;";
 
 }

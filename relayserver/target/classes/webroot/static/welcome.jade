@@ -50,6 +50,7 @@ body
                 p.text-justify
                     .embed-responsive.embed-responsive-16by9
                         iframe.embed-responsive-item(src='https://www.youtube.com/embed/wIK0JKTQcI8')
+                        
           .col-xs-12.col-sm-5.col-md-5.vert-center
             .row
               form#frm-signin(action='/signin', method='post')
@@ -69,7 +70,7 @@ body
                             input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
                             | ID 저장
                     .col-xs-6.col-sm-6.col-md-6.text-right
-                        a(href='#') 비밀번호 찾기
+                        a#a-pwfind(href='/pwfind') 비밀번호 찾기
                     
 
               //

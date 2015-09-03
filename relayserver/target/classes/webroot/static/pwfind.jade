@@ -1,0 +1,20 @@
+head
+  include commonheader
+
+
+.row 
+  .col-md-4.col-md-offset-4
+    h3 비밀번호 찾기
+    h5 회원님의 메일주소를 입력하시면,<br>메일로 임시 비밀번호를 보내드립니다.
+  
+.row
+  .col-md-4.col-md-offset-4
+    form#frm-pwfind(action='/pwfind', method='post')
+      .form-group
+        label.sr-only(for='txt-in-user-id') Email address
+        input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
+    
+      .form-group
+        input.login-btn.btn-lg.btn-default.padding5#pwfind(type='submit', value='메일주소 확인')
+    
+
