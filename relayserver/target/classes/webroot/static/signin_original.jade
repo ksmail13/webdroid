@@ -2,6 +2,9 @@ doctype html
 // 
 head
   include commonheader
+  
+
+
 script.
     $(document).ready(function () {
       var isSavedId = getCookie('saveId');
@@ -11,27 +14,22 @@ script.
           $('#txt-user-id').val(savedId);
       }
     
-    $('#frm-signin').submit(function (e) {
-    //alert();
-      if($('#chk-save-id').is(':checked')) {
-          setCookie('saveId', 'true', 10000000);
-          setCookie('id', $('#txt-user-id').val(), 10000000);
-      }
-    return formRequest(this, onReqSuccess, onReqFailed);
+     
+    $('#frm-signin').submit(function() {
+      return formRequest('#frm-signin', 
+          function(data){
+            if(data.result){
+              location.href = '/projectmain'; 
+            }
+            else
+              modalAlert("로그인", '로그인에 실패했습니다 .<br>다시 로그인해주세요', function() {});
+          },
+          function(error){modalAlert("로그인","서버에러", function(){});}
+      );
     });
-    });
-    function onReqSuccess(data) {
-    if(data.result) {
-    //modalAlert('success');
-    location.replace('/projectmain');
-    } else {
-    modalAlert("로그인 실패", data.message);
-    }
-    }
-    function onReqFailed(data) {
-    var res = $.parseJSON(data.responseText);
-    modalAlert('요청 실패', res.message);
-    }
+    
+    
+    
     
 include commonnavbar
 // body
@@ -39,7 +37,7 @@ include commonnavbar
   .row
     h3 로그인
     h5 로그인 후 , 웹드로이드를 즐겨보세요!
-    form#frm-signin(action='/signin', method='post')
+    form#frm-signin(action='/api/signin', method='post')
       .form-group
         label.sr-only(for='txt-user-id') Email address
         input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1') 

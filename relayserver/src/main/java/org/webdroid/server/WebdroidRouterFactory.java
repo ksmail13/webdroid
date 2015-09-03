@@ -240,7 +240,6 @@ public class WebdroidRouterFactory {
                             session.put("id", userInfo.getInteger("u_id"));
                             session.put("name", userInfo.getString("name"));
 
-
                             //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
                             redirectTo("/projectmain");
 
@@ -418,27 +417,82 @@ public class WebdroidRouterFactory {
             }
         });
 
-        router.post("/pwfind").handler(new RequestHandler(true,"user_id") {
+        router.post("/api/pwfind").handler(new RequestHandler(false,"user_id") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray( session.get("id"), params.get("user_id"));
+                JsonArray dbParams = JsonUtil.createJsonArray( params.get("user_id"));
 
-                mDBConnector.update(Query.SET_RANDOM_PW, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult result) {
-                                if (result.getUpdated() > 0) {
-                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SET_RANDOM_PW);
-                                } else
-                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.SET_RANDOM_PW_FAIL);
-                            }
-                        });
+                mDBConnector.update(Query.SET_RANDOM_PW, dbParams, new SQLResultHandler<UpdateResult>(this) {
+                    @Override
+                    public void success(UpdateResult result) {
+                        if (result.getUpdated() > 0) {
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SET_RANDOM_PW);
+                            //redirectTo("/");
+                        } else
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.SET_RANDOM_PW_FAIL);
+                    }
+                });
+            }
+        });
+
+        router.post("/api/signup").handler(new RequestHandler(false, signupParams) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+
+                JsonArray dbParams = JsonUtil.createJsonArray(
+                        params.get(signupParams[0]),
+                        params.get(signupParams[1]),
+                        params.get(signupParams[2]));
+
+                mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
+                    @Override
+                    public void success(UpdateResult result) {
+                        if (result.getUpdated() > 0) {
+                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                            //redirectTo("/");
+                        } else
+                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
+                    }
+                });
+            }
+        });
+
+        router.post("/api/signin").handler(new RequestHandler(false, signinParams) {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                if (isLogin())
+                    session.destroy();
+                logger.debug(req.params().toString());
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get(signinParams[0]), params.get(signinParams[1]));
+
+                if ("true".equals(req.getParam("save_id"))) {
+                    context.addCookie(Cookie.cookie("saveID", req.getParam("save_id")));
+                    context.addCookie(Cookie.cookie("id", params.get("user_id").toString()));
+                }
+
+                mDBConnector.query(Query.SIGN_IN, dbParams, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+
+                        if (resultSet.getNumRows() > 0) {
+                            JsonObject userInfo = resultSet.getRows().get(0);
+                            logger.debug(userInfo.toString());
+                            session.put("id", userInfo.getInteger("u_id"));
+                            session.put("name", userInfo.getString("name"));
+
+                            //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
+                            redirectTo("/projectmain");
+
+                        } else {
+                            sendJsonResult(HttpStatusCode.SUCCESS, false,
+                                    ResultMessage.CHECK_ID_PW);
+                        }
+                    }
+                });
             }
         });
 
     }
-
-
     /**
      * static resource routing
      */

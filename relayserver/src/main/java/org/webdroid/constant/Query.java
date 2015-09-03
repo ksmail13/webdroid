@@ -73,6 +73,6 @@ public class Query {
     public final static String SET_RANDOM_PW=
             "UPDATE user\n"+
             "SET passwd=password(FLOOR('10000' + rand() * '90000')) \n"+
-            "where u_id=? and id=?;";
+            "where id=?;";
 
 }
