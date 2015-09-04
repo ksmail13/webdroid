@@ -1,43 +1,69 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonheader.html'}
-	<title>
-			@{project.getString('name')}
-	</title>
-	<link rel="stylesheet" href="css/projectview.css" type="text/css"></link>
-	<link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+<!DOCTYPE HTML>
+<html ng-app>
+  <head>
+    <!--include commonheader-->
+    <title>
+    </title>
+
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js"></script>
-	<script src="js/jqueryFileTree.js" type="text/javascript"></script>
-	</head>
+  <script src="js/jqueryFileTree.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="css/projectview.css" type="text/css"></link>
+  <link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+	
 
-	<body>
-		@include{org.webdroid.constant.WebdroidConstant.Path.TEMPL_HTML+'/commonnavbar.html'}
 
-		<div class='container-fluid'>
-			<div class='row'>
-				<div class='col-md-2 tree_wrap' id='projectTree'>
-				</div>
-				<div class='col-md-10' id='editor'>
-				</div>
-			</div>
-		</div>
 
-		<script>
-		    var editor = ace.edit("editor");
-		    editor.setTheme("ace/theme/monokai");
-		    editor.getSession().setMode("ace/mode/java");
-			function resizeBrowser() {
-				return $('#editor').height($(window).height()/100*85)
-				,$('#projectTree').height($(window).height()/100*85);
-			};
-			$(window).resize(resizeBrowser);
-			resizeBrowser();
 
-			$(document).ready( function(){
-				$('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
-				});
-			});
-		</script>
-	</body>
+  </head>
+
+
+
+
+  <body>
+    <!--include commonnavbar-->
+    <div class='container-fluid'>
+    	<div class='row'>
+    		<div class='col-xs-2 tree_wrap' id='projectTree'> <!--file tree column-->
+    		</div>
+    		<div class='col-xs-10'> <!--code editor & logcat-->
+    			<div class='row' id='editor'> <!--code editor-->
+    			</div>
+    			<div class='row'> <!--logcat-->
+    				<div class='navbar navbar-fixed-bottom'>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+
+
+
+
+	<script>
+		var editor = ace.edit("editor");
+	    editor.setTheme("ace/theme/monokai");
+	    editor.getSession().setMode("ace/mode/java");
+
+		function resizeBrowser() {
+			return $('#editor').height($(window).height()/100*85)
+      ,$('#projectTree').height($(window).height()/100*85);
+		};
+		$(window).resize(resizeBrowser);
+		resizeBrowser();
+
+		$(document).ready( function(){
+      $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {});
+		});
+	</script>
+
+
+
+
+
+
+
+
+  </body>
 </html>

@@ -1,4 +1,7 @@
+body {background-color: #282828 !important;}
+
 .tree_wrap {
+	background-color:#2C3E50 !important; 
 	border-top: solid 1px #BBB;
 	border-left: solid 1px #BBB;
 	border-bottom: solid 1px #FFF;
@@ -6,4 +9,20 @@
 	background: #FFF;
 	overflow: scroll;
 	padding: 5px;
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(0, 0, 0, 0.5);
 }

@@ -34,7 +34,7 @@ public class JqueryFileTree {
             // All dirs
             for (String file : files) {
                 if (new File(dir, file).isDirectory()) {
-                    htmlRes += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + dir + file + "/\">"
+                    htmlRes += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + file + "/\">"
                             + file + "</a></li>";
                 }
             }
@@ -43,7 +43,7 @@ public class JqueryFileTree {
                 if (!new File(dir, file).isDirectory()) {
                     int dotIndex = file.lastIndexOf('.');
                     String ext = dotIndex > 0 ? file.substring(dotIndex + 1) : "";
-                    htmlRes += "<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + dir + file + "\">"
+                    htmlRes += "<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + file + "\">"
                             + file + "</a></li>";
                 }
             }

@@ -1,28 +1,36 @@
 doctype html
-html
+html(ng-app='')
   head
     include commonheader
-    title= context.get('p_id')
-    link(href='css/projectview.css', rel='stylesheet', type='text/css')
-    link(href='css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
+    title
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js')
     script(src='http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js')
     script(src='js/jqueryFileTree.js', type='text/javascript')
+    link(rel='stylesheet', href='css/projectview.css', type='text/css')
+    link(href='css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
   body
     include commonnavbar
     .container-fluid
       .row
-        #projectTree.col-md-2.tree_wrap
-        #editor.col-md-10
-    script.
-      var editor = ace.edit("editor");
-      editor.setTheme("ace/theme/monokai");
-      editor.getSession().setMode("ace/mode/java");
-      function resizeBrowser() {
-      return $('#editor').height($(window).height()/100*85),$('#projectTree').height($(window).height()/100*85);
-      };
-      $(window).resize(resizeBrowser);
-      resizeBrowser();
-      $(document).ready( function(){
-      $('#projectTree').fileTree({ root: '/' }, function(file) {
-      });
-      });
+        #projectTree.col-xs-2.tree_wrap
+          // file tree column
+        .col-xs-10
+          // code editor & logcat
+          #editor.row
+            // code editor
+          .row
+            // logcat
+            .navbar.navbar-fixed-bottom
+      script.
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/java");
+        function resizeBrowser() {
+        return $('#editor').height($(window).height()/100*85)
+        ,$('#projectTree').height($(window).height()/100*85);
+        };
+        $(window).resize(resizeBrowser);
+        resizeBrowser();
+        $(document).ready( function(){
+        $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {});
+        });

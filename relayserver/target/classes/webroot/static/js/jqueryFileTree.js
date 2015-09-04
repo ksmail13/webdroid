@@ -38,7 +38,7 @@ if(jQuery) (function($){
 			if( !o ) var o = {};
 			if( o.root == undefined ) o.root = '/';
 			if( o.script == undefined ) o.script = 'make_filetree';
-			if( o.folderEvent == undefined ) o.folderEvent = 'dblclick';
+			if( o.folderEvent == undefined ) o.folderEvent = 'click';
 			if( o.expandSpeed == undefined ) o.expandSpeed= 100;
 			if( o.collapseSpeed == undefined ) o.collapseSpeed= 100;
 			if( o.expandEasing == undefined ) o.expandEasing = null;
@@ -71,7 +71,7 @@ if(jQuery) (function($){
 									$(this).parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
 								}
 								$(this).parent().find('UL').remove(); // cleanup
-								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
+								showTree( $(this).parent(), escape( o.root + $(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
 							} else {
 								// Collapse
