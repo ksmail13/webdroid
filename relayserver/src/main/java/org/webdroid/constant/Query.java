@@ -58,7 +58,7 @@ public class Query {
             "set is_enable='0' \n"+
             "where u_id=?;";
 
-    public final static String USERALINFOPROFILE =
+    public final static String USER_ALL_INFOPROFILE =
 
             "SELECT id, passwd, name, git_id, introduce\n" +
             "FROM user\n" +
@@ -68,6 +68,11 @@ public class Query {
             "update user " +
             "set introduce = ? " +
             "where u_id = ?";
+
+    public final static String IMG_UPLOAD =
+            "update user" +
+                    "set user_img = ?" +
+                    "where u_id = ?";
 
 
     public final static String SET_RANDOM_PW=
