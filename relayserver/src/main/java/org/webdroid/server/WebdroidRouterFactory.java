@@ -492,6 +492,28 @@ public class WebdroidRouterFactory {
             }
         });
 
+        router.post("/idcheck").handler(new RequestHandler(false, "user-id") {
+            @Override
+            public void reqRecvParams(Map<String, Object> params) {
+                JsonArray dbParams = JsonUtil.createJsonArray( params.get("user_id"));
+
+                mDBConnector.query(Query.ID_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
+                    @Override
+                    public void success(ResultSet resultSet) {
+
+                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
+                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
+
+                        } else {
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
+                        }
+                    }
+                });
+            }
+        });
+
+
+
     }
     /**
      * static resource routing
@@ -508,8 +530,6 @@ public class WebdroidRouterFactory {
         router.route().pathRegex(JS).handler(staticHandler);
         router.route().pathRegex(CSS).handler(staticHandler);
         router.route().pathRegex(IMG).handler(staticHandler);
-
-
     }
 
     public void initBasicRouterhandler(Vertx vertx) {

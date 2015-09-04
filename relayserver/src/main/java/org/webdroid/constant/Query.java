@@ -75,4 +75,9 @@ public class Query {
             "SET passwd=password(FLOOR('10000' + rand() * '90000')) \n"+
             "where id=?;";
 
+    public final static String ID_CHECK=
+            "SELECT passwd\n"+
+            "FROM user \n"+
+            "where id=?;";
+
 }
