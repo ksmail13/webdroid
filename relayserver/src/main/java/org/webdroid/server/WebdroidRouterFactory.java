@@ -1,6 +1,5 @@
 package org.webdroid.server;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -19,12 +18,12 @@ import org.webdroid.server.handler.PageHandler;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.db.DBConnector;
 import org.webdroid.server.handler.RouteHandler;
+import org.webdroid.server.url.page.*;
+import org.webdroid.server.url.request.*;
 import org.webdroid.util.JsonUtil;
 import org.webdroid.util.JqueryFileTree;
 import org.webdroid.db.SQLResultHandler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,144 +74,29 @@ public class WebdroidRouterFactory {
 
     private void pageRoute() {
 
-        JadeTemplateEngine jadeTemplateEngine = JadeTemplateEngine.create();
+        // index page
+        router.route().path(WelcomePageHandler.URL).handler(new WelcomePageHandler());
 
-        // main page
-        router.route().path("/").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                if (isLogin()) {
-                    redirectTo("/projectmain");
-                    return;
-                }
+        // user main page
+        router.route().path(UserIndexPageHandler.URL).handler(new UserIndexPageHandler(mDBConnector));
 
-                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/welcome");
-            }
-        });
+        // user profile page
+        router.route().path(UserProfilePageHandler.URL).handler(new UserProfilePageHandler(mDBConnector));
 
-        // main page
-        router.route().path("/projectmain").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                if (!isLogin()) {
-                    redirectTo("/");
-                    return;
-                }
-                context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
-                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-
-                mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-                        List<JsonObject> resultList = resultSet.getRows();
-                        List<JsonObject> filteredList = new ArrayList<>(resultList);
-
-                        context.put("projects", resultList);
-
-                        filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
-                        context.put("favorates", filteredList);
-                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectmain");  //jade변환한 파일이름
-                    }
-                });
-            }
-        });
-
-        router.route().path("/profile").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                if (!isLogin()) {
-                    redirectTo("/");
-                    return;
-                }
-                context.put("name", session.get("name"));
-                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-
-                mDBConnector.query(Query.USER_ALL_INFOPROFILE, params, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-                        JsonObject row = resultSet.getRows().get(0);
-                        if (row.getString("id") == null) {
-                            context.put("show_id", ResultMessage.ID_ERROR);
-                        } else {
-                            context.put("show_id", row.getString("id"));
-                        }
-
-                        if (row.getString("git_id") == null) {
-                            context.put("show_git_id", ResultMessage.GIT_ERROR);
-                        } else {
-                            context.put("show_git_id", row.getString("git_id"));
-                        }
-
-                        if (row.getString("introduce") == null) {
-                            context.put("show_introduce", ResultMessage.INTRODUCE_ERROR);
-                        } else {
-                            context.put("show_introduce", row.getString("introduce"));
-                        }
-                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/profile");  //jade변환한 파일이름
-                    }
-                });
-            }
-        });
-
-        // project viewer page
-        router.route().path("/projectview").handler(new PageHandler() {
-            @Override
-            public void handling() {
-                if (!isLogin()) {
-                    redirectTo("/");
-                    return;
-                }
-
-                context.put("name", session.get("name"));
-                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-
-                mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-                        List<JsonObject> resultList = resultSet.getRows();
-
-                        context.put("projects", resultList);
-
-                        rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/projectview");
-                    }
-                });
-            }
-        });
+        // project list page
+        router.route().path(UserProjectListPageHandler.URL).handler(new UserProjectListPageHandler(mDBConnector));
 
         // setting page
-        router.route().path("/setting").handler(new PageHandler() {
-            @Override
-            public void handling() {
+        router.route().path(UserSettingPageHandler.URL).handler(new UserSettingPageHandler());
 
-                context.put("name", session.get("name")); //jade에서 projectmain 에서 쓰임
-                JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/setting");
-            }
-        });
+        // signup page
+        router.route().path(SignupPageHandler.URL).handler(new SignupPageHandler());
 
-        router.route().path("/signup_original").handler(new PageHandler() {
-            @Override
-            public void handling() {
+        // signin page
+        router.route().path(SigninPageHandler.URL).handler(new SigninPageHandler());
 
-                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/signup_original");
-            }
-        });
-
-        router.route().path("/signin_original").handler(new PageHandler() {
-            @Override
-            public void handling() {
-
-                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/signin_original");
-            }
-        });
-
-        router.route().path("/pwfind").handler(new PageHandler() {
-            @Override
-            public void handling() {
-
-                rendering(jadeTemplateEngine, WebdroidConstant.Path.HTML + "/pwfind");
-            }
-        });
+        // password change password page
+        router.route().path(PwChangePageHandler.URL).handler(new PwChangePageHandler());
     }
 
     /**
@@ -220,323 +104,42 @@ public class WebdroidRouterFactory {
      */
     public void requestHandling() {
         // sign in
-        String[] signinParams = {"user_id", "user_pw"};
-        router.post("/signin").handler(new RequestHandler(false, signinParams) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                if (isLogin())
-                    session.destroy();
-                logger.debug(req.params().toString());
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get(signinParams[0]), params.get(signinParams[1]));
-
-                if ("true".equals(req.getParam("save_id"))) {
-                    context.addCookie(Cookie.cookie("saveID", req.getParam("save_id")));
-                    context.addCookie(Cookie.cookie("id", params.get("user_id").toString()));
-                }
-
-                mDBConnector.query(Query.SIGN_IN, dbParams, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-
-                        if (resultSet.getNumRows() > 0) {
-                            JsonObject userInfo = resultSet.getRows().get(0);
-                            logger.debug(userInfo.toString());
-                            session.put("id", userInfo.getInteger("u_id"));
-                            session.put("name", userInfo.getString("name"));
-
-                            //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
-                            redirectTo("/projectmain");
-
-                        } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false,
-                                    ResultMessage.CHECK_ID_PW);
-                        }
-                    }
-                });
-            }
-        });
+        router.post(SigninRequestHandler.URL).handler(new SigninRequestHandler(mDBConnector));
 
         // sign up
-        String[] signupParams = {"user_id",  "user_pw","user_name"};
-        router.post("/signup").handler(new RequestHandler(false, signupParams) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
+        router.post(SignupRequestHandler.URL).handler(new SignupRequestHandler(mDBConnector));
 
-                JsonArray dbParams = JsonUtil.createJsonArray(
-                        params.get(signupParams[0]),
-                        params.get(signupParams[1]),
-                        params.get(signupParams[2]));
+        // sign out handler
+        router.route(SignoutRequestHandler.URL).handler(new SignoutRequestHandler());
 
-                mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
-                    @Override
-                    public void success(UpdateResult result) {
-                        if (result.getUpdated() > 0) {
-                            //sendJsonResult(200, true, ResultMessage.PW_CHECKED);
-                            redirectTo("/");
-                        } else
-                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
-                    }
-                });
-            }
-        });
+        // create project handler
+        router.post(CreateProjectRequestHandler.URL).handler(new CreateProjectRequestHandler(mDBConnector));
 
-        router.route("/signout").handler(new RequestHandler(false) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                session.destroy();
-                context.clearUser();
-                redirectTo("/");
-                //sendJsonResult(HttpStatusCode.FOUND, true, "sign out");
-            }
-        });
+        // gitid handler
+        router.post(GitIdUpdateRequestHandler.URL).handler(new GitIdUpdateRequestHandler(mDBConnector));
+
+        // introduce handler
+        router.post(IntroduceUpdateRequestHandler.URL).handler(new IntroduceUpdateRequestHandler(mDBConnector));
+
+        // user image upload handler
+        router.post(UserImageUploadReqeustHandler.URL).handler(new UserImageUploadReqeustHandler(mDBConnector));
+
+        // check password handler
+        router.post(CheckPasswordRequestHandler.URL).handler(new CheckPasswordRequestHandler(mDBConnector));
+
+        router.post(ChangePasswordRequestHandler.URL).handler(new ChangePasswordRequestHandler(mDBConnector));
+
+        // unsubscribe handler
+        //router.post("/unsubscribe").handler(new CheckPasswordRequestHandler(mDBConnector));
+        router.post(UnsubscribeRequestHandler.URL).handler(new UnsubscribeRequestHandler(mDBConnector));
+
+        // get project files handler
+        router.route(ProjectTreeRequestHandler.URL).handler(new ProjectTreeRequestHandler());
 
 
-        router.post("/createproject").handler(new RequestHandler(true, "project_name", "project_desc", "project_target_ver") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("project_name"),
-                        params.get("project_desc"), session.get("id"));
-                mDBConnector.update(Query.NEW_PROJECT, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult resultSet) {
-                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-                            }
-                        });
-            }
-        });
+        router.post(PasswordInitRequestHandler.URL).handler(new PasswordInitRequestHandler(mDBConnector));
 
-        router.post("/gitsubmit").handler(new RequestHandler(true, "git_id") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                System.out.println("gitsubmit");
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("git_id"), session.get("id"));
-                mDBConnector.update(Query.NEW_GIT, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult resultSet) {
-                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-                            }
-                        });
-            }
-        });
-
-
-        router.post("/update_introduce").handler(new RequestHandler(true, "introduce") {
-            @Override
-
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("introduce"), session.get("id"));
-                mDBConnector.update(Query.NEW_INTRODUCE, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult resultSet) {
-                                sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-                            }
-                        });
-            }
-        });
-
-        router.post("/p_img_upload").handler(new RouteHandler() {
-            String path;
-            @Override
-            public void handling() {
-                Set<FileUpload> uploads = context.fileUploads();
-                uploads.stream().forEach(upload -> {
-                    path = upload.uploadedFileName();
-                });
-                JsonArray dbParms = JsonUtil.createJsonArray(path, session.get("id"));
-                mDBConnector.update(Query.IMG_UPLOAD, dbParms, new SQLResultHandler<UpdateResult>(this) {
-                    @Override
-                    public void success(UpdateResult resultSet) {
-                        //sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-
-                        JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS).put("img_path", path);
-
-                        send(HttpStatusCode.SUCCESS, "application/json", res.toString());
-                    }
-                });
-            }
-        });
-
-        router.post("/old_pwsubmit").handler(new RequestHandler(true, "passwd") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
-
-
-                mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-
-                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-
-                        } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
-                        }
-                    }
-                });
-            }
-        });
-
-        router.post("/new_pwsubmit").handler(new RequestHandler(true, "new_pw") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get("new_pw"), session.get("id"));
-                mDBConnector.update(Query.NEW_PW, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult result) {
-                                if (result.getUpdated() > 0) {
-                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-                                } else
-                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
-                            }
-                        });
-            }
-        });
-
-        router.post("/unsubscribe").handler(new RequestHandler(true, "old_pw") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"), params.get("old_pw"));
-
-
-                mDBConnector.query(Query.PW_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-
-                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-
-                        } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
-                        }
-                    }
-                });
-            }
-        });
-
-        router.post("/final_unsubscribe").handler(new RequestHandler(true) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray((Integer)session.get("id"));
-                mDBConnector.update(Query.UNSUBSCRIBE, dbParams,
-                        new SQLResultHandler<UpdateResult>(this) {
-                            @Override
-                            public void success(UpdateResult result) {
-                                if (result.getUpdated() > 0) {
-                                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.MEMBER_CHECKED);
-                                } else
-                                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.MEMBER_FAIL);
-                            }
-                        });
-            }
-        });
-        
-        router.route("/make_filetree").handler(new RequestHandler(true) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                res.setChunked(true);
-                res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
-            }
-        });
-
-        router.post("/api/pwfind").handler(new RequestHandler(false,"user_id") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray( params.get("user_id"));
-
-                mDBConnector.update(Query.SET_RANDOM_PW, dbParams, new SQLResultHandler<UpdateResult>(this) {
-                    @Override
-                    public void success(UpdateResult result) {
-                        if (result.getUpdated() > 0) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SET_RANDOM_PW);
-                            //redirectTo("/");
-                        } else
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.SET_RANDOM_PW_FAIL);
-                    }
-                });
-            }
-        });
-
-        router.post("/api/signup").handler(new RequestHandler(false, signupParams) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-
-                JsonArray dbParams = JsonUtil.createJsonArray(
-                        params.get(signupParams[0]),
-                        params.get(signupParams[1]),
-                        params.get(signupParams[2]));
-
-                mDBConnector.update(Query.SIGN_UP, dbParams, new SQLResultHandler<UpdateResult>(this) {
-                    @Override
-                    public void success(UpdateResult result) {
-                        if (result.getUpdated() > 0) {
-                            sendJsonResult(200, true, ResultMessage.PW_CHECKED);
-                            //redirectTo("/");
-                        } else
-                            sendJsonResult(200, false, ResultMessage.PW_FAIL);
-                    }
-                });
-            }
-        });
-
-        router.post("/api/signin").handler(new RequestHandler(false, signinParams) {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                if (isLogin())
-                    session.destroy();
-                logger.debug(req.params().toString());
-                JsonArray dbParams = JsonUtil.createJsonArray(params.get(signinParams[0]), params.get(signinParams[1]));
-
-                if ("true".equals(req.getParam("save_id"))) {
-                    context.addCookie(Cookie.cookie("saveID", req.getParam("save_id")));
-                    context.addCookie(Cookie.cookie("id", params.get("user_id").toString()));
-                }
-
-                mDBConnector.query(Query.SIGN_IN, dbParams, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-
-                        if (resultSet.getNumRows() > 0) {
-                            JsonObject userInfo = resultSet.getRows().get(0);
-                            logger.debug(userInfo.toString());
-                            session.put("id", userInfo.getInteger("u_id"));
-                            session.put("name", userInfo.getString("name"));
-
-                            //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
-                            redirectTo("/projectmain");
-
-                        } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false,
-                                    ResultMessage.CHECK_ID_PW);
-                        }
-                    }
-                });
-            }
-        });
-
-        router.post("/idcheck").handler(new RequestHandler(false, "user-id") {
-            @Override
-            public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray( params.get("user_id"));
-
-                mDBConnector.query(Query.ID_CHECK, dbParams, new SQLResultHandler<ResultSet>(this) {
-                    @Override
-                    public void success(ResultSet resultSet) {
-
-                        if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
-                            sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-
-                        } else {
-                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
-                        }
-                    }
-                });
-            }
-        });
+        router.post(IdCheckRequestHandler.URL).handler(new IdCheckRequestHandler(mDBConnector));
 
 
 
@@ -558,6 +161,10 @@ public class WebdroidRouterFactory {
         router.route().pathRegex(IMG).handler(staticHandler);
     }
 
+    /**
+     * set log, error, body and cookie handler on router
+     * @param vertx
+     */
     public void initBasicRouterhandler(Vertx vertx) {
 
         /**

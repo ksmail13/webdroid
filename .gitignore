@@ -7,3 +7,11 @@ Thumbs.db
 relayserver/.vertx/
 
 relayserver/src/main/java/org/webdroid/db/DBConnector.java
+
+*.iml
+
+relayserver/src/main/java/org/webdroid/db/DBConnector.java
+
+relayserver/src/main/java/org/webdroid/db/DBConnector.java
+
+relayserver/webdroid.iml

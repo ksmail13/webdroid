@@ -1,5 +1,7 @@
 package org.webdroid.server.handler;
 
+import org.webdroid.db.DBConnector;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,14 +9,19 @@ public abstract class RequestHandler extends RouteHandler {
     protected String[] requestParameters = null;
     protected boolean chkLogin = false;
 
-    private RequestHandler() {}
+    protected DBConnector mDBConnector = null;
+
+    private RequestHandler(DBConnector dbConnector) {
+        mDBConnector = dbConnector;
+    }
 
     /**
      * Request handler not web page
      * @param checkLogin this request need auth
      * @param params parameter names.
      */
-    public RequestHandler (boolean checkLogin, String... params) {
+    public RequestHandler (DBConnector dbConnector, boolean checkLogin, String... params) {
+        this(dbConnector);
         chkLogin = checkLogin;
         requestParameters = params;
     }
@@ -23,8 +30,8 @@ public abstract class RequestHandler extends RouteHandler {
      * Reqeust handler not web page
      * @param checkLogin this request need auth
      */
-    public RequestHandler (boolean checkLogin) {
-        chkLogin = checkLogin;
+    public RequestHandler (DBConnector dbConnector, boolean checkLogin) {
+        this(dbConnector, checkLogin, null);
     }
 
     @Override
@@ -36,7 +43,7 @@ public abstract class RequestHandler extends RouteHandler {
 
 
         if(requestParameters == null) {
-            reqRecvParams(null);
+            handlingWithParams(null);
             return ;
         }
 
@@ -51,7 +58,7 @@ public abstract class RequestHandler extends RouteHandler {
                 return ;
             }
         }
-        reqRecvParams(params);
+        handlingWithParams(params);
     }
 
     /**
@@ -65,5 +72,5 @@ public abstract class RequestHandler extends RouteHandler {
      * request handling
      * @param params parameters from client
      */
-    public abstract void reqRecvParams(Map<String, Object> params);
+    public abstract void handlingWithParams(Map<String, Object> params);
 }
