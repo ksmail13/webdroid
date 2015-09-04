@@ -1,11 +1,13 @@
 package org.webdroid.server;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.ext.web.Cookie;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
@@ -16,6 +18,7 @@ import org.webdroid.constant.*;
 import org.webdroid.server.handler.PageHandler;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.db.DBConnector;
+import org.webdroid.server.handler.RouteHandler;
 import org.webdroid.util.JsonUtil;
 import org.webdroid.util.JqueryFileTree;
 import org.webdroid.db.SQLResultHandler;
@@ -23,6 +26,7 @@ import org.webdroid.db.SQLResultHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Router for page route
@@ -123,7 +127,7 @@ public class WebdroidRouterFactory {
                 context.put("name", session.get("name"));
                 JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
 
-                mDBConnector.query(Query.USERALINFOPROFILE, params, new SQLResultHandler<ResultSet>(this) {
+                mDBConnector.query(Query.USER_ALL_INFOPROFILE, params, new SQLResultHandler<ResultSet>(this) {
                     @Override
                     public void success(ResultSet resultSet) {
                         JsonObject row = resultSet.getRows().get(0);
@@ -333,6 +337,28 @@ public class WebdroidRouterFactory {
             }
         });
 
+        router.post("/p_img_upload").handler(new RouteHandler() {
+            String path;
+            @Override
+            public void handling() {
+                Set<FileUpload> uploads = context.fileUploads();
+                uploads.stream().forEach(upload -> {
+                    path = upload.uploadedFileName();
+                });
+                JsonArray dbParms = JsonUtil.createJsonArray(path, session.get("id"));
+                mDBConnector.update(Query.IMG_UPLOAD, dbParms, new SQLResultHandler<UpdateResult>(this) {
+                    @Override
+                    public void success(UpdateResult resultSet) {
+                        //sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+
+                        JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS).put("img_path", path);
+
+                        send(HttpStatusCode.SUCCESS, "application/json", res.toString());
+                    }
+                });
+            }
+        });
+
         router.post("/old_pwsubmit").handler(new RequestHandler(true, "passwd") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
@@ -357,7 +383,7 @@ public class WebdroidRouterFactory {
         router.post("/new_pwsubmit").handler(new RequestHandler(true, "new_pw") {
             @Override
             public void reqRecvParams(Map<String, Object> params) {
-                JsonArray dbParams = JsonUtil.createJsonArray( params.get("new_pw"),session.get("id") );
+                JsonArray dbParams = JsonUtil.createJsonArray(params.get("new_pw"), session.get("id"));
                 mDBConnector.update(Query.NEW_PW, dbParams,
                         new SQLResultHandler<UpdateResult>(this) {
                             @Override
