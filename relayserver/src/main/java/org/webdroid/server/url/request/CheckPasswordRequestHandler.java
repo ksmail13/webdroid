@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class CheckPasswordRequestHandler extends RequestHandler {
 
-    public static final String URL = "/old_pwsubmit";
+    public static final String URL = "/pwvalidate";
 
     public CheckPasswordRequestHandler(DBConnector dbConnector) {
         super(dbConnector, true, "old_pw");
