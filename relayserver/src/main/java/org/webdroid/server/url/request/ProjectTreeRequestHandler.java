@@ -1,6 +1,5 @@
 package org.webdroid.server.url.request;
 
-import org.webdroid.db.DBConnector;
 import org.webdroid.server.handler.RequestHandler;
 import org.webdroid.util.JqueryFileTree;
 
@@ -14,12 +13,12 @@ public class ProjectTreeRequestHandler extends RequestHandler {
     public static final String URL = "/make_filetree";
 
     public ProjectTreeRequestHandler() {
-        super(null, false, "dir");
+        super(null, false, "dir", "root");
     }
 
     @Override
     public void handlingWithParams(Map<String, Object> params) {
         res.setChunked(true);
-        res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"))).end();
+        res.write(JqueryFileTree.createHtmlRes(req.getParam("dir"),req.getParam("root"))).end();
     }
 }

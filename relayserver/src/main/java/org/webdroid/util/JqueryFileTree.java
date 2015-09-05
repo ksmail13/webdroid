@@ -1,19 +1,19 @@
 package org.webdroid.util;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.util.Arrays;
 
 /**
  * Created by Seho on 2015-08-30.
  */
 public class JqueryFileTree {
-    public static String createHtmlRes(String dir){
+    public static String createHtmlRes(String dir, String root){
         if (dir == null) {
             return "";
         }
 
         String htmlRes = "";
+        String subRoot = dir.substring(root.length());
 
         if (dir.charAt(dir.length()-1) == '\\') {
             dir = dir.substring(0, dir.length()-1) + "/";
@@ -34,7 +34,7 @@ public class JqueryFileTree {
             // All dirs
             for (String file : files) {
                 if (new File(dir, file).isDirectory()) {
-                    htmlRes += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + file + "/\">"
+                    htmlRes += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + subRoot + file + "/\">"
                             + file + "</a></li>";
                 }
             }
@@ -43,7 +43,7 @@ public class JqueryFileTree {
                 if (!new File(dir, file).isDirectory()) {
                     int dotIndex = file.lastIndexOf('.');
                     String ext = dotIndex > 0 ? file.substring(dotIndex + 1) : "";
-                    htmlRes += "<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + file + "\">"
+                    htmlRes += "<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + subRoot + file + "\">"
                             + file + "</a></li>";
                 }
             }
@@ -51,5 +51,31 @@ public class JqueryFileTree {
         }
 
         return htmlRes;
+    }
+
+    public static String openFileFromTree(String filepath){
+        if(filepath.endsWith(".java") || filepath.endsWith(".xml")) {
+
+            String innerText = "";
+            String p_path = "/Users/Owner/Documents/webdroid_IDE/";
+
+
+            try {
+                BufferedReader in = new BufferedReader(new FileReader(p_path + filepath));
+                String s;
+
+                while ((s = in.readLine()) != null) {
+                    innerText += s + "\n";
+                }
+                in.close();
+
+            } catch (IOException e) {
+                System.err.println(e);
+                System.exit(1);
+            }
+
+            return innerText;
+        }
+        return null;
     }
 }

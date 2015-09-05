@@ -33,15 +33,21 @@ public class UserProjectListPageHandler extends PageHandler {
         context.put("name", session.get("name"));
         JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
 
+
+        context.put("pid",req.getParam("pid"));
+        context.put("ppath",req.getParam("ppath"));
+
+        rendering(templateEngine, WebdroidConstant.Path.HTML + "/projectview");
+        /*
         mDBConnector.query(Query.MY_PROJECT, params, new SQLResultHandler<ResultSet>(this) {
             @Override
             public void success(ResultSet resultSet) {
-                List<JsonObject> resultList = resultSet.getRows();
+                //List<JsonObject> resultList = resultSet.getRows();
 
-                context.put("projects", resultList);
+                //context.put("projects", resultList);
 
-                rendering(templateEngine, WebdroidConstant.Path.HTML + "/projectview");
+
             }
-        });
+        });*/
     }
 }

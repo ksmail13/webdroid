@@ -136,6 +136,8 @@ public class WebdroidRouterFactory {
         // get project files handler
         router.route(ProjectTreeRequestHandler.URL).handler(new ProjectTreeRequestHandler());
 
+        router.route(EditorFileOpenRequestHandler.URL).handler(new EditorFileOpenRequestHandler());
+
 
         router.post(PasswordInitRequestHandler.URL).handler(new PasswordInitRequestHandler(mDBConnector));
 

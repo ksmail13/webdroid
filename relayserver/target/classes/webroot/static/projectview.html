@@ -26,13 +26,15 @@
     <!--include commonnavbar-->
     <div class='container-fluid'>
     	<div class='row'>
-    		<div class='col-xs-2 tree_wrap' id='projectTree'> <!--file tree column-->
+    		<div class='col-xs-3 tree_wrap' id='projectTree'> <!--file tree column-->
     		</div>
-    		<div class='col-xs-10'> <!--code editor & logcat-->
-    			<div class='row' id='editor'> <!--code editor-->
+    		<div class='col-xs-9'> <!--code editor & logcat-->
+    			<div class='row'> <!--code editor row-->
+            <div class='col-xs-12' id='editor'>
+            </div>
     			</div>
-    			<div class='row'> <!--logcat-->
-    				<div class='navbar navbar-fixed-bottom'>
+    			<div class='row'> <!--logcat row-->
+    				<div class='col-xs-12 navbar navbar-fixed-bottom'>
     				</div>
     			</div>
     		</div>
@@ -54,7 +56,12 @@
 		resizeBrowser();
 
 		$(document).ready( function(){
-      $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {});
+      $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
+        requestAysnc('/openfile','post',{filepath: file}, function(data) {
+          editor.setValue(data);
+          editor.gotoLine(1);
+        }, function(){});
+      });
 		});
 	</script>
 

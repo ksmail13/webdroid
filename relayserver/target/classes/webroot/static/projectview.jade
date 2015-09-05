@@ -12,19 +12,21 @@ html(ng-app='')
     include commonnavbar
     .container-fluid
       .row
-        #projectTree.col-xs-2.tree_wrap
+        #projectTree.col-xs-3.tree_wrap
           // file tree column
-        .col-xs-10
+        .col-xs-9
           // code editor & logcat
-          #editor.row
-            // code editor
           .row
-            // logcat
-            .navbar.navbar-fixed-bottom
+            // code editor row
+            #editor.col-xs-12
+          .row
+            // logcat row
+            .col-xs-12.navbar.navbar-fixed-bottom
       script.
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/java");
+        editor.setValue();
         function resizeBrowser() {
         return $('#editor').height($(window).height()/100*85)
         ,$('#projectTree').height($(window).height()/100*85);
@@ -32,5 +34,10 @@ html(ng-app='')
         $(window).resize(resizeBrowser);
         resizeBrowser();
         $(document).ready( function(){
-        $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {});
+        $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
+        requestAysnc('/openfile','post',{filepath: file}, function(data) {
+        editor.setValue(data);
+        editor.gotoLine(1);
+        }, function(){});
+        });
         });
