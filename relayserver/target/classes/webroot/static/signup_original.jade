@@ -3,10 +3,15 @@ doctype html
 head
   include commonheader
   link(rel='stylesheet', href='./css/welcome.css', type='text/css')
+  
   script.
+    var isClick = false;
+    
     $(document).ready(function () {
-            
+      
       $('#frm-signup').submit(function() {
+        
+        if(isClick){
           return formRequest('#frm-signup', 
               function(data){
                 if(data.result){
@@ -17,14 +22,36 @@ head
               },
               function(error){modalAlert("회원가입","서버에러", function(){});}
           );
-        });
+        }
+        
+        else{
+          modalAlert("아이디 중복체크", '아이디 중복체크를 해주세요', function() {});
+          return false;
+        }
+      });
         
       $('[data-toggle="tooltip"]').tooltip(); 
       
-      $('#idcheck').on('click', function (e) {
-        //
-      })
+      $('#idcheck').click( function () {
+        if($("#txt-in-user-id").val()=='')
+          modalAlert("아이디 체크", "아이디를 입력해주세요", function(){});
+        else
+          requestAysnc('/idcheck', 'post', {'user_id':$("#txt-in-user-id").val ()}, idSuccess, idFailed);
+      });
+      
+      function idSuccess(result) {
+        if(result.result) {
+          modalAlert('아이디 중복체크', '사용하실 수 있는 아이디 입니다.',function(){});
+          isClick = true;
+        }
+        else
+          modalAlert('아이디 중복체크', '이미 사용중인 아이디 입니다 <br> 다시 입력해 주세요.',function(){});  
+      }
 
+      function idFailed(result) {
+        modalAlert('실패','실패',function(){});
+      }
+      
     });
     
 include commonnavbar 
@@ -33,11 +60,11 @@ include commonnavbar
     h3 가입하기
     h5 간단한 회원가입 후 , 웹드로이드를 즐겨보세요!
     hr
-    form#frm-signup(action="/api/signup", method='post')
+    form#frm-signup(action="/signup", method='post')
       .form-group
         .input-group
           label.sr-only(for='txt-in-user-id') Email address
-          input#txt-in-user-id.form-control.input-lg(type='email', name='user-id', placeholder='Email')
+          input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
           .input-group-addon
             button#idcheck(type='button')
               span.glyphicon.glyphicon-ok(aria-hidden='true', data-toggle='tooltip', title='ID 중복확인')

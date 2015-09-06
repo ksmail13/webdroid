@@ -81,8 +81,7 @@ public class Query {
             "where id=?;";
 
     public final static String ID_CHECK=
-            "SELECT passwd\n"+
+            "SELECT count(*) as cnt\n"+
             "FROM user \n"+
-            "where id=?;";
-
+            "WHERE id = ?";
 }
