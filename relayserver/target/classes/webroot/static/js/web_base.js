@@ -177,7 +177,13 @@ function validString(variable) {
 //**************************확인alert****************************************//
 
 function modalAlert(title, msg, callback) {
+    try{
     msg = msg.replace(/\n/gi, '<br />');
+    } catch(e) {
+        if(console) {
+            console.log(e);
+        }
+    }
     var myHTML ='<div class="modal-back-dark modal-alert-back ">';
         myHTML += '<div class="modal-dialog modal-alert screen-center" role="alert"><div class="modal-content">';
 

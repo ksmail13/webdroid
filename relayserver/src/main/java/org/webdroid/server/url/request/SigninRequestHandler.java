@@ -50,8 +50,9 @@ public class SigninRequestHandler extends RequestHandler {
                     session.put("id", userInfo.getInteger("u_id"));
                     session.put("name", userInfo.getString("name"));
 
-                    //sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
-                    redirectTo("/projectmain");
+                    sendJsonResult(HttpStatusCode.SUCCESS, true,ResultMessage.SIGNED_IN);
+                    //redirectTo("/projectmain");
+
 
                 } else {
                     sendJsonResult(HttpStatusCode.SUCCESS, false,
