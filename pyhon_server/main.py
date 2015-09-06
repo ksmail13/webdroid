@@ -1,6 +1,6 @@
 import os
-#from controller.AdbController import AdbController
-#from controller.VirtualBoxController import VirtualBoxController
+from controller.AdbController import AdbController
+from controller.VirtualBoxController import VirtualBoxController
 
 from controller.VmSocket import VmSocket
 
@@ -8,17 +8,17 @@ __author__ = 'admin'
 
 
 def main():
-    """
+
     mVirtualBoxController = VirtualBoxController()
-    mVirtualBoxController.checkAllMachines()
+    #mVirtualBoxController.checkAllMachines()
     machine = mVirtualBoxController.findMachine("user1")
     #mVirtualBoxController.createMachine("user1")
     mVirtualBoxController.getSession()
     mVirtualBoxController.makeProcess(machine)
     mVirtualBoxController.closeSession()
 
-
-    mAdbController = AdbController("10.0.2.15/24","","5557")
+    """
+    mAdbController = AdbController("10.0.2.15/24","","5555")
 
     mAdbController.killServer()
 
@@ -32,13 +32,13 @@ def main():
     else :
         print 'Connect Devices False!!' + '\n'
     mAdbController.checkConnectDevices()
-    """
 
-    mVmSocket = VmSocket("211.243.108.135",5555)
+
+    mVmSocket = VmSocket("211.243.108.156",5554)
     mVmSocket.bindSocket()
     mVmSocket.recvData()
     mVmSocket.closeSocket()
-
+    """
 
 if __name__ == "__main__" :
     try :

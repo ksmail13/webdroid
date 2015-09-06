@@ -1,12 +1,12 @@
 from vboxapi import VirtualBoxManager
-from virtualbox.library import VBoxErrorObjectNotFound
+#from virtualbox.library import VBoxErrorObjectNotFound
 import pywintypes
-import win32com
+#import win32com
 
 __author__ = 'admin'
 
 class VirtualBoxController :
-    machineName = "Android-x86"
+    machineName = "android_x86"
 
     def __init__(self) :
         self.mgr = VirtualBoxManager(None,None)

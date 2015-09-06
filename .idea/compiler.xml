@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://C:/Program Files/Java/jdk1.8.0_51" includeSubdirectories="true" />
+      <directory url="file://C:/Program Files/Java/jdk1.7.0_25" includeSubdirectories="true" />
+    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -18,5 +22,6 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>
