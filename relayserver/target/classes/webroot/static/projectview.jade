@@ -4,40 +4,82 @@ html(ng-app='')
     include commonheader
     title
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js')
-    script(src='http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ext-modelist.js')
+    script(src='js/jquery.layout-1.4.1.js')
+    script(src='js/jquery.ui.all.js')
     script(src='js/jqueryFileTree.js', type='text/javascript')
+    link(rel='stylesheet', href='css/layout-default-latest.css', type='text/css')
     link(rel='stylesheet', href='css/projectview.css', type='text/css')
     link(href='css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
   body
-    include commonnavbar
-    .container-fluid
-      .row
-        #projectTree.col-xs-3.tree_wrap
-          // file tree column
-        .col-xs-9
-          // code editor & logcat
-          .row
-            // code editor row
-            #editor.col-xs-12
-          .row
-            // logcat row
-            .col-xs-12.navbar.navbar-fixed-bottom
-      script.
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/java");
-        editor.setValue();
-        function resizeBrowser() {
-        return $('#editor').height($(window).height()/100*85)
-        ,$('#projectTree').height($(window).height()/100*85);
-        };
-        $(window).resize(resizeBrowser);
-        resizeBrowser();
-        $(document).ready( function(){
-        $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
-        requestAysnc('/openfile','post',{filepath: file}, function(data) {
-        editor.setValue(data);
-        editor.gotoLine(1);
-        }, function(){});
-        });
-        });
+    .ui-layout-center
+      // code editor & logcat
+      #editor
+      button#playbtn.btn.btn-success
+        span.glyphicon.glyphicon-play  Run
+    .ui-layout-north
+      include commonnavbar
+    .ui-layout-west
+      // file tree column
+      #projectTree.tree_wrap
+    script.
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.getSession().setMode("ace/mode/text");
+      editor.setReadOnly(true);
+      var modelist = ace.require("ace/ext/modelist");
+      function resizeBrowser() {
+      return $('#editor').height($(window).height()/100*85)
+      ,$('#projectTree').height($(window).height()/100*85);
+      };
+      $(window).resize(resizeBrowser);
+      resizeBrowser();
+      $("#playbtn").click( function(){
+      //alert('button clicked');
+      requestAysnc('/run_vm', 'post', { command:"run_vm" }, null, null);
+      });
+      $(document).ready( function(){
+      $("body").layout( {
+      defaults: {
+      size:                   "auto"
+      ,   contentSelector:        ".content"  // inner div to auto-size so only it scrolls, not the entire pane!
+      ,   contentIgnoreSelector:  "span"      // 'paneSelector' for content to 'ignore' when measuring room for content
+      ,   togglerLength_open:     35          // WIDTH of toggler on north/south edges - HEIGHT on east/west edges
+      ,   togglerLength_closed:   35          // "100%" OR -1 = full height
+      ,   hideTogglerOnSlide:     false        // hide the toggler when pane is 'slid open'
+      ,   togglerTip_open:        "Close This Pane"
+      ,   togglerTip_closed:      "Open This Pane"
+      ,   resizerTip:             "Resize This Pane"
+      //  effect defaults - overridden on some panes
+      ,   fxName:                 "slide"     // none, slide, drop, scale
+      ,   fxSpeed_open:           750
+      ,   fxSpeed_close:          1500
+      ,   fxSettings_open:        { easing: "easeInQuint" }
+      ,   fxSettings_close:       { easing: "easeOutQuint" }
+      }
+      ,
+      north: {
+      spacing_open:           0           // cosmetic spacing
+      ,   togglerLength_open:     0           // HIDE the toggler button
+      ,   togglerLength_closed:   -1          // "100%" OR -1 = full width of pane
+      ,   resizable:              false
+      ,   slidable:               false
+      ,   fxName:                 "none"
+      }
+      ,   west: {
+      size:                   .22
+      ,   spacing_closed:         2
+      ,   togglerLength_closed:   -1
+      ,   resizable:              true
+      ,   slidable:               false
+      }
+      });
+      $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
+      requestAysnc('/openfile','post',{filepath: file}, function(data) {
+      editor.getSession().setMode(modelist.getModeForPath(file).mode);
+      editor.setValue(data);
+      editor.gotoLine(1);
+      }, function(){});
+      });
+      });

@@ -1,4 +1,4 @@
-from PIL import Image
+#from PIL import Image
 from collections import namedtuple
 import socket
 import io
