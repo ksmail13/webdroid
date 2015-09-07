@@ -68,9 +68,13 @@ function formRequest(frm, success, failed) {
 function isTextInput(typeStr) {
     var inputType = ['text', 'email', 'password', 'phone'];
     
+    
+    if(!isValid(typeStr))
+      return true;
+  
     for(var i=0;i<4;i++) {
-        if(inputType[i] == typeStr.toLowerCase())
-            return true;
+      if(inputType[i] == typeStr.toLowerCase())
+          return true;
     }
     
     return false;

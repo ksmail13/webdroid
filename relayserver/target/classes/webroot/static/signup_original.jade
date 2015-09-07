@@ -3,56 +3,8 @@ doctype html
 head
   include commonheader
   link(rel='stylesheet', href='./css/welcome.css', type='text/css')
-  
-  script.
-    var isClick = false;
-    
-    $(document).ready(function () {
+  script(src='./js/signuptest.js')
       
-      $('#frm-signup').submit(function() {
-        
-        if(isClick){
-          return formRequest('#frm-signup', 
-              function(data){
-                if(data.result){
-                  modalAlert("회원가입", '회원가입이 완료되었습니다.<br>로그인 후 웹드로이드를 즐겨보세요!', function() {location.href = '/';}); 
-                }
-                else
-                  modalAlert("회원가입", '회원가입에 실패했습니다 .<br>다시 가입해주세요', function() {});
-              },
-              function(error){modalAlert("회원가입","서버에러", function(){});}
-          );
-        }
-        
-        else{
-          modalAlert("아이디 중복체크", '아이디 중복체크를 해주세요', function() {});
-          return false;
-        }
-      });
-        
-      $('[data-toggle="tooltip"]').tooltip(); 
-      
-      $('#idcheck').click( function () {
-        if($("#txt-in-user-id").val()=='')
-          modalAlert("아이디 체크", "아이디를 입력해주세요", function(){});
-        else
-          requestAysnc('/idcheck', 'post', {'user_id':$("#txt-in-user-id").val ()}, idSuccess, idFailed);
-      });
-      
-      function idSuccess(result) {
-        if(result.result) {
-          modalAlert('아이디 중복체크', '사용하실 수 있는 아이디 입니다.',function(){});
-          isClick = true;
-        }
-        else
-          modalAlert('아이디 중복체크', '이미 사용중인 아이디 입니다 <br> 다시 입력해 주세요.',function(){});  
-      }
-
-      function idFailed(result) {
-        modalAlert('실패','실패',function(){});
-      }
-      
-    });
     
 include commonnavbar 
 .row
@@ -68,15 +20,17 @@ include commonnavbar
           .input-group-addon
             button#idcheck(type='button')
               span.glyphicon.glyphicon-ok(aria-hidden='true', data-toggle='tooltip', title='ID 중복확인')
-
+    
       .form-group
-        label.sr-only(for='txt_in_user_name') Name
-        input#txt_in_user_id.form-control.input-lg(type='name', name='user_name', placeholder='이름')
-      .form-group
-        label.sr-only(for='txt-in-user-pw') Password
-        input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password')
-      .form-group
-        label.sr-only(for='txt-in-user-pw-re') Password repeat
-        input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat')
+        label.sr-only(for='txt-in-user-name') Name
+        input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='이름')
+      
+      .pwcheck
+        .form-group
+          label.sr-only(for='txt-in-user-pw') Password
+          input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password')
+        .form-group
+          label.sr-only(for='txt-in-user-pw-re') Password repeat
+          input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat')
       .form-group.col-md-4.col-md-offset-4
         input.login-btn.btn-lg.btn-default.padding5#signup_original(type='submit', value='Sign Up')
