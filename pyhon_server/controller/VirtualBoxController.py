@@ -8,17 +8,17 @@ __author__ = 'admin'
 class VirtualBoxController :
     machineName = "android_x86"
 
-    def __init__(self) :
+    def __init__(self,userName) :
         self.mgr = VirtualBoxManager(None,None)
         self.vbox = self.mgr.vbox
-
+        self.userName = userName
     def createMachine(self,userName) :
         exMachine = self.vbox.findMachine(self.machineName)
         result = self.vbox.createMachine("",self.machineName + "_" + userName,None,'Linux',"")
         #result.setSettingsFilePath(exMachine.settingsFilePath)
         print "'%s" %(result)
 
-    def findMachine(self,userName) :
+    def findMachine(self) :
         try :
             mach = self.vbox.findMachine(self.machineName)
             #mach = self.vbox.findMachine(self.machineName + "_" + userName)
