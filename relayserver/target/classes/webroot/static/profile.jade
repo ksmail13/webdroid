@@ -21,29 +21,25 @@ include commonnavbar
 .container
   .padding10
     .row
-      .col-sm-2.col-md-2
+      .col-xs-12.col-sm-4
         span.glyphicon.glyphicon-user
         |  My profile 
         .profile-pic.padding5
           .row
-            img.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')
-            span.glyphicon.glyphicon-cog(data-toggle='modal', data-target='#myprofile')
-      .col-sm-3.col-md-3
-        .profile-pro.padding5
-          .row
-            .panel-body
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('name')}
-            .panel-body
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_id')}
-            .panel-body
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_git_id')}
-            .panel-body
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_introduce')}
-              span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
+            img.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')       
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('name')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_id')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_git_id')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_introduce')}
+            span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
               // Modal
               #myprofile.modal.fade
                 .modal-dialog
@@ -63,36 +59,26 @@ include commonnavbar
                   // modalcontent
                 // modal dialog
               // modal fade
-      .col-sm-7.col-md-7
-        .padding5
-          span.glyphicon.glyphicon-list
-          |  My project
-          .row
-            ul.project-list.nav.nav-tabs(role='tablist')
-              li.active
-                a(href='#private', role='tab', data-toggle='tab') Private
-              li
-                a(href='#public', role='tab', data-toggle='tab') Public
-            // Tab panes
-            .tab-content
-              #private.tab-pane.fade.active.in
-                .project-name.col-sm-7.col-md-7
-                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                  a(href='#') 앱1
-                .project-name.col-sm-7.col-md-7
-                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                  a(href='#') 앱2
-                .project-name.col-sm-7.col-md-7
-                  img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                  a(href='#') 앱3
-              #public.tab-pane.fade
-                ul.list.list-public
-                  .project-name.col-sm-7.col-md-7
-                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                    a(href='#') 앱1
-                  .project-name.col-sm-7.col-md-7
-                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                    a(href='#') 앱2
-                  .project-name.col-sm-7.col-md-7
-                    img.img-circle(src='images/apple-touch-icon@2.png', alt='Cinque Terre', width='30', height='30')
-                    a(href='#') 앱3
+      .col-xs-12.col-sm-8
+        .padding5.row
+          ul
+            li
+              h2.section-title
+                span.glyphicon.glyphicon-star
+                |  즐겨찾기
+            li
+              #dv-favorate.row     
+            li
+              .row
+                .col-sm-8.col-md-8.col-lg-8
+                  h2.section-title
+                    span.glyphicon.glyphicon-option-horizontal
+                    |  내 프로젝트
+                .col-sm-4.col-md-4.col-lg-4.text-right
+                  .blank20
+                  .btn-toolbar(role='toolbar', style='display:inline-block;')
+                    .btn-group(role='group')
+                      a#btn-plus.btn.btn-default
+                        span.glyphicon.glyphicon-plus
+            li
+              #dv-projectlist.row
