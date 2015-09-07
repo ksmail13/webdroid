@@ -31,9 +31,9 @@ $(document).ready(function(){
   /////////////////비밀번호 변경////////////////////////
     var old_pw_modal_option={
       title:'비밀번호 변경',
-      form:{action:'/old_pwsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': pw_frmfailed},
+      form:{action:'/pwvalidate', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'}],
-      buttons:[{'id':'old_pwsubmit', text:'비밀번호 확인',actiontype:'submit'}]
+      buttons:[{'id':'pwvalidate', text:'비밀번호 확인',actiontype:'submit'}]
     };
     
     var new_pw_modal_option={
@@ -48,7 +48,7 @@ $(document).ready(function(){
     
     function pw_frmsuccess(result){
       if(result.result) {
-        $("#old_pwsubmit").common_modal_box(new_pw_modal_option);
+        $("#pwvalidate").common_modal_box(new_pw_modal_option);
       } else {
         modalAlert('확인 실패', result.message);
       }
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
     var member_modal_option={
       title:'회원을 탈퇴하시겠습니까? ',
-      form:{action:'/unsubscribe', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': pw_frmfailed},
+      form:{action:'/pwvalidate', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'old_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password'}],
       buttons:[{'type':'success','id':'membersubmit', text:'탈퇴하기', actiontype:'submit'}]
     };

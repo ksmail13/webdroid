@@ -28,4 +28,7 @@ public class ResultMessage {
     public  static  final String SET_RANDOM_PW = "password set";
     public  static  final String SET_RANDOM_PW_FAIL = "password set fail";
     public static final String IRRAGULAR_ACCESS = "irregularity access";
+
+    public  static  final String ID_CHECK = "available ID";
+    public  static  final String ID_CHECK_ERROR = "already used ID";
 }

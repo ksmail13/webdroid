@@ -8,13 +8,13 @@ body {background-color: #282828 !important;}
 	border-right: solid 1px #FFF;
 	background: #FFF;
 	overflow: scroll;
-	padding: 5px;
+	padding: 0px;
 }
 
 ::-webkit-scrollbar
 {
-  width: 12px;  /* for vertical scrollbars */
-  height: 12px; /* for horizontal scrollbars */
+  width: 12px;  // for vertical scrollbars
+  height: 12px; // for horizontal scrollbars
 }
 
 ::-webkit-scrollbar-track

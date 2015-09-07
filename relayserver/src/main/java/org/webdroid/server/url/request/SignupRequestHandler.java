@@ -35,8 +35,8 @@ public class SignupRequestHandler extends RequestHandler{
             @Override
             public void success(UpdateResult result) {
                 if (result.getUpdated() > 0) {
-                    //sendJsonResult(200, true, ResultMessage.PW_CHECKED);
-                    redirectTo("/");
+                    sendJsonResult(200, true, ResultMessage.PW_CHECKED);
+                    //redirectTo("/");
                 } else
                     sendJsonResult(200, false, ResultMessage.PW_FAIL);
             }

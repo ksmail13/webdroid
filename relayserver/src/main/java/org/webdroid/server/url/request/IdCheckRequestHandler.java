@@ -19,7 +19,7 @@ public class IdCheckRequestHandler extends RequestHandler {
     public static final String URL = "/idcheck";
 
     public IdCheckRequestHandler(DBConnector dbConnector) {
-        super(dbConnector, true, "user_id");
+        super(dbConnector, false, "user_id");
     }
 
     @Override
@@ -30,11 +30,10 @@ public class IdCheckRequestHandler extends RequestHandler {
             @Override
             public void success(ResultSet resultSet) {
 
-                if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
-                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
-
+                if (resultSet.getRows().get(0).getInteger("cnt") == 0) {
+                    sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.ID_CHECK);
                 } else {
-                    sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);
+                    sendJsonResult(HttpStatusCode.SUCCESS, false    , ResultMessage.ID_CHECK_ERROR);
                 }
             }
         });

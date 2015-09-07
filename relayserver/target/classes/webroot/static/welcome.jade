@@ -2,6 +2,8 @@ doctype html
 head
   include commonheader
   link(rel='stylesheet', href='./css/welcome.css', type='text/css')
+  script(src='./js/signuptest.js')
+  
   script.
     $(document).ready(function () {
     var isSavedId = getCookie('saveId');
@@ -101,16 +103,20 @@ body
                 h4 가입하기
               form#frm-signup(action='/signup', method='post')
                 .form-group
-                  label.sr-only(for='txt-in-user-id') Email address
-                  input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
+                  .input-group
+                    label.sr-only(for='txt-in-user-id') Email address
+                    input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email', knownname='이메일')
+                    .input-group-addon
+                      button#idcheck(type='button')
+                        span.glyphicon.glyphicon-ok(aria-hidden='true', data-toggle='tooltip', title='ID 중복확인')
                 .form-group
-                  label.sr-only(for='txt_in_user_name') Name
-                  input#txt_in_user_id.form-control.input-lg(type='name', name='user_name', placeholder='이름')
+                  label.sr-only(for='txt-in-user-name') Name
+                  input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='이름',knownname='이름')
                 .form-group
                   label.sr-only(for='txt-in-user-pw') Password
-                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password')
+                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password', knownname='비밀번호')
                 .form-group
                   label.sr-only(for='txt-in-user-pw-re') Password repeat
-                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat')
+                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat',knownname='비밀번호 확인')
                 .form-group
                   input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign Up')

@@ -1,31 +1,16 @@
 package org.webdroid.server;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.ResultSet;
-import io.vertx.ext.sql.UpdateResult;
-import io.vertx.ext.web.Cookie;
-import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
-import io.vertx.ext.web.templ.JadeTemplateEngine;
-import org.webdroid.constant.*;
-import org.webdroid.server.handler.PageHandler;
-import org.webdroid.server.handler.RequestHandler;
+import org.webdroid.constant.ServerConfigure;
+import org.webdroid.constant.WebdroidConstant;
 import org.webdroid.db.DBConnector;
-import org.webdroid.server.handler.RouteHandler;
 import org.webdroid.server.url.page.*;
 import org.webdroid.server.url.request.*;
-import org.webdroid.util.JsonUtil;
-import org.webdroid.util.JqueryFileTree;
-import org.webdroid.db.SQLResultHandler;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Router for page route
@@ -44,6 +29,7 @@ public class WebdroidRouterFactory {
      */
     public static Router createRouter(Vertx vertx, DBConnector dbConnector) {
         WebdroidRouterFactory router = new WebdroidRouterFactory(vertx, dbConnector);
+        router.vertx = vertx;
         router.initBasicRouterhandler(vertx);
         router.initStaticResource();
         router.pageRoute();
@@ -51,7 +37,7 @@ public class WebdroidRouterFactory {
 
         return router.getRouter();
     }
-
+    private Vertx vertx = null;
     private Router router = null;
 
     /**
@@ -122,7 +108,7 @@ public class WebdroidRouterFactory {
         router.post(IntroduceUpdateRequestHandler.URL).handler(new IntroduceUpdateRequestHandler(mDBConnector));
 
         // user image upload handler
-        router.post(UserImageUploadReqeustHandler.URL).handler(new UserImageUploadReqeustHandler(mDBConnector));
+        router.post(UserImageUploadReqeustHandler.URL).handler(new UserImageUploadReqeustHandler(mDBConnector, vertx));
 
         // check password handler
         router.post(CheckPasswordRequestHandler.URL).handler(new CheckPasswordRequestHandler(mDBConnector));
@@ -138,6 +124,7 @@ public class WebdroidRouterFactory {
 
         router.route(EditorFileOpenRequestHandler.URL).handler(new EditorFileOpenRequestHandler());
 
+        router.route(RunProjectRequestHandler.URL).handler(new RunProjectRequestHandler(vertx));
 
         router.post(PasswordInitRequestHandler.URL).handler(new PasswordInitRequestHandler(mDBConnector));
 

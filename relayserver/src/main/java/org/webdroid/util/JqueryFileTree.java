@@ -54,11 +54,8 @@ public class JqueryFileTree {
     }
 
     public static String openFileFromTree(String filepath){
-        if(filepath.endsWith(".java") || filepath.endsWith(".xml")) {
-
             String innerText = "";
             String p_path = "/Users/Owner/Documents/webdroid_IDE/";
-
 
             try {
                 BufferedReader in = new BufferedReader(new FileReader(p_path + filepath));
@@ -75,7 +72,12 @@ public class JqueryFileTree {
             }
 
             return innerText;
-        }
-        return null;
     }
+
+    /*public static String fileExt(String filepath){
+        String filename = filepath.substring(filepath.lastIndexOf("/")+1);
+        String ext = filename.substring(filename.lastIndexOf(".")+1);
+
+        return ext;
+    }*/
 }
