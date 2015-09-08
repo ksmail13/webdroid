@@ -1,16 +1,26 @@
 var isClick = false;
-$('[data-toggle="tooltip"]').tooltip(); 
+
+$('[data-toggle="tooltip"]').tooltip();
+
 
 $(document).ready(function () {
 
   $('#frm-signup').submit(function() {
 
     if(isClick){
-      return formRequest('#frm-signup', 
+      if($("#txt-in-user-pw").val() != $("#txt-in-user-pw-re").val()){
+        modalAlert("비밀번호 오류", '비밀번호가 맞지 않습니다 .<br>다시 확인해주세요', function() {});
+        return false;
+      }
+      
+      else{
+        return formRequest('#frm-signup', 
         function(data){
-          if(data.result && $("#txt-in-user-name").val()!='' && $("#txt-in-user-pw").val()!='' && $("#txt-in-user-pw-re").val()!='' &&$("#txt-in-user-pw").val() === $("#txt-in-user-pw-re").val() ){
-            modalAlert("회원가입", '회원가입이 완료되었습니다.<br>로그인 후 웹드로이드를 즐겨보세요!', function() {location.href = '/';}); 
+          
+          if(data.result && $("#txt-in-user-name").val()!='' && $("#txt-in-user-pw").val()!='' && $("#txt-in-user-pw-re").val()!='' ){
+            modalAlert("회원가입", '회원가입이 완료되었습니다.<br>로그인 후 웹드로이드를 즐겨보세요!', function() {location.href = '/';});     
           }
+        
           else{
             modalAlert("회원가입", '회원가입에 실패했습니다 .<br>다시 가입해주세요', function() {});
             return false;
@@ -18,7 +28,9 @@ $(document).ready(function () {
         },
 
         function(error){modalAlert("회원가입","서버에러", function(){});}
-    );
+      );
+      }
+      
     }
 
     else{
@@ -48,21 +60,9 @@ $(document).ready(function () {
 
   function idFailed(result) {
     modalAlert('실패','실패',function(){});
-  }
+  }  
   
-  $("#signup_original").submit(function() {
-    var inputVal = $("#txt-in-user-pw").val();
-    $(document).trigger("clear-alert-id.example");
-    if (inputVal.length < 8) {
-      $(document).trigger("set-alert-id-example", 
-        {
-          message: "비밀번호를 8자 이상 입력해주세요",
-          priority: "error"
-        }
-        
-      );
-    }
-  });
+ 
   
   
 });
