@@ -12,6 +12,7 @@ class VirtualBoxController :
         self.mgr = VirtualBoxManager(None,None)
         self.vbox = self.mgr.vbox
         self.userName = userName
+
     def createMachine(self,userName) :
         exMachine = self.vbox.findMachine(self.machineName)
         result = self.vbox.createMachine("",self.machineName + "_" + userName,None,'Linux',"")
@@ -20,11 +21,12 @@ class VirtualBoxController :
 
     def findMachine(self) :
         try :
-            mach = self.vbox.findMachine(self.machineName)
+            mach = self.vbox.findMachine(self.machineName + "_" + self.userName)
             #mach = self.vbox.findMachine(self.machineName + "_" + userName)
             return mach
         except pywintypes.com_error :
             print "WRONG MACHINE NAME"
+
 
     def checkAllMachines(self) :
         for machines in self.mgr.getArray(self.vbox,'machines') :
