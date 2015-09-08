@@ -14,12 +14,17 @@ import java.util.Optional;
  */
 public class SocketServer extends WebdroidVerticle {
 
+    private final static int PY_PORT = 1112;
+    private final static String PY_IP = "192.168.56.1";
     NetClient netClient;
     Optional<NetSocket> socket = Optional.empty();
+    private boolean frameBufferRecvState = false;
+    private String frameBufferRecved = "";
+
     public void start(){
         EventBus eb = vertx.eventBus();
         netClient = vertx.createNetClient();
-        netClient.connect(1113, "211.243.108.156", this::connectHandler);
+        netClient.connect(PY_PORT, PY_IP, this::connectHandler);
         eb.consumer("socket", this::vmEventHandler);
     }
 
@@ -45,16 +50,29 @@ public class SocketServer extends WebdroidVerticle {
     }
 
     private void recvHandler(Buffer buffer) {
-        if(buffer.toString().equals("success")){
+        if(frameBufferRecvState){
+            if(buffer.toString().startsWith("frame_buffer_end")){
+                frameBufferRecvState = false;
+                System.out.println(buffer);
+                System.out.println(frameBufferRecved);
+                vertx.eventBus().send("frameBuffer", frameBufferRecved);
+            }else {
+                frameBufferRecved += buffer.toString();
+            }
+        }else if (buffer.toString().equals("run_vm_success")){
             socket.ifPresent(sock -> sock.write("install_apk" + "#abc"));
-            System.out.println("send install_apk success");
-        }else{
-            System.out.println(buffer);
+            System.out.println("send install_apk done");
+        }else if(buffer.toString().startsWith("install_apk_")){
+            socket.ifPresent(sock -> sock.write("get_frame_buffer"));
+            System.out.println("send get_frame_buffer done");
+        }else if(buffer.toString().startsWith("frame_buffer_start")){
+            frameBufferRecvState = true;
+            System.out.println("frame_buffer_start");
         }
     }
 
     private void vmEventHandler(Message<Object> objectMessage) {
-        System.out.println(objectMessage.body()); // "run_vm"
+        System.out.println(objectMessage.body()); // "run_vm@userId"
         socket.ifPresent(sock -> sock.write(objectMessage.body().toString()));
 
     }

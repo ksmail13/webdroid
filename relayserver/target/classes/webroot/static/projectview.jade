@@ -15,9 +15,10 @@ html(ng-app='')
   body
     .ui-layout-center
       // code editor & logcat
-      #editor
       button#playbtn.btn.btn-success
         span.glyphicon.glyphicon-play  Run
+      canvas#imgRecvTester(width='500', height='500')
+      #editor
     .ui-layout-north
       include commonnavbar
     .ui-layout-west
@@ -25,6 +26,7 @@ html(ng-app='')
       #projectTree.tree_wrap
     script.
       var editor = ace.edit("editor");
+      var frameBuffer = new Image();
       editor.setTheme("ace/theme/monokai");
       editor.getSession().setMode("ace/mode/text");
       editor.setReadOnly(true);
@@ -37,7 +39,15 @@ html(ng-app='')
       resizeBrowser();
       $("#playbtn").click( function(){
       //alert('button clicked');
-      requestAysnc('/run_vm', 'post', { command:"run_vm" }, null, null);
+      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data.frameBuffer){
+      console.log("run btn success function start");
+      if(data) console.log(data);
+      else console.log("empty response");
+      frameBuffer.src = 'data:image/jpg;base64,' + data.frameBuffer;
+      console.log(frameBuffer);
+      document.getElementById('imgRecvTester').getContext('2d').drawImage(frameBuffer,0,0);
+      console.log(frameBuffer);
+      }, null);
       });
       $(document).ready( function(){
       $("body").layout( {
