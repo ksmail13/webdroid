@@ -16,7 +16,7 @@ public class ConsoleLogger {
     }
 
     private String logMessage(Object msg) {
-        return String.format("[%s] %s", TAG, msg.toString());
+        return String.format("[%s] %s", TAG, msg);
     }
 
     public void info(Object msg) {
