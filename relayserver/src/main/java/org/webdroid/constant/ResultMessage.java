@@ -31,4 +31,6 @@ public class ResultMessage {
 
     public  static  final String ID_CHECK = "available ID";
     public  static  final String ID_CHECK_ERROR = "already used ID";
+    public static final String UNAUTHORIZED_ACCESS = "please signin";
+    public static final String NOT_FOUND = "Not Found";
 }

@@ -38,23 +38,19 @@ public class UserProfilePageHandler extends PageHandler{
             @Override
             public void success(ResultSet resultSet) {
                 JsonObject row = resultSet.getRows().get(0);
-                if (row.getString("id") == null) {
-                    context.put("show_id", ResultMessage.ID_ERROR);
-                } else {
-                    context.put("show_id", row.getString("id"));
+                String[] keys = {"id", "git_id", "introduce", "user_img"};
+                String[] errorDefault = {ResultMessage.ID_ERROR, ResultMessage.GIT_ERROR, ResultMessage.INTRODUCE_ERROR, ""};
+
+                for (int i = 0; i < keys.length; i++) {
+                    String data = row.getString(keys[i]);
+                    logger.debug(data);
+                    if (data == null) {
+                        context.put(keys[i], errorDefault[i]);
+                    } else {
+                        context.put(keys[i], data);
+                    }
                 }
 
-                if (row.getString("git_id") == null) {
-                    context.put("show_git_id", ResultMessage.GIT_ERROR);
-                } else {
-                    context.put("show_git_id", row.getString("git_id"));
-                }
-
-                if (row.getString("introduce") == null) {
-                    context.put("show_introduce", ResultMessage.INTRODUCE_ERROR);
-                } else {
-                    context.put("show_introduce", row.getString("introduce"));
-                }
                 rendering(JadeTemplateEngine.create(), WebdroidConstant.Path.HTML + "/profile");  //jade변환한 파일이름
             }
         });

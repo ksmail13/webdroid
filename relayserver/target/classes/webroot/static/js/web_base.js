@@ -198,10 +198,13 @@ function modalAlert(title, msg, callback) {
         myHTML += '</div>';
 
         myHTML += '<div class="modal-body">';
-        myHTML += '<p align="center">'+msg+'</p>';
-        myHTML += '<div class="form-group text-center">';
-        myHTML += '<input type="button" class="btn btn-success setting_btn padding5" id="btn-alert"  value="확인">';
-        myHTML += '</div>';
+          myHTML += '<div class="row"><div class="col-xs-12">';
+          myHTML += '<p align="center">'+msg+'</p>';
+          myHTML += '</div></div>';
+          myHTML += '<div class="row"><div class="col-xs-12 text-cetner">';
+          
+            myHTML += '<input type="button" class="btn btn-success setting_btn padding5" id="btn-alert"  value="확인">';
+          myHTML += '</div></div>';
         myHTML += '</div>';
 
         myHTML += '</div>';
@@ -229,10 +232,12 @@ function modalConfirm(title, msg, okCallback, cancelCallback) {
         myHTML += '</div>';
 
         myHTML += '<div class="modal-body">';
+        myHTML += '<div class="row"><div class="col-xs-12">';
         myHTML += '<p align="center">'+msg+'</p>';
-        myHTML += '<div class="form-group text-center">';
-        myHTML += '<input type="button" class="btn btn-success setting_btn padding5" id="btn-alert-ok"  value="확인">';
-        myHTML += ' <input type="button" class="btn btn-danger setting_btn padding5" id="btn-alert-cancel"  value="취소">';
+        myHTML += '</div></div>';
+        myHTML += '<div class="row"><div class="col-xs-12 text-center">';
+        myHTML += '<input type="button" class="btn btn-success padding5" id="btn-alert-ok"  value="확인">';
+        myHTML += ' <input type="button" class="btn btn-danger padding5" id="btn-alert-cancel"  value="취소">';
         myHTML += '</div>';
         myHTML += '</div>';
 

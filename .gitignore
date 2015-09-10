@@ -16,3 +16,20 @@ relayserver/src/main/java/org/webdroid/db/DBConnector.java
 
 relayserver/webdroid.iml
 relayserver/target/classes/org/webdroid/server/ServerMain.class
+
+relayserver/.idea/misc.xml
+
+relayserver/.idea/compiler.xml
+
+relayserver/.idea/compiler.xml
+
+
+relayserver/file-uploads/*
+relayserver/user-upload/*
+relayserver/target/classes/org/webdroid/server/ServerMain.class
+
+*.class
+
+relayserver/.idea/misc.xml
+
+relayserver/.idea/misc.xml

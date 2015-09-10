@@ -1,12 +1,14 @@
 package org.webdroid.server.handler;
 
 import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 import org.webdroid.constant.HttpStatusCode;
+import org.webdroid.constant.ResultMessage;
 import org.webdroid.constant.ServerConfigure;
 import org.webdroid.util.ConsoleLogger;
 import org.webdroid.util.JsonUtil;
@@ -29,7 +31,12 @@ public abstract class RouteHandler implements Handler<RoutingContext> {
         req = routingContext.request();
         // set character set utf-8
         res.putHeader(HttpHeaders.ACCEPT_CHARSET, ServerConfigure.SERVER_ENCODING);
-        handling();
+        try {
+            handling();
+        } catch (Exception e) {
+            logger.error("throw un catched Exception", e);
+            sendJsonResult(HttpStatusCode.RUNTIME_ERROR, false, ResultMessage.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -41,6 +48,12 @@ public abstract class RouteHandler implements Handler<RoutingContext> {
     public final void send(int statusCode, String contentType, String data) {
         res.setStatusCode(statusCode);
         res.putHeader(HttpHeaders.CONTENT_TYPE, contentType);
+        res.end(data);
+    }
+
+    public final void send(int statusCode, String contextType, Buffer data) {
+        res.setStatusCode(statusCode);
+        res.putHeader(HttpHeaders.CONTENT_TYPE, contextType);
         res.end(data);
     }
 

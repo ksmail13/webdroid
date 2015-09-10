@@ -8,8 +8,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> </link>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="http://malsup.github.com/jquery.form.js"></script>
         <link rel="stylesheet" href="./css/basic.css" type="text/css"> </link>
         <script src="./js/web_base.js"></script>
+        <script src="./js/uploader.js"></script>
 
 		<title>
 			samilgong main
@@ -29,7 +31,7 @@ $(document).ready(function() {
     };
     
     $("#test").common_modal_box(modal_option);
-    
+    $('#img-profile-image').imageUploader('');
 });
 
 function frmsuccess(result) {
@@ -53,6 +55,6 @@ function buttonClick(e) {
 	</head>
 	<body>
         <button id="test" value="">테스트</button>
-        
+        <img id="img-profile-image" src="images/android-300x168.jpg" class="img-responsive img-circle"/>
 	</body>
 </html>

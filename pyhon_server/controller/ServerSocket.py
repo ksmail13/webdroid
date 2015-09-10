@@ -24,7 +24,7 @@ class ServerSocket :
         flag = True
         self.sock.listen(1)
         clientSock , address = self.sock.accept()
-        print "accept client , address : " + address
+        #print "accept client , address : " + address
         while True :
             data = clientSock.recv(1024)
             print data
@@ -88,6 +88,7 @@ class ServerSocket :
 
                 continue
             if "get_frame_buffer" in data :
+                #print data
                 """
               Receive Framebuffer size and send data
               clientSock.send("frame_buffer_start#"+width+height+size)
@@ -103,7 +104,7 @@ class ServerSocket :
                 image = Image.open('example.jpg')
                 (width,height) = image.size
                 size = os.path.getsize('example.jpg')
-                clientSock.send("frame_buffer_start#"+width+"#"+height+"#"+size)
+                clientSock.send("frame_buffer_start#"+str(width)+"#"+str(height)+"#"+str(size))
 
                 image = open('example.jpg','rb')
                 n_roof = size/1024 + 1
@@ -111,6 +112,7 @@ class ServerSocket :
                 for i in range(n_roof) :
                     data = image.read(1024)
                     clientSock.send(data)
+                print 'img send done\n'
                 image.close()
 
                 clientSock.send("frame_buffer_end")

@@ -8,8 +8,10 @@ public abstract class WebdroidConstant {
 
         public final static String CONFIGURE = "./configure";
 
-        public final static String UPLOAD_ROOT = "../../user-upload";
+        public final static String UPLOAD_ROOT = "./user-upload";
         public final static String UPLOAD_IMG = UPLOAD_ROOT + "/images";
+        public final static String STATIC_UPLOAD_ROOT = "../../../user-upload";
+        public final static String STATIC_UPLOAD_IMG = STATIC_UPLOAD_ROOT+"/images";
 
         /**
          * resource path

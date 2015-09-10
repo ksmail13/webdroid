@@ -28,7 +28,6 @@ public class UserImageUploadReqeustHandler extends RouteHandler {
     private Vertx vertx = null;
 
     FileUpload upload;
-    String path;
 
     public UserImageUploadReqeustHandler(DBConnector dbConnector, Vertx vertx) {
         mDBConnector = dbConnector;
@@ -37,21 +36,28 @@ public class UserImageUploadReqeustHandler extends RouteHandler {
 
     @Override
     public void handling() {
+        if(!isLogin()) {
+            sendJsonResult(HttpStatusCode.UNAUTHORIZED_ACCESS, false, ResultMessage.UNAUTHORIZED_ACCESS);
+            return;
+        }
+
         Set<FileUpload> uploads = context.fileUploads();
         uploads.stream().forEach(upload -> this.upload = upload);
         Calendar c = Calendar.getInstance();
 
 
-        String pImageName = String.format("%d_profile_%ld.%s",
+        String pImageName = WebdroidConstant.Path.UPLOAD_IMG+"/"+String.format("%d_profile_%d.%s",
                 (Integer)session.get("id"), c.getTimeInMillis(), upload.fileName());
         logger.debug(String.format("file save in %s", pImageName));
-        vertx.fileSystem().copyBlocking(upload.uploadedFileName(), WebdroidConstant.Path.UPLOAD_IMG+"/"+pImageName);
+        logger.debug(upload);
 
-        JsonArray dbParms = JsonUtil.createJsonArray(path, session.get("id"));
-        mDBConnector.update(Query.IMG_UPLOAD, dbParms, new SQLResultHandler<UpdateResult>(this) {
+        vertx.fileSystem().copyBlocking(upload.uploadedFileName(), pImageName);
+
+        JsonArray dbParms = JsonUtil.createJsonArray(pImageName, session.get("id"));
+        mDBConnector.update(Query.PROFILE_IMG_UPLOAD, dbParms, new SQLResultHandler<UpdateResult>(this) {
             @Override
             public void success(UpdateResult resultSet) {
-                JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS).put("img_path", path);
+                JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS).put("uploadPath", pImageName);
                 send(HttpStatusCode.SUCCESS, "application/json", res.toString());
             }
         });
