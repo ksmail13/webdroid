@@ -2,6 +2,7 @@ doctype html
 html
   head
     include commonheader
+    link(rel='stylesheet', href='./css/basic.css', type='text/css')
     title 비밀번호 찾기
     script.
       $(document).ready(function () {
@@ -22,15 +23,15 @@ html
   body
     .container
       .row 
-        .col-xs-12
+        .col-xs-12.jumbotron.text-center
           h3 비밀번호 찾기
           h5 회원님의 메일주소를 입력하시면,<br>메일로 임시 비밀번호를 보내드립니다.
       .row
         form#frm-pwfind(action='/api/pwfind', method='post')
-          .col-xs-12
-            .form-group
+          .col-xs-6.col-xs-offset-3
+            .form-group.padding15
               label.sr-only(for='txt-in-user-id') Email address
-              input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
-          .col-xs-12
-            .form-group
-              input.login-btn.btn-lg.btn-default.padding5#pwfind(type='submit', value='메일주소 확인')
+              input#txt-in-user-id.form-control.text-center.input-lg(type='email', name='user_id', placeholder='Email')
+          .col-xs-12.padding5
+            .form-group.text-center
+              input.login-btn.btn-lg.btn-default#pwfind(type='submit', value='메일주소 확인')

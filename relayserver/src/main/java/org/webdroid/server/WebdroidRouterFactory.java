@@ -85,7 +85,7 @@ public class WebdroidRouterFactory {
         router.route().path(SignupPageHandler.URL).handler(new SignupPageHandler());
 
         // signin page
-        router.route().path(SigninPageHandler.URL).handler(new SigninPageHandler());
+        router.route().path(SigninPageHandler.URL).handler(new SigninPageHandler(vertx));
 
         // password change password page
         router.route().path(PwChangePageHandler.URL).handler(new PwChangePageHandler());
