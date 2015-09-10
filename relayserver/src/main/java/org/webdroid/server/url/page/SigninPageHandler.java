@@ -9,7 +9,7 @@ import org.webdroid.server.handler.PageHandler;
  */
 public class SigninPageHandler extends PageHandler{
 
-    public static final String URL = "/signin_origin";
+    public static final String URL = "/signin_original";
 
     public SigninPageHandler() {
         super(null);

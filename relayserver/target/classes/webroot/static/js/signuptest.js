@@ -1,18 +1,6 @@
 var isClick = false;
-var sEmail=$('#txt-in-user-id').val();
-
 $('[data-toggle="tooltip"]').tooltip();
 
-
-function validateEmail(sEmail) {
-    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (filter.test(sEmail)) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 
 
 $(document).ready(function () {
@@ -20,6 +8,7 @@ $(document).ready(function () {
   $('#frm-signup').submit(function() {
 
     if(isClick){
+      
       if($("#txt-in-user-pw").val() != $("#txt-in-user-pw-re").val()){
         modalAlert("비밀번호 오류", '비밀번호가 맞지 않습니다 .<br>다시 확인해주세요', function() {});
         return false;
@@ -54,21 +43,26 @@ $(document).ready(function () {
   
 
   $('#idcheck').click( function () {
+    var email = $('#txt-in-user-id').val();  
+    var regex=/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
     
-    if ($.trim(sEmail).length == 0) {
-        modalAlert("아이디 체크", "아이디를 입력해주세요", function(){});
-        e.preventDefault();
+    if(!regex.test(email)) {   
+      if(email==='') {
+        modalAlert("아이디 체크", "메일을 입력해 주세요.", function(){});
+        return false;
+      }
+      else{
+        modalAlert("아이디 체크", "잘못된 메일형식입니다<br>메일 주소를 확인해 주세요.", function(){});
+        return false; 
+      }
+    } 
+    
+    else {      
+      requestAysnc('/idcheck', 'post', {'user_id ':$("#txt-in-user-id").val ()}, idSuccess, idFailed);
     }
-    if (validateEmail(sEmail)) {
-        requestAysnc('/idcheck', 'post', {'user_id':$("#txt-in-user-id").val ()}, idSuccess, idFailed);
-    }
-    else {
-        modalAlert("아이디 체크", "메일 주소를 확인해 주세요.", function(){});
-        e.preventDefault();
-    }
-
+  
     /*
-    if($("#txt-in-user-id").val()=='')
+    if(sEmail=='')
       modalAlert("아이디 체크", "아이디를 입력해주세요", function(){});
     else
       requestAysnc('/idcheck', 'post', {'user_id':$("#txt-in-user-id").val ()}, idSuccess, idFailed);

@@ -58,8 +58,7 @@ function formRequest(frm, success, failed) {
         if(isValid(breakInfo.breakName)) {
             modalAlert('다시 확인해주세요',  breakInfo.breakName + '를 입력하셔야 합니다.', function () {breakInfo.breakObj.focus();});
 
-        } 
-        
+        }        
         else {
             requestAysnc($frm.attr('action'), $frm.attr('method'), data, success, failed);
         }

@@ -38,7 +38,7 @@ include commonnavbar
     h3 로그인
     h5 로그인 후 , 웹드로이드를 즐겨보세요!
     hr
-    form#frm-signin(action='/api/signin', method='post')
+    form#frm-signin(action='/signin', method='post')
       .form-group
         label.sr-only(for='txt-user-id') Email address
         input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1') 
