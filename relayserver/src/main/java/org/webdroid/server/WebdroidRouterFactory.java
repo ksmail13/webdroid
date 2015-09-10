@@ -1,20 +1,14 @@
 package org.webdroid.server;
 
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.file.FileSystem;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.ClusteredSessionStore;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
-import org.webdroid.constant.HttpStatusCode;
-import org.webdroid.constant.ResultMessage;
 import org.webdroid.constant.ServerConfigure;
 import org.webdroid.constant.WebdroidConstant;
 import org.webdroid.db.DBConnector;
-import org.webdroid.server.handler.RouteHandler;
 import org.webdroid.server.url.page.*;
 import org.webdroid.server.url.request.*;
 
@@ -85,7 +79,7 @@ public class WebdroidRouterFactory {
         router.route().path(SignupPageHandler.URL).handler(new SignupPageHandler());
 
         // signin page
-        router.route().path(SigninPageHandler.URL).handler(new SigninPageHandler(vertx));
+        router.route().path(SigninPageHandler.URL).handler(new SigninPageHandler());
 
         // password change password page
         router.route().path(PwChangePageHandler.URL).handler(new PwChangePageHandler());
@@ -136,6 +130,8 @@ public class WebdroidRouterFactory {
 
         router.post(IdCheckRequestHandler.URL).handler(new IdCheckRequestHandler(mDBConnector));
 
+        router.post(ProjectmainRequestHandler.URL).handler(new ProjectmainRequestHandler(mDBConnector));
+
 
 
     }
@@ -148,38 +144,12 @@ public class WebdroidRouterFactory {
         final String JS = "/js/\\S+.(js)";
         final String IMG = "/images/\\S+.(jpeg|png|jpg|ico)";
 
-        final String PROFILE_IMG = "/user-upload/images/\\S+.(jpeg|png|jpg)";
-
         StaticHandler staticHandler = StaticHandler.create(WebdroidConstant.Path.STATIC);
 
         router.route().pathRegex(BOOTSTRAP).handler(staticHandler);
         router.route().pathRegex(JS).handler(staticHandler);
         router.route().pathRegex(CSS).handler(staticHandler);
         router.route().pathRegex(IMG).handler(staticHandler);
-
-        router.route().pathRegex(PROFILE_IMG).handler(new RouteHandler() {
-            String ext;
-
-            @Override
-            public void handling() {
-                FileSystem fs = vertx.fileSystem();
-                String uri = "."+req.uri();
-                ext = uri.substring(uri.lastIndexOf("."));
-                logger.debug(uri);
-                if(fs.existsBlocking(uri)) {
-                    fs.readFile(uri, this::sendImage);
-                } else {
-                    send(HttpStatusCode.NOT_FOUND, "text/plain", ResultMessage.NOT_FOUND);
-                }
-            }
-
-            private void sendImage(AsyncResult<Buffer> bufferAsyncResult) {
-                if(bufferAsyncResult.succeeded())
-                    send(HttpStatusCode.SUCCESS, "image/"+ext, bufferAsyncResult.result());
-                else
-                    send(HttpStatusCode.NOT_FOUND, "text/plain", ResultMessage.NOT_FOUND);
-            }
-        });
     }
 
     /**

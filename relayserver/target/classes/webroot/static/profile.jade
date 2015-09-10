@@ -4,8 +4,7 @@ head
   title
     | samilgong mypage
   link(rel='stylesheet', href='/css/profile.css', type='text/css')
-  script(src='./js/jquery.form.js')
-  script(src='./js/uploader.js')
+  link(rel='stylesheet', href='css/projectmain.css', type='text/css')
   script.
     $(document).ready(function() {
       $('#frm-update-introduce').submit(function() {
@@ -15,63 +14,83 @@ head
         }
       });
       });
-      $('#img-profile').imageUploader('/p_img_upload');
+      
     });
+
+    $(window).load(function(){
+      requestAysnc('/show_projectlist','post',row,function(data){
+        if(data.result){
+          
+        }
+      },null);
+    });
+
+    $(document).ready(function(){
+        var modal_option = {
+            title:'Add Project',
+            form:{action:'/createproject', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
+            contents:[{ name:'project_name', 'placeholder':'Project name', 'id':'txt-project-name', 'type':'text'},
+                  { name:'project_desc', 'placeholder':'Description', 'id':'txt-project-desc', 'type':'text'},],
+            buttons:[{'type':'success', 'id':'test-btn','text':'Add',actiontype:'submit'}]
+        };
+        $("#btn-plus").common_modal_box(modal_option);
+    });
+    function frmsuccess(result) {
+      location.reload();
+      //modalAlert('성공', result);
+    }
+    function frmfailed(error) {
+    // error 내용 {readyState: 4, responseText: "Cannot POST /test.html", status: 404, statusText: "Not Found"}
+      modalAlert('실패', error.status+' '+error.statusText);
+    }
+    function buttonClick(e) {
+      modalAlert('얼럿', '테스트',function() {alert('alert');});
+    }
 
 include commonnavbar
 // body
 .container
   .padding10
     .row
-      .col-xs-12.col-sm-3
+      .col-xs-12.col-sm-4
         span.glyphicon.glyphicon-user
         |  My profile 
         .profile-pic.padding5
           .row
-            .col-xs-12.text-center
-              img#img-profile.img-rounded.img-responsive(src="#{context.get('show_user_img')}", alt='Profile')       
-              .padding10
-          .row
-            .col-xs-12
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('name')}
-              .padding10
-          .row
-            .col-xs-12
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_id')}
-              .padding10
-          .row
-            .col-xs-12
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_git_id')}
-              .padding10
-          .row
-            .col-xs-12
-              span.glyphicon.glyphicon-menu-right
-              | #{context.get('show_introduce')}
-              span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
-              .padding10
-                // Modal
-                #myprofile.modal.fade
-                  .modal-dialog
-                    // Modal content
-                    .modal-content
-                      .modal-header
-                        button.close(type='button', data-dismiss='modal') ×
-                        h4.modal-title 자기소개를 입력하세요 
-                      .modal-body
-                        form#frm-update-introduce(action="/update_introduce", method='post')
-                          .form-group
-                            label.sr-only(for='txt-profile') Profile
-                            textarea#comment.form-control(rows='5', name='introduce')
-                          .form-group
-                            input.setting_btn.padding5(type='submit', value='입력하기')
-                      // modalbody
-                    // modalcontent
-                  // modal dialog
-                // modal fade
-      .col-xs-12.col-sm-9
+            img.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')       
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('name')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_id')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_git_id')}
+          .panel-body
+            span.glyphicon.glyphicon-menu-right
+            | #{context.get('show_introduce')}
+            span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
+              // Modal
+              #myprofile.modal.fade
+                .modal-dialog
+                  // Modal content
+                  .modal-content
+                    .modal-header
+                      button.close(type='button', data-dismiss='modal') ×
+                      h4.modal-title 자기소개를 입력하세요 
+                    .modal-body
+                      form#frm-update-introduce(action="/update_introduce", method='post')
+                        .form-group
+                          label.sr-only(for='txt-profile') Profile
+                          textarea#comment.form-control(rows='5', name='introduce')
+                        .form-group
+                          input.setting_btn.padding5(type='submit', value='입력하기')
+                    // modalbody
+                  // modalcontent
+                // modal dialog
+              // modal fade
+      .col-xs-12.col-sm-8
         .padding5.row
           ul
             li
@@ -79,7 +98,26 @@ include commonnavbar
                 span.glyphicon.glyphicon-star
                 |  즐겨찾기
             li
-              #dv-favorate.row     
+              #dv-favorate.row
+                .col-md-4.col-sm-4.project-block
+                  .thumbnail(pid='1', ppath='')
+                    .row.margin0
+                      .col-xs-5
+                        .app-icon
+                          img(src='/images/apple-touch-icon@2.png')
+                      .col-xs-7
+                        .text-center.app-title
+                          h4 #{context.get('favorates')}
+                        .app-descript
+                          p this is project descript
+                        .app-function
+                          .btn-group.btn-group-xs
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-minus
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-star
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-info-sign
             li
               .row
                 .col-sm-8.col-md-8.col-lg-8
@@ -94,3 +132,22 @@ include commonnavbar
                         span.glyphicon.glyphicon-plus
             li
               #dv-projectlist.row
+                .col-md-4.col-sm-4.project-block
+                  .thumbnail(pid='1', ppath='')
+                    .row.margin0
+                      .col-xs-5
+                        .app-icon
+                          img(src='/images/apple-touch-icon@2.png')
+                      .col-xs-7
+                        .text-center.app-title
+                          h4 #{context.get('projects')}
+                        .app-descript
+                          p this is project descript
+                        .app-function
+                          .btn-group.btn-group-xs
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-minus
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-star
+                            a.btn.btn-default(pid='1', href='#')
+                              span.glyphicon.glyphicon-info-sign
