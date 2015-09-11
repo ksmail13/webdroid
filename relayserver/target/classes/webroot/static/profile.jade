@@ -11,41 +11,21 @@ head
         return formRequest('#frm-update-introduce', function(data){
           if(data.result){
             modalAlert("자기소개", '자기소개가 수정 되었습니다.', function() {location.reload();});
-        }
-      });
+          }
+        });
       });
       
     });
 
     $(window).load(function(){
-      requestAysnc('/show_projectlist','post',row,function(data){
+      requestAysnc('/show_projectlist','post',null,function(data){
         if(data.result){
           
         }
       },null);
     });
 
-    $(document).ready(function(){
-        var modal_option = {
-            title:'Add Project',
-            form:{action:'/createproject', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':frmsuccess, 'error': frmfailed},
-            contents:[{ name:'project_name', 'placeholder':'Project name', 'id':'txt-project-name', 'type':'text'},
-                  { name:'project_desc', 'placeholder':'Description', 'id':'txt-project-desc', 'type':'text'},],
-            buttons:[{'type':'success', 'id':'test-btn','text':'Add',actiontype:'submit'}]
-        };
-        $("#btn-plus").common_modal_box(modal_option);
-    });
-    function frmsuccess(result) {
-      location.reload();
-      //modalAlert('성공', result);
-    }
-    function frmfailed(error) {
-    // error 내용 {readyState: 4, responseText: "Cannot POST /test.html", status: 404, statusText: "Not Found"}
-      modalAlert('실패', error.status+' '+error.statusText);
-    }
-    function buttonClick(e) {
-      modalAlert('얼럿', '테스트',function() {alert('alert');});
-    }
+    
 
 include commonnavbar
 // body
@@ -70,26 +50,29 @@ include commonnavbar
           .panel-body
             span.glyphicon.glyphicon-menu-right
             | #{context.get('show_introduce')}
-            span.glyphicon.glyphicon-pencil(data-toggle='modal', data-target='#myprofile')
+            
+           
+            button.btn.btn-link(type='button', data-toggle='modal', data-target='#myprofile')
+              span.glyphicon.glyphicon-pencil(aria-hidden='true')
               // Modal
-              #myprofile.modal.fade
-                .modal-dialog
-                  // Modal content
-                  .modal-content
-                    .modal-header
-                      button.close(type='button', data-dismiss='modal') ×
-                      h4.modal-title 자기소개를 입력하세요 
-                    .modal-body
-                      form#frm-update-introduce(action="/update_introduce", method='post')
-                        .form-group
-                          label.sr-only(for='txt-profile') Profile
-                          textarea#comment.form-control(rows='5', name='introduce')
-                        .form-group
-                          input.setting_btn.padding5(type='submit', value='입력하기')
-                    // modalbody
-                  // modalcontent
-                // modal dialog
-              // modal fade
+            #myprofile.modal.fade
+              .modal-dialog
+                // Modal content
+                .modal-content
+                  .modal-header
+                    button.close(type='button', data-dismiss='modal') ×
+                    h4.modal-title 자기소개를 입력하세요 
+                  .modal-body
+                    form#frm-update-introduce(action="/update_introduce", method='post')
+                      .form-group
+                        label.sr-only(for='txt-profile') Profile
+                        textarea#comment.form-control(rows='5', name='introduce')
+                      .form-group
+                        input.setting_btn.padding5(type='submit', value='입력하기')
+                  // modalbody
+                // modalcontent
+              // modal dialog
+            // modal fade
       .col-xs-12.col-sm-8
         .padding5.row
           ul
@@ -127,9 +110,27 @@ include commonnavbar
                 .col-sm-4.col-md-4.col-lg-4.text-right
                   .blank20
                   .btn-toolbar(role='toolbar', style='display:inline-block;')
-                    .btn-group(role='group')
-                      a#btn-plus.btn.btn-default
-                        span.glyphicon.glyphicon-plus
+
+                    button.btn.btn-default.btn-lg(type='button', data-toggle='modal', data-target='#myModal')
+                      span.glyphicon.glyphicon-plus(aria-hidden='true')
+                    // Modal
+                    #myModal.modal.fade(role='dialog')
+                      .modal-dialog
+                        // Modal content
+                        .modal-content
+                          .modal-header
+                            button.close(type='button', data-dismiss='modal') ×
+                          .modal-body
+                            form(action='#', method='post', enctype='multipart/form-data')
+                              .form-group
+                                label.sr-only(for='txt-in-user-file') My file name
+                                input#txt-in-user-file.form-control.input-lg(type='text', name='file-name', placeholder='File')
+                              .form-group
+                                label.sr-only(for='txt-in-user-fileup') File upload
+                                input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', placeholder='Fileup')
+                              .form-group.modal-footer
+                                input.login-btn.btn-lg.btn-default.padding5(type='submit', value='File upload')
+
             li
               #dv-projectlist.row
                 .col-md-4.col-sm-4.project-block

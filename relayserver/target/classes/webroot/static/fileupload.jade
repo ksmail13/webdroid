@@ -1,0 +1,31 @@
+doctype html
+html(lang='en')
+  head
+    title fileup load
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+    script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+  body
+    .container
+      // Trigger the modal with a button
+      button.btn.btn-info.btn-lg(type='button', data-toggle='modal', data-target='#myModal') File upload
+      // Modal
+      #myModal.modal.fade(role='dialog')
+        .modal-dialog
+          // Modal content
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal') ×
+              h4.modal-title File upload
+            .modal-body
+              form(action='#', method='post', enctype='multipart/form-data')
+                .form-group
+                  label.sr-only(for='txt-in-user-file') My file name
+                  input#txt-in-user-file.form-control.input-lg(type='text', name='file-name', placeholder='File')
+                .form-group
+                  label.sr-only(for='txt-in-user-fileup') File upload
+                  input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', placeholder='Fileup')
+                .form-group.modal-footer
+                  input.login-btn.btn-lg.btn-default.padding5(type='submit', value='File upload')
