@@ -132,6 +132,8 @@ public class WebdroidRouterFactory {
 
         router.post(ProjectmainRequestHandler.URL).handler(new ProjectmainRequestHandler(mDBConnector));
 
+        router.post(ProjectUploadRequestHandler.URL).handler(new ProjectUploadRequestHandler(mDBConnector));
+
 
 
     }
