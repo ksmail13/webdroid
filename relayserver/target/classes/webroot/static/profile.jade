@@ -5,27 +5,8 @@ head
     | samilgong mypage
   link(rel='stylesheet', href='/css/profile.css', type='text/css')
   link(rel='stylesheet', href='css/projectmain.css', type='text/css')
-  script.
-    $(document).ready(function() {
-      $('#frm-update-introduce').submit(function() {
-        return formRequest('#frm-update-introduce', function(data){
-          if(data.result){
-            modalAlert("자기소개", '자기소개가 수정 되었습니다.', function() {location.reload();});
-          }
-        });
-      });
-      
-    });
-
-    $(window).load(function(){
-      requestAysnc('/show_projectlist','post',null,function(data){
-        if(data.result){
-          
-        }
-      },null);
-    });
-
-    
+  link(rel='stylesheet', href='http://css-spinners.com/css/spinner/inner-circles.css', type='text/css')
+  script(src='./js/profile.js')
 
 include commonnavbar
 // body
@@ -121,15 +102,16 @@ include commonnavbar
                           .modal-header
                             button.close(type='button', data-dismiss='modal') ×
                           .modal-body
-                            form(action='#', method='post', enctype='multipart/form-data')
+                            form#fileup(action='/fileup', method='post', enctype='multipart/form-data')
                               .form-group
                                 label.sr-only(for='txt-in-user-file') File
-                                input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', placeholder='파일 이름')
+                                input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', knownname='파일',placeholder='파일 이름')
                               .form-group
                                 label.sr-only(for='txt-in-user-fileup') File upload
                                 input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', placeholder='Fileup')
                               .form-group.modal-footer
-                                input.login-btn.btn-lg.btn-default.padding5(type='submit', value='파일 불러오기')
+                                .loading
+                                input#upload.login-btn.btn-lg.btn-default.padding5(type='submit', value='파일 불러오기')
 
             li
               #dv-projectlist.row
