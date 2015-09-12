@@ -31,7 +31,13 @@ public class GitIdUpdateRequestHandler extends RequestHandler {
                 new SQLResultHandler<UpdateResult>(this) {
                     @Override
                     public void success(UpdateResult resultSet) {
-                        sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                        //sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                        if (resultSet.getUpdated() > 0) {
+                            sendJsonResult(200, true, ResultMessage.SUCCESS);
+                            //redirectTo("/");
+                        } else
+                            sendJsonResult(200, false, ResultMessage.INTRODUCE_ERROR);
+
                     }
                 });
     }

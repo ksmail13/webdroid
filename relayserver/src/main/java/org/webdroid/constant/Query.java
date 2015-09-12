@@ -89,4 +89,9 @@ public class Query {
             "user_img as path\n" +
             "from user\n" +
             "where u_id='?';";
+
+    public final static String GET_PATH=
+            "SELECT p_path\n"+
+            "FROM project\n"+
+            "WHERE p_id=?";
 }

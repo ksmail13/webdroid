@@ -1,11 +1,19 @@
  $(document).ready(function() {
        
       $('#frm-update-introduce').submit(function() {
-        return formRequest('#frm-update-introduce', function(data){
-          if(data.result){
-            modalAlert("자기소개", '자기소개가 수정 되었습니다.', function() {location.reload();});
+        return formRequest('#frm-update-introduce', 
+          function(data){
+            if(data.result){
+              modalAlert("자기소개", '자기소개가 수정 되었습니다.', function() {location.reload();});
+              $('.modal-back').remove();
+            }
+            else{
+              modalAlert("자기소개", '자기소개등록에 실패했습니다 .<br>다시 등록해주세요', function() {});
+            }
+          });
+          function(error){
+            modalAlert("자기소개 등록","서버에러", function(){});
           }
-        });
       });
 
       $('#fileup').submit(function() {

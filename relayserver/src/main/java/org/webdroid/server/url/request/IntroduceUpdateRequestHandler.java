@@ -32,6 +32,11 @@ public class IntroduceUpdateRequestHandler extends RequestHandler {
                     @Override
                     public void success(UpdateResult resultSet) {
                         sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
+                        if (resultSet.getUpdated() > 0) {
+                            sendJsonResult(200, true, ResultMessage.SUCCESS);
+                            //redirectTo("/");
+                        } else
+                            sendJsonResult(200, false, ResultMessage.GIT_ERROR);
                     }
                 });
     }

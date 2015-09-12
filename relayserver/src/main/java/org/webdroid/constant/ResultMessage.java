@@ -24,6 +24,8 @@ public class ResultMessage {
     public  static  final String ID_ERROR = "please input your id";
     public  static  final String GIT_ERROR = "please input your github id";
     public  static  final String INTRODUCE_ERROR = "please input your introduce";
+    public static final String P_PATH_ERROR="there's no path";
+
 
     public  static  final String SET_RANDOM_PW = "password set";
     public  static  final String SET_RANDOM_PW_FAIL = "password set fail";

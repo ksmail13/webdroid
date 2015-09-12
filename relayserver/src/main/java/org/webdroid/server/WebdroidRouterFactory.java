@@ -120,9 +120,9 @@ public class WebdroidRouterFactory {
         router.post(UnsubscribeRequestHandler.URL).handler(new UnsubscribeRequestHandler(mDBConnector));
 
         // get project files handler
-        router.route(ProjectTreeRequestHandler.URL).handler(new ProjectTreeRequestHandler());
+        router.route(ProjectTreeRequestHandler.URL).handler(new ProjectTreeRequestHandler(mDBConnector));
 
-        router.route(EditorFileOpenRequestHandler.URL).handler(new EditorFileOpenRequestHandler());
+        router.route(EditorFileOpenRequestHandler.URL).handler(new EditorFileOpenRequestHandler(mDBConnector));
 
         router.route(RunProjectRequestHandler.URL).handler(new RunProjectRequestHandler(vertx));
 
@@ -134,7 +134,7 @@ public class WebdroidRouterFactory {
 
         router.post(ProjectUploadRequestHandler.URL).handler(new ProjectUploadRequestHandler(mDBConnector));
 
-
+        router.post(TreeBaseRequestHandler.URL).handler(new TreeBaseRequestHandler(mDBConnector));
 
     }
     /**

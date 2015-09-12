@@ -1,6 +1,7 @@
 package org.webdroid.util;
 
 import java.io.*;
+import java.sql.ResultSet;
 import java.util.Arrays;
 
 /**
@@ -53,9 +54,10 @@ public class JqueryFileTree {
         return htmlRes;
     }
 
-    public static String openFileFromTree(String filepath){
-            String innerText = "";
-            String p_path = "/Users/Owner/Documents/webdroid_IDE/";
+    public static String openFileFromTree(String filepath, String path){
+
+        String innerText = "";
+        String p_path = path;//"/Users/Y/Documents/webdroid/";
 
             try {
                 BufferedReader in = new BufferedReader(new FileReader(p_path + filepath));

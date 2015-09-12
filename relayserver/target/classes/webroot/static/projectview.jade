@@ -29,7 +29,7 @@ html(ng-app='')
       var frameBuffer = new Image();
       editor.setTheme("ace/theme/monokai");
       editor.getSession().setMode("ace/mode/text");
-      editor.setReadOnly(true);
+      //editor.setReadOnly(true);
       var modelist = ace.require("ace/ext/modelist");
       function resizeBrowser() {
       return $('#editor').height($(window).height()/100*85)
@@ -85,11 +85,13 @@ html(ng-app='')
       ,   slidable:               false
       }
       });
-      $('#projectTree').fileTree({ root: '/' }, function(file) {
-      requestAysnc('/openfile','post',{filepath: file}, function(data) {
-      editor.getSession().setMode(modelist.getModeForPath(file).mode);
+      requestAysnc('/treebase','post',{pid : 1},function(p_path){
+      $('#projectTree').fileTree({ root: p_path }, function(file) {
+      requestAysnc('/openfile','post',{filepath: file, pid : 1}, function(data) {
+      editor.getSession().setMode(modelist.getModeForPath(file).mode);  
       editor.setValue(data);
       editor.gotoLine(1);
       }, function(){});
-      });
+      })
+      },function(){});
       });
