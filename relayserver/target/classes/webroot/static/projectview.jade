@@ -17,8 +17,8 @@ html(ng-app='')
       // code editor & logcat
       button#playbtn.btn.btn-success
         span.glyphicon.glyphicon-play  Run
-      canvas#imgRecvTester(width='500', height='500')
       #editor
+      // canvas#imgRecvTester(width='500', height='500')
     .ui-layout-north
       include commonnavbar
     .ui-layout-west
@@ -39,7 +39,7 @@ html(ng-app='')
       resizeBrowser();
       $("#playbtn").click( function(){
       //alert('button clicked');
-      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data.frameBuffer){
+      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data){
       console.log("run btn success function start");
       if(data) console.log(data);
       else console.log("empty response");
@@ -85,7 +85,7 @@ html(ng-app='')
       ,   slidable:               false
       }
       });
-      $('#projectTree').fileTree({ root: '/Users/Owner/Documents/webdroid_IDE/' }, function(file) {
+      $('#projectTree').fileTree({ root: '/' }, function(file) {
       requestAysnc('/openfile','post',{filepath: file}, function(data) {
       editor.getSession().setMode(modelist.getModeForPath(file).mode);
       editor.setValue(data);

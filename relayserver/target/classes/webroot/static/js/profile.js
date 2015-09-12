@@ -14,7 +14,7 @@
         var loading= "<div class='inner-circles-loader'>";
                         
         $(".modal-footer").append(loading);
-        $("#upload").val('로딩중');
+        $("#upload").val('로딩중...');
         
         return formRequest('#fileup', 
           function(data){
@@ -30,10 +30,20 @@
               $("#upload").val('파일 업로드'); 
               return false;
             }
-          
-            
           },
-          function(error){modalAlert("회원가입","서버에러", function(){});}
+                           
+          function(error){
+            modalAlert("회원가입","서버에러", function(){});
+            $(".inner-circles-loader").remove();
+            $("#upload").val('파일 업로드'); 
+          },
+                           
+          function (){
+            $(".inner-circles-loader").remove();
+            $("#upload").val('파일 업로드'); 
+            return false;
+          }
         );
+        
       });
     });

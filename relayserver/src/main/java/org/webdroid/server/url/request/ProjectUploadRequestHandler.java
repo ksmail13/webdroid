@@ -16,7 +16,7 @@ public class ProjectUploadRequestHandler extends RequestHandler {
     public static final String URL = "/fileup";
 
     public ProjectUploadRequestHandler(DBConnector dbConnector) {
-        super(dbConnector, true, "p_name");
+        super(dbConnector, true, "p_name", "p_descript");
     }
 
     @Override

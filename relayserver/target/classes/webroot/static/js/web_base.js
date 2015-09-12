@@ -12,7 +12,7 @@ function requestAysnc(url, type, param, success, failed) {
 // success : request success callback
 // failed : request failed callback
 // return : always false because it will prevent execute form action
-function formRequest(frm, success, failed) {
+function formRequest(frm, success, failed, successcheck) {
     var $frm = $(frm);
     var data = {};
     var breakInfo = {};
@@ -57,7 +57,7 @@ function formRequest(frm, success, failed) {
 
         if(isValid(breakInfo.breakName)) {
             modalAlert('다시 확인해주세요',  breakInfo.breakName + '를 입력하셔야 합니다.', function () {breakInfo.breakObj.focus();});
-
+            successcheck();
         }        
         else {
             requestAysnc($frm.attr('action'), $frm.attr('method'), data, success, failed);
@@ -68,7 +68,6 @@ function formRequest(frm, success, failed) {
 
 function isTextInput(typeStr) {
     var inputType = ['text', 'email', 'password', 'phone'];
-    
     
     if(!isValid(typeStr))
       return true;
