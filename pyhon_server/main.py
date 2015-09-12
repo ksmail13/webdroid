@@ -4,7 +4,7 @@ from PIL import Image
 from controller.AdbController import AdbController
 from controller.ServerSocket import ServerSocket
 from controller.VirtualBoxController import VirtualBoxController
-
+from controller.MachineCreator import MachineCreator
 from controller.VmSocket import VmSocket
 
 __author__ = 'admin'
@@ -12,11 +12,12 @@ __author__ = 'admin'
 
 def main():
 
-    mServerSocket = ServerSocket("192.168.123.101",1111)
-    mServerSocket.bindSocket()
-    mServerSocket.recvData()
-    mServerSocket.closeSocket()
-
+    #mServerSocket = ServerSocket("10.0.27.89",1111)
+    #mServerSocket.bindSocket()
+    #mServerSocket.recvData()
+    #mServerSocket.closeSocket()
+    nMachine = MachineCreator()
+    nMachine.createNewMachine()
     """
     mVirtualBoxController = VirtualBoxController("user1")
     #mVirtualBoxController.checkAllMachines()
