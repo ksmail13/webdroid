@@ -17,6 +17,10 @@ class VmSocket :
     def bindSocket(self) :
         self.sock.bind((self.udpIp,self.udpPort))
 
+    def aceeptVm(self):
+        self.sock.listen(1)
+        clientSock , address = self.sock.accept()
+        clientSock.settimeout(1)
     def recvData(self) :
 
         flag = True
@@ -65,6 +69,11 @@ class VmSocket :
             flag = False
             f.close()
         """
+    def waitVm(self) :
+        data = self.closeSocket().recv()
+
+        if "complete" in data :
+            return "Vm_Boot_Complete"
 
     def closeSocket(self) :
         self.sock.close()

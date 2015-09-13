@@ -16,9 +16,9 @@ environment variable path -> add C:\Program Files\Oracle\VirtualBox;
 
 class MachineCreator :
     machineName = "android_x86"
-    VmRoot = "C:/Users/Owner/VirtualBox Vms" #server vm folder path
-    VmRootWin = "C:\\Users\\Owner\\VirtualBox VMs"
-    machineNumber = 1
+    VmRoot = "C:/Users/Administrator/VirtualBox Vms" #server vm folder path
+    VmRootWin = "C:\\Users\\Administrator\\VirtualBox VMs"
+    #machineNumber = 1
     portNumber = 1100
     nUUID = ""
     machUUID = ""
@@ -29,8 +29,9 @@ class MachineCreator :
         #self.userName = userName
         return
 
-    def createNewMachine(self) :
-        self.setMachineNumber()
+    def createNewMachine(self,machineNumReq) :
+        self.machineNumber = machineNumReq
+        #self.setMachineNumber()
         self.cpyMachine()
         self.setNewUUID()
         self.setXml()

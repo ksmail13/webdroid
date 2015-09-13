@@ -1,27 +1,67 @@
 import os
 
 from PIL import Image
+import sys
 from controller.AdbController import AdbController
 from controller.ServerSocket import ServerSocket
 from controller.VirtualBoxController import VirtualBoxController
-from controller.MachineCreator import MachineCreator
+
 from controller.VmSocket import VmSocket
 
 __author__ = 'admin'
 
 
-def main():
+def main() :
+    mVirtualBoxController = VirtualBoxController()
+    flag = True
+    machineDic = {}
+    while flag :
+        print "Wait Command"
+        sys.stdout.flush()
 
-    #mServerSocket = ServerSocket("10.0.27.89",1111)
-    #mServerSocket.bindSocket()
-    #mServerSocket.recvData()
-    #mServerSocket.closeSocket()
-    nMachine = MachineCreator()
-    nMachine.createNewMachine()
-    """
-    mVirtualBoxController = VirtualBoxController("user1")
+        command = raw_input()
+        split_input = command.split()
+        print command
+        sys.stdout.flush()
+
+        if "exit" in command :
+            flag = False
+
+        if "run_vm" in command :
+            if len(split_input) == 1:
+                print "run_vm command needs machineNumber"
+                continue
+            mach = mVirtualBoxController.findMachine(split_input[1])
+            mVirtualBoxController.getSession()
+            mVirtualBoxController.makeProcess(mach)
+            mVirtualBoxController.closeSession()
+            machineDic[split_input[1]] = mach
+
+        if "check_vm" in command :
+            mVirtualBoxController.checkAllMachines()
+
+        if "connect_vm" in command :
+            if len(split_input) == 1:
+                print "connect_vm command needs machineNumber"
+                continue
+            portNum = 1100 + int(split_input[1])
+            if mVirtualBoxController.connectVmSocket("211.243.108.156",5555) :
+                print "Vm_Boot_Complete " + str(portNum)
+            else :
+                print "Vm_Boot_Fail"
+
+    """"
+    mServerSocket = ServerSocket("211.243.108.156",1112)
+    mServerSocket.initSocket()
+    mServerSocket.bindSocket()
+    mServerSocket.recvData()
+    mServerSocket.closeSocket()
+
+
+    mVirtualBoxController = VirtualBoxController()
     #mVirtualBoxController.checkAllMachines()
-    machine = mVirtualBoxController.findMachine()
+    machine = mVirtualBoxController.findMachine("1")
+
     if not machine :
         print "Machine not found!"
         print machine
@@ -71,7 +111,9 @@ def main():
     out.close()
     """
 if __name__ == "__main__" :
+    print "on"
     try :
+        print "on2"
         main()
     except os.error, err :
         print str(err)
