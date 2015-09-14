@@ -47,19 +47,14 @@ $(document).ready(function(){
         $('.project-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                $('.project-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
-                 $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
 
         $('.project-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/favorate_projectlist','post',{id:spid},function(data) {
-                $('.project-block[pid='+spid+']').appendTo('#dv-favorate');
+                location.reload();
             },null);
         });
 
@@ -108,21 +103,14 @@ $(document).ready(function(){
         $('.favorate-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                $('.project-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
-                $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
 
         $('.favorate-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/cancel_favorate_projectlist','post',{id:spid},function(data) {
-                 $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
 
