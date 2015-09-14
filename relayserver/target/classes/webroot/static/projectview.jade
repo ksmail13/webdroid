@@ -18,13 +18,13 @@ html(ng-app='')
       button#playbtn.btn.btn-success
         span.glyphicon.glyphicon-play  Run
       #editor
-      // canvas#imgRecvTester(width='500', height='500')
     .ui-layout-north
       include commonnavbar
     .ui-layout-west
       // file tree column
-      #projectTree.tree_wrap
+      #projectTree.tree_wrap(rel=context.get('pid'))
     script.
+      var p_id = $("#projectTree").attr("rel");
       var editor = ace.edit("editor");
       var frameBuffer = new Image();
       editor.setTheme("ace/theme/monokai");
@@ -39,15 +39,7 @@ html(ng-app='')
       resizeBrowser();
       $("#playbtn").click( function(){
       //alert('button clicked');
-      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data){
-      console.log("run btn success function start");
-      if(data) console.log(data);
-      else console.log("empty response");
-      frameBuffer.src = 'data:image/jpg;base64,' + data.frameBuffer;
-      console.log(frameBuffer);
-      document.getElementById('imgRecvTester').getContext('2d').drawImage(frameBuffer,0,0);
-      console.log(frameBuffer);
-      }, null);
+      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data){}, null);
       });
       $(document).ready( function(){
       $("body").layout( {
@@ -85,13 +77,16 @@ html(ng-app='')
       ,   slidable:               false
       }
       });
-      requestAysnc('/treebase','post',{pid : 1},function(p_path){
+      requestAysnc('/treebase','post',{pid : p_id},function(p_path){
       $('#projectTree').fileTree({ root: p_path }, function(file) {
-      requestAysnc('/openfile','post',{filepath: file, pid : 1}, function(data) {
+      requestAysnc('/openfile','post',{filepath: file, pid : p_id}, function(data) {
+      if(data.ext.indexOf('jpg') > -1){
+      }
+      else{
       editor.getSession().setMode(modelist.getModeForPath(file).mode);  
-      editor.setValue(data);
+      editor.setValue(data.innerText);
       editor.gotoLine(1);
-      }, function(){});
+      }}, function(){});
       })
       },function(){});
       });

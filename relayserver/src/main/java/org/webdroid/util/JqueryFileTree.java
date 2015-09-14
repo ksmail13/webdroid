@@ -76,10 +76,10 @@ public class JqueryFileTree {
             return innerText;
     }
 
-    /*public static String fileExt(String filepath){
+    public static String fileExt(String filepath){
         String filename = filepath.substring(filepath.lastIndexOf("/")+1);
         String ext = filename.substring(filename.lastIndexOf(".")+1);
 
         return ext;
-    }*/
+    }
 }

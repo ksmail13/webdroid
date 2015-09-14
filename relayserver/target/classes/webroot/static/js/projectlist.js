@@ -14,7 +14,7 @@ $(document).ready(function(){
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title go"><h4>'+data.projects[i].name+'</h4></div>';
+                myHTML += '<div class="text-center app-title go" pid="'+data.projects[i].id+'"><h4>'+data.projects[i].name+'</h4></div>';
                 myHTML += '<div class="app-descript"><p>'+data.projects[i].description+'</p></div>';                
                 myHTML += '<div class="app-function">';
                 myHTML += '<div class="btn-group btn-group-xs">';
@@ -75,7 +75,7 @@ $(document).ready(function(){
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title go"><h4>'+data.favorates[i].name+'</h4></div>';
+                myHTML += '<div class="text-center app-title go" pid="'+data.projects[i].id+'"><h4>'+data.favorates[i].name+'</h4></div>';
                 myHTML += '<div class="app-descript"><p>'+data.favorates[i].description+'</p></div>';
                 myHTML += '<div class="app-function">';
 
@@ -125,8 +125,8 @@ $(document).ready(function(){
         
           
           $('.go').click(function(e){
-            
-            alert("dd");
+            var spid = $(this).attr("pid");
+            requestAysnc('/projectview/'+spid,'post',{},null,null);
           });
          
         

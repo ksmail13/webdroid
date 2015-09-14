@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class UserProjectListPageHandler extends PageHandler {
 
-    public static final String URL = "/projectview/:p_id";
+    public static final String URL = "/projectview";///:projectid";
 
     public UserProjectListPageHandler(DBConnector dbConnector) {
         super(dbConnector);
@@ -30,11 +30,12 @@ public class UserProjectListPageHandler extends PageHandler {
             return;
         }
 
+        String pid = req.getParam("projectid");
+        context.put("pid",1);//pid);
+        System.out.println(pid + "##################");
+
         context.put("name", session.get("name"));
         JsonArray params = JsonUtil.createJsonArray((Integer) session.get("id"));
-
-        String pid = req.getParam("p_id");
-        context.put("pid",pid);
 
         rendering(templateEngine, WebdroidConstant.Path.HTML + "/projectview");
         /*
