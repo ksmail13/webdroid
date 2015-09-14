@@ -8,17 +8,15 @@ $(document).ready(function(){
                 myHTML += '<div class="col-md-4 col-sm-4 project-block" pid="'+data.projects[i].id+'">';
                 myHTML += '<div class="thumbnail"  ppath="">';
 
-                myHTML += '<div class="row margin0">';
+                myHTML += '<div class="row margin0">';                
                 myHTML += '<div class="col-xs-5"><div class="app-icon">';
                 myHTML += '<img src="/images/apple-touch-icon@2.png">';
-
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title"><h4>'+data.projects[i].name+'</h4></div>';
-                myHTML += '<div class="app-descript"><p>'+data.projects[i].description+'</p></div>';
+                myHTML += '<div class="text-center app-title go"><h4>'+data.projects[i].name+'</h4></div>';
+                myHTML += '<div class="app-descript"><p>'+data.projects[i].description+'</p></div>';                
                 myHTML += '<div class="app-function">';
-
                 myHTML += '<div class="btn-group btn-group-xs">';
 
                 myHTML += '<a class="btn btn-default deletebutton" pid="'+data.projects[i].id+'" href="#">';
@@ -77,7 +75,7 @@ $(document).ready(function(){
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title"><h4>'+data.favorates[i].name+'</h4></div>';
+                myHTML += '<div class="text-center app-title go"><h4>'+data.favorates[i].name+'</h4></div>';
                 myHTML += '<div class="app-descript"><p>'+data.favorates[i].description+'</p></div>';
                 myHTML += '<div class="app-function">';
 
@@ -123,6 +121,16 @@ $(document).ready(function(){
                 });
             },null);
         });
+        
+        
+          
+          $('.go').click(function(e){
+            
+            alert("dd");
+          });
+         
+        
+          
 
     },null);
 });
