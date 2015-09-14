@@ -33,25 +33,30 @@ public class Query {
             "p.p_is_important as isImportant,\n" +
             "p.create_date as createDate,\n" +
             "up.u_id as userId\n" +
+<<<<<<< HEAD
             "from project as p, USER_PROJECT as up\n" +
             "where p.p_is_working != '0' and p.p_id = up.p_id and up.u_id = ?;";
+=======
+    "from project as p, USER_PROJECT as up\n" +
+            "where p.p_id = up.p_id and up.u_id = ?;";
+>>>>>>> origin/master
 
     public final static String  NEW_GIT=
             "update user\n" +
-            "set git_id=? \n"+
-            "where u_id=? ;";
+                    "set git_id=? \n"+
+                    "where u_id=? ;";
 
 
     public final static String  PW_CHECK=
             "SELECT count(*) as cnt\n"+
-            "FROM user \n"+
-            "where u_id=? and passwd=password(?)";
+                    "FROM user \n"+
+                    "where u_id=? and passwd=password(?)";
 
 
     public final static String  NEW_PW=
             "UPDATE user\n"+
-            "SET passwd=password(?) \n"+
-            "where u_id=?;";
+                    "SET passwd=password(?) \n"+
+                    "where u_id=?;";
 
     public final static String  UNSUBSCRIBE=
             "update user\n" +

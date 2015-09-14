@@ -5,22 +5,18 @@ $(document).ready(function(){
         var myHTML = '';
         for (var i = 0; i < data.projects.length; i++) {
 
-            
-
                 myHTML += '<div class="col-md-4 col-sm-4 project-block" pid="'+data.projects[i].id+'">';
                 myHTML += '<div class="thumbnail"  ppath="">';
 
-                myHTML += '<div class="row margin0">';
+                myHTML += '<div class="row margin0">';                
                 myHTML += '<div class="col-xs-5"><div class="app-icon">';
                 myHTML += '<img src="/images/apple-touch-icon@2.png">';
-
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title"><h4>'+data.projects[i].name+'</h4></div>';
-                myHTML += '<div class="app-descript"><p>'+data.projects[i].description+'</p></div>';
+                myHTML += '<div class="text-center app-title go"><h4>'+data.projects[i].name+'</h4></div>';
+                myHTML += '<div class="app-descript"><p>'+data.projects[i].description+'</p></div>';                
                 myHTML += '<div class="app-function">';
-
                 myHTML += '<div class="btn-group btn-group-xs">';
 
                 myHTML += '<a class="btn btn-default deletebutton" pid="'+data.projects[i].id+'" href="#">';
@@ -47,14 +43,19 @@ $(document).ready(function(){
         $('.project-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                location.reload();
+                $('.project-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
+                 $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
 
         $('.project-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/favorate_projectlist','post',{id:spid},function(data) {
-                location.reload();
+                $('.project-block[pid='+spid+']').appendTo('#dv-favorate');
             },null);
         });
 
@@ -74,7 +75,7 @@ $(document).ready(function(){
                 myHTML += '</div>';
                 myHTML += '</div>';
                 myHTML += '<div class="col-xs-7">';
-                myHTML += '<div class="text-center app-title"><h4>'+data.favorates[i].name+'</h4></div>';
+                myHTML += '<div class="text-center app-title go"><h4>'+data.favorates[i].name+'</h4></div>';
                 myHTML += '<div class="app-descript"><p>'+data.favorates[i].description+'</p></div>';
                 myHTML += '<div class="app-function">';
 
@@ -103,16 +104,33 @@ $(document).ready(function(){
         $('.favorate-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                location.reload();
+                $('.project-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
+                $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
 
         $('.favorate-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/cancel_favorate_projectlist','post',{id:spid},function(data) {
-                location.reload();
+                 $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
+        
+        
+          
+          $('.go').click(function(e){
+            
+            alert("dd");
+          });
+         
+        
+          
 
     },null);
 });
