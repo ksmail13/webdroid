@@ -5,8 +5,6 @@ $(document).ready(function(){
         var myHTML = '';
         for (var i = 0; i < data.projects.length; i++) {
 
-            
-
                 myHTML += '<div class="col-md-4 col-sm-4 project-block" pid="'+data.projects[i].id+'">';
                 myHTML += '<div class="thumbnail"  ppath="">';
 
@@ -47,14 +45,19 @@ $(document).ready(function(){
         $('.project-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                location.reload();
+                $('.project-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
+                 $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
 
         $('.project-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/favorate_projectlist','post',{id:spid},function(data) {
-                location.reload();
+                $('.project-block[pid='+spid+']').appendTo('#dv-favorate');
             },null);
         });
 
@@ -103,14 +106,21 @@ $(document).ready(function(){
         $('.favorate-block .deletebutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                location.reload();
+                $('.project-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
+                $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
 
         $('.favorate-block .starbutton').click(function(){
             var spid = $(this).attr("pid");
             requestAysnc('/cancel_favorate_projectlist','post',{id:spid},function(data) {
-                location.reload();
+                 $('.favorate-block').each(function(){
+                    if($(this).attr('pid') == spid) $(this).remove();
+                });
             },null);
         });
 
