@@ -1,5 +1,5 @@
 /** projectmain.css **/
-body {background:#E2E2E2 url('/images/img2_converted.jpg') no-repeat top;}
+body {background:#E2E2E2 url('/images/img1_converted.jpg') no-repeat top;}
 
 .project-block {height:100px; padding:10px; background-color: blanchedalmond}
 
@@ -22,7 +22,7 @@ background-color:#C0EAB8;
 }
 
 .setting-text{
-    color: #8DB785;
+    color: darkcyan;
 }
 
 .close {
