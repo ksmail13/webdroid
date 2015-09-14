@@ -11,7 +11,7 @@ head
 
 include commonnavbar
 // body
-.container
+.container  
   .padding10
     .row
       .col-xs-12.col-sm-4
@@ -92,6 +92,12 @@ include commonnavbar
                               .form-group
                                 label.sr-only(for='txt-in-user-fileup') File upload
                                 input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', placeholder='Fileup')
+
+                              .form-group
+                                label.sr-only(for='txt-profile') Profile                                
+                                textarea#txt-in-user-des.form-control.input-lg(rows='4', cols='50',name='p_descript', knownname='파일 설명', placeholder='파일 설명')
+
+
                               .form-group.modal-footer
                                 .loading
                                 input#upload.login-btn.btn-lg.btn-default.padding5(type='submit', value='파일 불러오기')
