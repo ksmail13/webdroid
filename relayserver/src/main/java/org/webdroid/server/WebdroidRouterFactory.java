@@ -134,7 +134,17 @@ public class WebdroidRouterFactory {
 
         router.post(ProjectUploadRequestHandler.URL).handler(new ProjectUploadRequestHandler(mDBConnector));
 
+
+        router.post(ProjectdeletRequestHandler.URL).handler(new ProjectdeletRequestHandler(mDBConnector));
+
+        router.post(ProjectfavorateRequestHandler.URL).handler(new ProjectfavorateRequestHandler(mDBConnector));
+
+        router.post(CancelProjectfavorateRequestHandler.URL).handler(new CancelProjectfavorateRequestHandler(mDBConnector));
+
+
+
         router.post(TreeBaseRequestHandler.URL).handler(new TreeBaseRequestHandler(mDBConnector));
+
 
     }
     /**

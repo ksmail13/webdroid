@@ -17,18 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ±è¹Î¼ö on 2015-09-09.
+ * Created by ï¿½ï¿½Î¼ï¿½ on 2015-09-09.
  */
 public class ProjectmainRequestHandler extends RequestHandler {
 
     public static final String URL = "/show_projectlist";
 
     public ProjectmainRequestHandler(DBConnector dbConnector) {
-        super(dbConnector, true, "id");
+        super(dbConnector, true);
     }
+    @Override
 
     public void handlingWithParams(Map<String, Object> params) {
-        JsonArray dbParams = JsonUtil.createJsonArray(session.get("id"));
+        JsonArray dbParams = JsonUtil.createJsonArray(session.get("id").toString());
         mDBConnector.query(Query.MY_PROJECT, dbParams,
                 new SQLResultHandler<ResultSet>(this) {
                     @Override
@@ -44,7 +45,7 @@ public class ProjectmainRequestHandler extends RequestHandler {
                         filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
                         row.put("favorates", new JsonArray(filteredList));
 
-                        send(HttpStatusCode.SUCCESS, "application/Json", row.toString());
+                        send(HttpStatusCode.SUCCESS, "application/json", row.toString());
                     }
                 });
     }
