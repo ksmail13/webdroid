@@ -26,7 +26,7 @@ public class ProjectfavorateRequestHandler extends RequestHandler{
     @Override
 
     public void handlingWithParams(Map<String, Object> params) {
-        JsonArray dbParams = JsonUtil.createJsonArray(session.get("id").toString());
+        JsonArray dbParams = JsonUtil.createJsonArray(params.get("id"));
         mDBConnector.update(Query.FAVORATE_PROJECT, dbParams,
                 new SQLResultHandler<UpdateResult>(this) {
                     @Override

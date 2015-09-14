@@ -34,7 +34,7 @@ public class Query {
             "p.create_date as createDate,\n" +
             "up.u_id as userId\n" +
             "from project as p, USER_PROJECT as up\n" +
-            "where p.p_id = up.p_id and up.u_id = ?;";
+            "where p.p_is_working != '0' and p.p_id = up.p_id and up.u_id = ?;";
 
     public final static String  NEW_GIT=
             "update user\n" +

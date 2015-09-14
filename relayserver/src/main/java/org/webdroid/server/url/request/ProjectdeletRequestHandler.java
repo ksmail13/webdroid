@@ -26,15 +26,18 @@ public class ProjectdeletRequestHandler extends RequestHandler {
     @Override
 
     public void handlingWithParams(Map<String, Object> params) {
-        JsonArray dbParams = JsonUtil.createJsonArray( session.get("id").toString());
+        JsonArray dbParams = JsonUtil.createJsonArray(params.get("id"));
+        System.out.println("Delete Project!");
         mDBConnector.update(Query.DELETE_PROJECT, dbParams,
                 new SQLResultHandler<UpdateResult>(this) {
                     @Override
                     public void success(UpdateResult resultSet) {
-                        if(resultSet.getUpdated()==1)
+                        if (resultSet.getUpdated() == 1 || resultSet.getUpdated() == 2) {
                             sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.SUCCESS);
-                        else
-                            sendJsonResult(HttpStatusCode.SUCCESS,false, ResultMessage.SUCCESS);
+
+                        } else {
+                            sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.SUCCESS);
+                        }
                     }
                 });
     }

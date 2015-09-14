@@ -9,11 +9,8 @@
             }
             else{
               modalAlert("자기소개", '자기소개등록에 실패했습니다 .<br>다시 등록해주세요', function() {});
-<<<<<<< HEAD
-            }
-=======
+
             } 
->>>>>>> origin/master
           }),
           function(error){
             modalAlert("자기소개 등록","서버에러", function(){});

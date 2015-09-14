@@ -26,7 +26,7 @@ public class CancelProjectfavorateRequestHandler extends RequestHandler{
     @Override
 
     public void handlingWithParams(Map<String, Object> params) {
-        JsonArray dbParams = JsonUtil.createJsonArray(session.get("id").toString());
+        JsonArray dbParams = JsonUtil.createJsonArray(params.get("id"));
         mDBConnector.update(Query.CANCEL_FAVORATE_PROJECT, dbParams,
                 new SQLResultHandler<UpdateResult>(this) {
                     @Override
