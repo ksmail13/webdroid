@@ -10,51 +10,49 @@ import socket
 __author__ = 'admin'
 
 class ServerSocket :
+    clientDic = {}
 
     def __init__(self, tcpIp,tcpPort) :
         self.tcpIp = tcpIp
         self.tcpPort = tcpPort
+        self.mVirtualBoxController = VirtualBoxController()
+
+    def initSocket(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        print "init socket complete"
 
     def bindSocket(self) :
         self.sock.bind((self.tcpIp,self.tcpPort))
         print "bind complete"
-    def recvData(self) :
 
+    def recvData(self) :
         flag = True
-        self.sock.listen(1)
-        clientSock , address = self.sock.accept()
-        #print "accept client , address : " + address
+        self.sock.listen(5)
+        self.clientSock , address = self.sock.accept()
+        print "accept client , address : " , address
+
         while True :
-            data = clientSock.recv(1024)
+            data = self.clientSock.recv(1024)
             print data
 
             if "run_vm" in data :
-
                 #run_vm starting VritualBox name from JavaServer
                 split_data = data.split("#")
-                #data example is run_vm@userEmail
-                mVirtualBoxController = VirtualBoxController(split_data[1])
-                #mVirtualBoxController.checkAllMachines()
-                #data = clientSock.recv(1024)
-                machine = mVirtualBoxController.findMachine()
-
-                if not machine :
-                    #Not Found User's Virtual Machine -> Create Virtual Machine
-                    #mVirtualBoxController.createMachine(split_data[1])
-                    clientSock.send("run_vm_fail#find machine fail")
-                    continue
-                print split_data[1] , machine
-
-                mVirtualBoxController.getSession()
-                mVirtualBoxController.makeProcess(machine)
-                mVirtualBoxController.closeSession()
-                """
-              connect python sever and VmSocket
-              wait when virtualbox's C socket send Power On Complete signal
-              if Not receive complete signal clientSock.send("run_vm_fail#c_connect")
-              """
-                clientSock.send("run_vm_success")
+                #data example is run_vm@userKey
+                mach = self.mVirtualBoxController.findMachine(split_data[1])
+                self.mVirtualBoxController.getSession()
+                self.mVirtualBoxController.makeProcess(mach)
+                self.mVirtualBoxController.closeSession()
+                #self.clientDic[split_data[1]] = str(self.machineNum)
+                #self.machineNum += 1
+                #self.findVM(split_data[1])
+                portNum = 1100 + int(split_data[1])
+                self.clientSock.send("run_vm#"+split_data[1]+"#"+split_data[1])
+                if self.mVirtualBoxController.connectVmSocket("211.243.108.156",portNum) :
+                    print "Vm_Boot_Complete " + str(portNum)
+                    self.clientSock.send("run_vm#"+split_data[1]+"#"+str(portNum))
+                else :
+                    print "Vm_Boot_Fail"
                 continue
 
 
@@ -62,33 +60,12 @@ class ServerSocket :
                 split_data = data.split("#")
                 #install_apk
                 #connect virtualbox and install apk that path is in database
-                #data example is install_apk#c/project/path
-                print split_data[1]
-                mAdbController = AdbController("10.0.2.15/24","","5555")
-                mAdbController.killServer()
-
-                mAdbController.startServer()
-                mAdbController.setTcpip()
-
-                connectFlag = mAdbController.connectVirtualbox()
-                if connectFlag == True :
-                    #connect virtualbox success and install apk
-                    mAdbController.checkConnectDevices()
-                    #mAdbController.installApkInVirtualmachine(split_data[1])
-                    mAdbController.installApkInVirtualmachine("app-debug.apk")
-                    send_data = "install_apk_success"
-                    clientSock.send(send_data)
-                else :
-                    print 'Connect Devices False!!' + '\n'
-                    send_data = "install_apk_error#connect devices"
-                    clientSock.send(send_data)
-                    #break
-                #mAdbController.checkConnectDevices()
-
-
+                #data example is install_apk#userKey#c/project/path
+                print split_data[1] ,split_data[2]
+                self.installApk(split_data[1],split_data[2])
                 continue
+
             if "get_frame_buffer" in data :
-                #print data
                 """
               Receive Framebuffer size and send data
               clientSock.send("frame_buffer_start#"+width+height+size)
@@ -101,28 +78,86 @@ class ServerSocket :
               open example.jpg and send server width,height,size
               and send img
               """
-                image = Image.open('example.jpg')
-                (width,height) = image.size
-                size = os.path.getsize('example.jpg')
-                clientSock.send("frame_buffer_start#"+str(width)+"#"+str(height)+"#"+str(size))
+                split_data = data.split("#")
+                self.sendFramebuffer(split_data[1])
 
-                image = open('example.jpg','rb')
-                n_roof = size/1024 + 1
+    def findVM(self,userKey) :
+        mVirtualBoxController = VirtualBoxController()
+        #mVirtualBoxController.checkAllMachines()
+        #data = clientSock.recv(1024)
+        print "ClientVM Name : " + self.clientDic[userKey]
+        machine = mVirtualBoxController.findMachine(self.clientDic[userKey])
 
-                for i in range(n_roof) :
-                    data = image.read(1024)
-                    clientSock.send(data)
-                print 'img send done\n'
-                image.close()
+        if not machine :
+            #Not Found User's Virtual Machine -> Create Virtual Machine
+            #mVirtualBoxController.createMachine(split_data[1])
+            self.clientSock.send("run_vm_fail#"+userKey+"#find machine fail")
 
-                clientSock.send("frame_buffer_end")
+        else :
+            print userKey , machine
 
-                continue
+            mVirtualBoxController.getSession()
+            mVirtualBoxController.makeProcess(machine)
+            mVirtualBoxController.closeSession()
+            """
+           connect python sever and VmSocket
+           wait when virtualbox's C socket send Power On Complete signal
+           if Not receive complete signal clientSock.send("run_vm_fail"+userKey+"#c_connect")
+          """
+            self.clientSock.send("run_vm_success#"+userKey)
 
+    def installApk(self,userKey,apkPath) :
+        mAdbController = AdbController("10.0.2.15/24","","5555")
+        mAdbController.killServer()
 
-            if "close_sock" in data :
-                flag = False
-                break
+        mAdbController.startServer()
+        mAdbController.setTcpip()
+
+        connectFlag = mAdbController.connectVirtualbox()
+        if connectFlag == True :
+            #connect virtualbox success and install apk
+            mAdbController.checkConnectDevices()
+            #mAdbController.installApkInVirtualmachine(apkPath)
+            mAdbController.installApkInVirtualmachine("app-debug.apk")
+            send_data = "install_apk_success#"+userKey
+            self.clientSock.send(send_data)
+        else :
+            print 'Connect Devices False!!' + '\n'
+            send_data = "install_apk_error#"+userKey+"#connect devices"
+            self.clientSock.send(send_data)
+            #mAdbController.checkConnectDevices()
+
+    def sendFramebuffer(self,userKey) :
+        """
+              Receive Framebuffer size and send data
+              clientSock.send("frame_buffer_start#"+width+height+size)
+              Receive FrameBuffer img Stream
+              and for i = 0; i < size/buffer_size +1; i++
+              clientSock.send(data)
+              complete and clientSock.send("frame_buffer_end")
+
+              Image Sending Example
+              open example.jpg and send server width,height,size
+              and send img
+        """
+        image = Image.open('example.jpg')
+        (width,height) = image.size
+        size = os.path.getsize('example.jpg')
+        self.clientSock.send("frame_buffer_start#"+userKey+"#"+str(width)+"#"+str(height)+"#"+str(size))
+
+        image = open('example.jpg','rb')
+        n_roof = size/1024 + 1
+
+        for i in range(n_roof) :
+            data = "frame_buffer#"+userKey+"#"
+            data += image.read(1024)
+            print data
+            send_data = data.__sizeof__()
+            self.clientSock.send(data)
+        image.close()
+
+        self.clientSock.send("frame_buffer_end#"+userKey)
+        print "send complete"
 
 
     def closeSocket(self) :
