@@ -15,7 +15,7 @@ class ServerSocket :
     def __init__(self, tcpIp,tcpPort) :
         self.tcpIp = tcpIp
         self.tcpPort = tcpPort
-        self.machineNum = 1
+        self.mVirtualBoxController = VirtualBoxController()
 
     def initSocket(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -39,9 +39,20 @@ class ServerSocket :
                 #run_vm starting VritualBox name from JavaServer
                 split_data = data.split("#")
                 #data example is run_vm@userKey
-                self.clientDic[split_data[1]] = str(self.machineNum)
-                self.machineNum += 1
-                self.findVM(split_data[1])
+                mach = self.mVirtualBoxController.findMachine(split_data[1])
+                self.mVirtualBoxController.getSession()
+                self.mVirtualBoxController.makeProcess(mach)
+                self.mVirtualBoxController.closeSession()
+                #self.clientDic[split_data[1]] = str(self.machineNum)
+                #self.machineNum += 1
+                #self.findVM(split_data[1])
+                portNum = 1100 + int(split_data[1])
+                self.clientSock.send("run_vm#"+split_data[1]+"#"+split_data[1])
+                if self.mVirtualBoxController.connectVmSocket("211.243.108.156",portNum) :
+                    print "Vm_Boot_Complete " + str(portNum)
+                    self.clientSock.send("run_vm#"+split_data[1]+"#"+str(portNum))
+                else :
+                    print "Vm_Boot_Fail"
                 continue
 
 

@@ -15,7 +15,7 @@ import java.util.Optional;
 public class SocketServer extends WebdroidVerticle {
 
     private final static int PY_PORT = 1112;
-    private final static String PY_IP = "192.168.56.1";
+    private final static String PY_IP = "211.243.108.156";
     NetClient netClient;
     Optional<NetSocket> socket = Optional.empty();
     private boolean frameBufferRecvState = false;
@@ -50,6 +50,7 @@ public class SocketServer extends WebdroidVerticle {
     }
 
     private void recvHandler(Buffer buffer) {
+        System.out.println(buffer.toString());
         if(frameBufferRecvState){
             if(buffer.toString().startsWith("frame_buffer_end")){
                 frameBufferRecvState = false;

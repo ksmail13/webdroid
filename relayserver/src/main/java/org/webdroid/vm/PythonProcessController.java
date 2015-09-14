@@ -7,9 +7,8 @@ import java.io.*;
  */
 public class PythonProcessController {
     ProcessBuilder builder;
-    BufferedReader input;
-    BufferedReader error;
-    BufferedWriter out;
+    InputStream input;
+    OutputStreamWriter out;
     Process process;
 
     public boolean startProcess() {
@@ -20,14 +19,16 @@ public class PythonProcessController {
             builder.redirectErrorStream(true);
             //process = runtime.exec("python C:\\공개소프트웨어\\pyhon_server\\main.py");
             process = builder.start();
-            printOutput();
+            input = process.getInputStream();
+            out = new OutputStreamWriter(process.getOutputStream());
+            new InputThread(input).run();
             return true;
         } catch (IOException e) {
             System.out.println(e.toString());
             return false;
         }
     }
-
+    /*
     public boolean inputCommand(String cmd){
         out = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         try {
@@ -69,6 +70,49 @@ public class PythonProcessController {
             e.printStackTrace();
             System.out.println("printOutputError!");
             return false;
+        }
+    }
+    */
+    class OutputThread extends Thread{
+        BufferedWriter writer;
+        String cmd;
+        public OutputThread(OutputStreamWriter outputStream,String cmd) {
+            this.writer = new BufferedWriter(outputStream);
+            this.cmd = cmd;
+        }
+        public void run() {
+             try {
+                this.writer.write(cmd);
+                this.writer.flush();
+            }catch(IOException e) {
+                e.printStackTrace();
+                System.out.println("OutputThreadError!");
+            }
+        }
+    }
+    class InputThread extends Thread{
+        InputStreamReader inputReader;
+        BufferedReader reader;
+        public InputThread(InputStream inputStream) {
+            this.inputReader = new InputStreamReader(inputStream);
+            this.reader = new BufferedReader(this.inputReader);
+        }
+        public void run() {
+            String str;
+            try {
+                str = reader.readLine();
+                while (str!=null&&!str.contains("Wait Command")) {
+                    if(str.contains("On")){
+                        new OutputThread(out,"run_vm 1");
+                    }
+                    System.out.println(str);
+                    str = reader.readLine();
+                }
+                System.out.println("end read output stream");
+            }catch(IOException e) {
+                e.printStackTrace();
+                System.out.println("printOutputError!");
+            }
         }
     }
 }

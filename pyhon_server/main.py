@@ -12,16 +12,23 @@ __author__ = 'admin'
 
 
 def main() :
+    mServerSocket = ServerSocket("211.243.108.156",1112)
+    mServerSocket.initSocket()
+    mServerSocket.bindSocket()
+    mServerSocket.recvData()
+    mServerSocket.closeSocket()
+    """
     mVirtualBoxController = VirtualBoxController()
     flag = True
     machineDic = {}
+    print "On"
     while flag :
-        print "Wait Command"
+        #print "Wait Command"
         sys.stdout.flush()
 
         command = raw_input()
         split_input = command.split()
-        print command
+        #print command
         sys.stdout.flush()
 
         if "exit" in command :
@@ -50,7 +57,7 @@ def main() :
             else :
                 print "Vm_Boot_Fail"
 
-    """"
+
     mServerSocket = ServerSocket("211.243.108.156",1112)
     mServerSocket.initSocket()
     mServerSocket.bindSocket()
@@ -111,9 +118,8 @@ def main() :
     out.close()
     """
 if __name__ == "__main__" :
-    print "on"
+
     try :
-        print "on2"
         main()
     except os.error, err :
         print str(err)

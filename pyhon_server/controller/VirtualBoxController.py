@@ -55,6 +55,5 @@ class VirtualBoxController :
         print "VmReturn " + vmReturn
         if "Vm_Boot_Complete" in vmReturn :
             return True
-
         else :
             return False
