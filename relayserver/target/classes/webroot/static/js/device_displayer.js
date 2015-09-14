@@ -164,7 +164,7 @@ function draw(loc){
 	context.arc(loc[1].x,loc[1].y,3,0,Math.PI*2,false);
 	context.stroke();
 	context.fill();
-	updateTextDouble(loc[0].x*2,loc[0].y*2,loc[1].x*2,loc[1].y*2);
+	updateTextDouble(loc[0].x,loc[0].y,loc[1].x,loc[1].y);
 }
 
 function makeRandom(){
@@ -194,11 +194,11 @@ function displayerInit(displayer) {
 
 		drawBackground();
 		drawGuidelines(loc.x,loc.y);
-		updateReadout(loc.x*2,loc.y*2);	
+		updateReadout(loc.x,loc.y);	
 		
 		if(dragging == true){
 			if(mode==0){
-				updateText(loc.x*2,loc.y*2);	
+				updateText(loc.x,loc.y);	
 			}
 			else{
 				drawRect(loc.x,loc.y);
@@ -214,7 +214,7 @@ function displayerInit(displayer) {
 
 		dragging = true;
 		if(mode==0){
-			updateText(loc.x*2,loc.y*2);
+			updateText(loc.x,loc.y);
 		}else{
 			zoomx = loc.x;
 			zoomy = loc.y;
@@ -270,7 +270,7 @@ function makeDevice(target)  {
 	
 	html += "<div class='col-md-4'>";
 	html += "<div id='xy_field'></div>";
-	html += "<canvas id='displayer' class='canvas-border' width='360' height='640'> \
+	html += "<canvas id='displayer' class='canvas-border' width='320' height='480'> \
 		Canvas not supported \
 		</canvas></div>";
 

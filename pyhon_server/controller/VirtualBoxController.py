@@ -30,7 +30,7 @@ class VirtualBoxController :
             nMachine.createNewMachine(int(machineNum))
             mach = self.vbox.findMachine(self.machineName + "_" + machineNum)
 
-            print "WRONG MACHINE NAME"
+            #print "WRONG MACHINE NAME"
             return mach
 
     def checkAllMachines(self) :
