@@ -29,25 +29,19 @@ $(document).ready(function(){
 
 
   /////////////////비밀번호 변경////////////////////////
+  
+  
+  //////////////비밀번호 확인///////////////////////
     var old_pw_modal_option={
       title:'비밀번호 변경',
       form:{action:'/pwvalidate', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': pw_frmfailed},
       contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'}],
       buttons:[{'id':'pwvalidate', text:'비밀번호 확인',actiontype:'submit'}]
     };
-    
-    var new_pw_modal_option={
-      title:'새로운 비밀번호 등록',
-      form:{action:'/new_pwsubmit', method:'post', id:'frm-update', enctype:'multipart/form-data', 'success':pwUpsuccess, 'error': pwUpFail},
-      contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
-                { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
-      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기',  actiontype:'submit'}]
-    };
-    
-    $("#pwpw").common_modal_box(old_pw_modal_option);
-    
+  $("#pwpw").common_modal_box(old_pw_modal_option);
+  
     function pw_frmsuccess(result){
-      if(result.result) {
+      if(result.result) {        
         $("#pwvalidate").common_modal_box(new_pw_modal_option);
       } else {
         modalAlert('확인 실패', result.message);
@@ -59,9 +53,26 @@ $(document).ready(function(){
       //modalAlert('실패', error.status+' '+error.statusText);
     }
     
+ ///////////////새로운 비밀번호 등록 /////////////////////////  
+    var new_pw_modal_option={
+      title:'새로운 비밀번호 등록',
+      form:{action:'/new_pwsubmit', method:'post', id:'frm-update', enctype:'multipart/form-data', 'success':pwUpsuccess, 'error': pwUpFail},
+      contents:[{ name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
+                { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
+      buttons:[{'type':'success','id':'pwsubmit', text:'변경하기',  actiontype:'submit'}]
+    };
+    
+    
+    
     function pwUpsuccess(result) {
-      modalAlert('성공', '수정되었습니다.');
-      $('.modal-back').remove();
+      if($("#new_pw").val() != $("#new_pw_confrim").val()){
+        modalAlert("비밀번호 오류", '비밀번호가 맞지 않습니다 .<br>다시 확인해주세요', function() {});
+        return false;
+      }
+      else{
+        modalAlert('성공', '수정되었습니다.');
+        $('.modal-back').remove();
+      }
     }
     
     function pwUpFail(error) {
