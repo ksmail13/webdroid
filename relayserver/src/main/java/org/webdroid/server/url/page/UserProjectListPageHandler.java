@@ -27,7 +27,7 @@ public class UserProjectListPageHandler extends PageHandler {
     public void handling() {
 
         String pid = req.getParam("projectid");
-        context.put("pid",1);//pid);
+        context.put("pid",pid);
         System.out.println(pid + "##################");
 
         context.put("name", session.get("name"));
