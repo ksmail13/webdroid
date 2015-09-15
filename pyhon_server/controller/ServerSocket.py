@@ -1,5 +1,5 @@
 import os
-from controller.AdbController import AdbController
+import thread
 from controller.VirtualBoxController import VirtualBoxController
 from PIL import Image
 
@@ -8,14 +8,25 @@ __author__ = 'Administrator'
 import socket
 
 __author__ = 'admin'
+def runVm(machineNum,clientSock) :
+    #print "runVm : !!"
+    mVirtualBoxController = VirtualBoxController()
+    mach = mVirtualBoxController.findMachine(str(machineNum))
+    mVirtualBoxController.getSession()
+    mVirtualBoxController.makeProcess(mach)
+    mVirtualBoxController.closeSession()
+    clientSock.send("run_vm"+"#"+machineNum+"#"+machineNum)
+    #self.clientDic[split_data[1]] = str(self.machineNum)
+    #self.machineNum += 1
+    #self.findVM(split_data[1])
+    portNum = 1100 + int(machineNum)
+
 
 class ServerSocket :
-    clientDic = {}
-
     def __init__(self, tcpIp,tcpPort) :
         self.tcpIp = tcpIp
         self.tcpPort = tcpPort
-        self.mVirtualBoxController = VirtualBoxController()
+        #self.mVirtualBoxController = VirtualBoxController()
 
     def initSocket(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -32,27 +43,17 @@ class ServerSocket :
         print "accept client , address : " , address
 
         while True :
+
+            print "Wait Command"
             data = self.clientSock.recv(1024)
             print data
 
             if "run_vm" in data :
-                #run_vm starting VritualBox name from JavaServer
                 split_data = data.split("#")
-                #data example is run_vm@userKey
-                mach = self.mVirtualBoxController.findMachine(split_data[1])
-                self.mVirtualBoxController.getSession()
-                self.mVirtualBoxController.makeProcess(mach)
-                self.mVirtualBoxController.closeSession()
-                #self.clientDic[split_data[1]] = str(self.machineNum)
-                #self.machineNum += 1
-                #self.findVM(split_data[1])
-                portNum = 1100 + int(split_data[1])
-                self.clientSock.send("run_vm#"+split_data[1]+"#"+split_data[1])
-                if self.mVirtualBoxController.connectVmSocket("211.243.108.156",portNum) :
-                    print "Vm_Boot_Complete " + str(portNum)
-                    self.clientSock.send("run_vm#"+split_data[1]+"#"+str(portNum))
-                else :
-                    print "Vm_Boot_Fail"
+                try :
+                    thread.start_new_thread(runVm,(split_data[1],self.clientSock))
+                except :
+                    print "Thread Error!"
                 continue
 
 
@@ -81,51 +82,6 @@ class ServerSocket :
                 split_data = data.split("#")
                 self.sendFramebuffer(split_data[1])
 
-    def findVM(self,userKey) :
-        mVirtualBoxController = VirtualBoxController()
-        #mVirtualBoxController.checkAllMachines()
-        #data = clientSock.recv(1024)
-        print "ClientVM Name : " + self.clientDic[userKey]
-        machine = mVirtualBoxController.findMachine(self.clientDic[userKey])
-
-        if not machine :
-            #Not Found User's Virtual Machine -> Create Virtual Machine
-            #mVirtualBoxController.createMachine(split_data[1])
-            self.clientSock.send("run_vm_fail#"+userKey+"#find machine fail")
-
-        else :
-            print userKey , machine
-
-            mVirtualBoxController.getSession()
-            mVirtualBoxController.makeProcess(machine)
-            mVirtualBoxController.closeSession()
-            """
-           connect python sever and VmSocket
-           wait when virtualbox's C socket send Power On Complete signal
-           if Not receive complete signal clientSock.send("run_vm_fail"+userKey+"#c_connect")
-          """
-            self.clientSock.send("run_vm_success#"+userKey)
-
-    def installApk(self,userKey,apkPath) :
-        mAdbController = AdbController("10.0.2.15/24","","5555")
-        mAdbController.killServer()
-
-        mAdbController.startServer()
-        mAdbController.setTcpip()
-
-        connectFlag = mAdbController.connectVirtualbox()
-        if connectFlag == True :
-            #connect virtualbox success and install apk
-            mAdbController.checkConnectDevices()
-            #mAdbController.installApkInVirtualmachine(apkPath)
-            mAdbController.installApkInVirtualmachine("app-debug.apk")
-            send_data = "install_apk_success#"+userKey
-            self.clientSock.send(send_data)
-        else :
-            print 'Connect Devices False!!' + '\n'
-            send_data = "install_apk_error#"+userKey+"#connect devices"
-            self.clientSock.send(send_data)
-            #mAdbController.checkConnectDevices()
 
     def sendFramebuffer(self,userKey) :
         """

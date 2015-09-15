@@ -1,18 +1,11 @@
 import os
 
-from PIL import Image
-import sys
-from controller.AdbController import AdbController
 from controller.ServerSocket import ServerSocket
-from controller.VirtualBoxController import VirtualBoxController
-
-from controller.VmSocket import VmSocket
 
 __author__ = 'admin'
 
-
 def main() :
-    mServerSocket = ServerSocket("211.243.108.156",1112)
+    mServerSocket = ServerSocket("211.243.108.156",1113)
     mServerSocket.initSocket()
     mServerSocket.bindSocket()
     mServerSocket.recvData()
