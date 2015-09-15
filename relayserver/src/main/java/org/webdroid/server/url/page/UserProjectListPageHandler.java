@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class UserProjectListPageHandler extends PageHandler {
 
-    public static final String URL = "/projectview";///:projectid";
+    public static final String URL = "/projectview/:projectid";
 
     public UserProjectListPageHandler(DBConnector dbConnector) {
         super(dbConnector);
