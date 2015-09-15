@@ -8,7 +8,7 @@ $(document).ready(function(){
                 myHTML += '<div class="col-md-4 col-sm-4 project-block" pid="'+data.projects[i].id+'">';
                 myHTML += '<div class="thumbnail"  ppath="">';
 
-                myHTML += '<div class="row margin0">';                
+                myHTML += '<div class="row margin0 go2">';                
                 myHTML += '<div class="col-xs-5"><div class="app-icon">';
                 myHTML += '<img src="/images/apple-touch-icon@2.png">';
                 myHTML += '</div>';
@@ -40,8 +40,9 @@ $(document).ready(function(){
         $('#dv-projectlist').html(myHTML);
 
        
-        $('.project-block .deletebutton').click(function(){
+        $('.project-block .deletebutton').click(function(e){
             var spid = $(this).attr("pid");
+            e.stopPropagation();
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
                 $('.project-block').each(function(){
                     if($(this).attr('pid') == spid) $(this).remove();
@@ -52,8 +53,9 @@ $(document).ready(function(){
             },null);
         });
 
-        $('.project-block .starbutton').click(function(){
+        $('.project-block .starbutton').click(function(e){
             var spid = $(this).attr("pid");
+            e.stopPropagation();
             requestAysnc('/favorate_projectlist','post',{id:spid},function(data) {
                 $('.project-block[pid='+spid+']').appendTo('#dv-favorate');
             },null);
@@ -68,7 +70,7 @@ $(document).ready(function(){
             myHTML += '<div class="col-md-4 col-sm-4 favorate-block">';
                 myHTML += '<div class="thumbnail" pid="'+data.favorates[i].id+'" ppath="">';
 
-                myHTML += '<div class="row margin0">';
+                myHTML += '<div class="row margin0 go2">';
                 myHTML += '<div class="col-xs-5"><div class="app-icon">';
                 myHTML += '<img src="/images/apple-touch-icon@2.png">';
 
@@ -101,8 +103,9 @@ $(document).ready(function(){
         }
         $('#dv-favorate').html(myHTML);
 
-        $('.favorate-block .deletebutton').click(function(){
+        $('.favorate-block .deletebutton').click(function(e){
             var spid = $(this).attr("pid");
+            e.stopPropagation();
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
                 $('.project-block').each(function(){
                     if($(this).attr('pid') == spid) $(this).remove();
@@ -113,8 +116,9 @@ $(document).ready(function(){
             },null);
         });
 
-        $('.favorate-block .starbutton').click(function(){
+        $('.favorate-block .starbutton').click(function(e){
             var spid = $(this).attr("pid");
+            e.stopPropagation();
             requestAysnc('/cancel_favorate_projectlist','post',{id:spid},function(data) {
                  $('.favorate-block').each(function(){
                     if($(this).attr('pid') == spid) $(this).remove();
@@ -125,12 +129,14 @@ $(document).ready(function(){
         
           
           $('.go').click(function(e){
+            alert("title");
             var spid = $(this).attr("pid");
             requestAysnc('/projectview/'+spid,'post',{},null,null);
           });
          
-        
-          
+          $('.go2').click(function(e){
+            alert("ddd");
+          });
 
     },null);
 });

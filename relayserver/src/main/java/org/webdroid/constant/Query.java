@@ -95,8 +95,8 @@ public class Query {
 
     public final static String DELETE_PROJECT =
             "update project "+
-                    "set p_is_working = '0', p_is_important = '0' "+
-                    "where p_id = ?";
+            "set p_is_working = '0', p_is_important = '0' "+
+            "where p_id = ?";
 
     public final static String FAVORATE_PROJECT =
             "update project "+
@@ -105,8 +105,8 @@ public class Query {
 
     public final static String CANCEL_FAVORATE_PROJECT =
             "update project "+
-                    "set p_is_important = '0' "+
-                    "where p_id = ?";
+             "set p_is_important = '0' "+
+             "where p_id = ?";
 
     public final static String GET_PATH=
             "SELECT p_path\n"+

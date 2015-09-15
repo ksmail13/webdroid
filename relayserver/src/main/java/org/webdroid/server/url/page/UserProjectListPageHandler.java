@@ -25,10 +25,6 @@ public class UserProjectListPageHandler extends PageHandler {
 
     @Override
     public void handling() {
-        if (!isLogin()) {
-            redirectTo("/");
-            return;
-        }
 
         String pid = req.getParam("projectid");
         context.put("pid",1);//pid);
