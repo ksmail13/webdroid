@@ -1,16 +1,19 @@
 import os
-
+from controller.MonkeyRunner import MonkeyRunner
 from controller.ServerSocket import ServerSocket
 
 __author__ = 'admin'
 
 def main() :
+    monkey = MonkeyRunner(3356)
+    monkey.startMonkey()
+    """
     mServerSocket = ServerSocket("211.243.108.156",1113)
     mServerSocket.initSocket()
     mServerSocket.bindSocket()
     mServerSocket.recvData()
     mServerSocket.closeSocket()
-    """
+
     mVirtualBoxController = VirtualBoxController()
     flag = True
     machineDic = {}
