@@ -35,15 +35,16 @@ public class ProjectUploadRequestHandler extends RequestHandler {
         if(uploads.size() > 0) {
             uploads.stream().forEach(upload -> this.upload = upload);
 
+            System.out.println(upload.fileName());
+            String zipFileName = String.format("%d_%s_%s", 1, req.getParam("p_name"), upload.fileName());
+            String unzipPathFolderName = String.format("%d_%s", 1, req.getParam("p_name"));
 
-            String pProjectPath = WebdroidConstant.Path.UPLOAD_PROJECT + "/" + String.format("%d_%s", 1, req.getParam("p_name"));
-            String pProjectName = WebdroidConstant.Path.UPLOAD_PROJECT + "/" + String.format("%d_%s_%s", 1, req.getParam("p_name"), upload.fileName());
-            logger.debug(String.format("project file save in %s", pProjectName));
+            String zipFilePath = WebdroidConstant.Path.UPLOAD_PROJECT + "/" + zipFileName;
+            logger.debug(String.format("project file save in %s", zipFilePath));
             logger.debug(upload);
 
-            //UnZipper.unZipper("");
-            //vertx.fileSystem().mkdir(pProjectPath, voidAsyncResult -> {});
-            vertx.fileSystem().copy(upload.uploadedFileName(), pProjectName, voidAsyncResult -> {
+            vertx.fileSystem().copy(upload.uploadedFileName(), zipFilePath, voidAsyncResult -> {
+                UnZipper.unZipper(zipFileName, unzipPathFolderName);
             });
             logger.debug("uploads");
             uploads.forEach(upload -> logger.debug(upload.fileName() + " " + upload.uploadedFileName() + " " + upload.name()));
@@ -51,9 +52,9 @@ public class ProjectUploadRequestHandler extends RequestHandler {
             //sendJsonResult(HttpStatusCode.SUCCESS, false, "not implement");
             JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS);
             send(HttpStatusCode.SUCCESS, "application/json", res.toString());
-        }
-        else{
-            sendJsonResult(HttpStatusCode.SUCCESS,false,"no file upload");
+
+        } else {
+            sendJsonResult(HttpStatusCode.SUCCESS, false, "no file upload");
         }
     }
 }
