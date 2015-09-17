@@ -86,17 +86,17 @@ include commonnavbar
                           .modal-header
                             button.close(type='button', data-dismiss='modal') ×
                           .modal-body
-                            form#fileup(action='/fileup', method='post', enctype='multipart/form-data')
+                            form#fileup(action='/fileup', method='post', enctype='multipart/form-data' name='fileup')                
                               .form-group
                                 label.sr-only(for='txt-in-user-file') File
                                 input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', knownname='파일',placeholder='파일 이름')
                               .form-group
                                 label.sr-only(for='txt-in-user-fileup') File upload
-                                input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', placeholder='Fileup')
+                                input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', knownname='파일업로드', placeholder='Fileup')
 
                               .form-group
                                 label.sr-only(for='txt-profile') Profile                                
-                                textarea#txt-in-user-des.form-control.input-lg(rows='4', cols='50',name='p_descript', knownname='파일 설명', placeholder='파일 설명')
+                                textarea#txt-in-user-des.form-control.input-lg(rows='4', cols='50',type="text", name='p_descript', knownname='파일 설명', placeholder='파일 설명')
 
 
                               .form-group.modal-footer

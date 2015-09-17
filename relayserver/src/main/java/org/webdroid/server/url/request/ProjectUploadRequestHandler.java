@@ -32,22 +32,28 @@ public class ProjectUploadRequestHandler extends RequestHandler {
     @Override
     public void handlingWithParams(Map<String, Object> params) {
         Set<FileUpload> uploads = context.fileUploads();
-        uploads.stream().forEach(upload -> this.upload = upload);
+        if(uploads.size() > 0) {
+            uploads.stream().forEach(upload -> this.upload = upload);
 
-        String pProjectPath = WebdroidConstant.Path.UPLOAD_PROJECT+"/"+String.format("%d_%s",1,req.getParam("p_name"));
-        String pProjectName = WebdroidConstant.Path.UPLOAD_PROJECT+"/"+String.format("%d_%s_%s",1,req.getParam("p_name"),upload.fileName());
-        logger.debug(String.format("project file save in %s", pProjectName));
-        logger.debug(upload);
 
-        //UnZipper.unZipper("");
-        //vertx.fileSystem().mkdir(pProjectPath, voidAsyncResult -> {});
-        vertx.fileSystem().copy(upload.uploadedFileName(), pProjectName, voidAsyncResult -> {
-        });
-        logger.debug("uploads");
-        uploads.forEach(upload -> logger.debug(upload.fileName() + " " + upload.uploadedFileName() + " " + upload.name()));
+            String pProjectPath = WebdroidConstant.Path.UPLOAD_PROJECT + "/" + String.format("%d_%s", 1, req.getParam("p_name"));
+            String pProjectName = WebdroidConstant.Path.UPLOAD_PROJECT + "/" + String.format("%d_%s_%s", 1, req.getParam("p_name"), upload.fileName());
+            logger.debug(String.format("project file save in %s", pProjectName));
+            logger.debug(upload);
 
-        //sendJsonResult(HttpStatusCode.SUCCESS, false, "not implement");
-        JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS);
-        send(HttpStatusCode.SUCCESS, "application/json", res.toString());
+            //UnZipper.unZipper("");
+            //vertx.fileSystem().mkdir(pProjectPath, voidAsyncResult -> {});
+            vertx.fileSystem().copy(upload.uploadedFileName(), pProjectName, voidAsyncResult -> {
+            });
+            logger.debug("uploads");
+            uploads.forEach(upload -> logger.debug(upload.fileName() + " " + upload.uploadedFileName() + " " + upload.name()));
+
+            //sendJsonResult(HttpStatusCode.SUCCESS, false, "not implement");
+            JsonObject res = JsonUtil.createJsonResult(true, ResultMessage.SUCCESS);
+            send(HttpStatusCode.SUCCESS, "application/json", res.toString());
+        }
+        else{
+            sendJsonResult(HttpStatusCode.SUCCESS,false,"no file upload");
+        }
     }
 }

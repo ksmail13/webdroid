@@ -33,8 +33,9 @@ public class CheckPasswordRequestHandler extends RequestHandler {
 
                 if (resultSet.getRows().get(0).getInteger("cnt") == 1) {
                     session.put("isPasswordChecked", true);
-
                     sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.PW_CHECKED);
+
+
 
                 } else {
                     sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.PW_FAIL);

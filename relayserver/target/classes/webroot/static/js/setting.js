@@ -35,9 +35,15 @@ $(document).ready(function(){
     var old_pw_modal_option={
       title:'비밀번호 변경',
       form:{action:'/pwvalidate', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':pw_frmsuccess, 'error': pw_frmfailed},
-      contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'}],
-      buttons:[{'id':'pwvalidate', text:'비밀번호 확인',actiontype:'submit'}]
+      contents:[{ name:'old_pw', 'placeholder':'이전 비밀번호', 'id':'old_pw', 'type':'password'},
+                { name:'new_pw', 'placeholder':'새로운 비밀번호', 'id':'new_pw', 'type':'password'},
+                { name:'new_pw_confirm', 'placeholder':'비밀번호 확인', 'id':'new_pw_confrim', 'type':'password'}],
+      buttons:[{'id':'pwvalidate', text:'비밀번호 확인',actiontype:'submit'}],
+      onload:function(){
+        $("#pwvalidate").common_modal_box(new_pw_modal_option);
+      },
     };
+  
   $("#pwpw").common_modal_box(old_pw_modal_option);
   
     function pw_frmsuccess(result){
