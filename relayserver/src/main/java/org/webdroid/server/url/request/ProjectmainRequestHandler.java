@@ -40,6 +40,7 @@ public class ProjectmainRequestHandler extends RequestHandler {
 
                         JsonObject row = new JsonObject();
 
+                        resultList.removeIf(obj -> obj.getInteger("isImportant", 1) == 1);
                         row.put("projects", new JsonArray(resultList));
 
                         filteredList.removeIf(obj -> obj.getInteger("isImportant", 0) == 0);
