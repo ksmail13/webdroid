@@ -57,7 +57,7 @@ function formRequest(frm, success, failed, successcheck) {
 
         if(isValid(breakInfo.breakName)) {
             modalAlert('다시 확인해주세요',  breakInfo.breakName + '를 입력하셔야 합니다.', function () {breakInfo.breakObj.focus();});
-            successcheck;
+            successcheck();
         }        
         else {
             requestAysnc($frm.attr('action'), $frm.attr('method'), data, success, failed);
@@ -101,7 +101,7 @@ function validString(variable) {
             //add_block_page();
             //add_popup_box(opt);
             $('body').append(createModalTag(opt));
-            
+            //prop.onload();
             if(isValid(opt.form)) {
                 $('#'+opt.form.id).submit(function(e) {
                     return formRequest(this, opt.form.success, opt.form.error);

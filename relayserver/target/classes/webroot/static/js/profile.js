@@ -23,40 +23,52 @@
    });
 
 
-   $('#fileup').submit(function () {
-
-     //로딩
+   $(function(){
+     
      var loading = "<div class='inner-circles-loader'>";
 
-     $(".modal-footer").append(loading);
-     $("#upload").val('로딩중...');
-
-     return formRequest('#fileup',
-       function (data) {
-         //로딩끝
-         if (data.result) {
-           alert("업로드");
-           location.href = '#';
-         } else {
-           modalAlert("파일 업로드", '파일업로드에 실패했습니다 .<br>다시 업로드해주세요', function () {});
+    
+     
+     $('#fileup').ajaxForm({
+       
+        beforeSubmit: function(){
+          alert("before");
+          $(".modal-footer").append(loading);
+          $("#upload").val('로딩중...');
+        },
+       
+       success: function(data){
+         if(data.error){           
            $(".inner-circles-loader").remove();
            $("#upload").val('파일 업로드');
+           modalAlert("파일 업로드", '파일업로드에 실패했습니다 .<br>다 시 업로드해주세요', function () {});
            return false;
          }
+         else{
+           if(('#txt-in-user-file').val==''){
+             modalAlert("파일 업로드 실패", '파일 이름을 입력해주세요', function () {});
+             return false;
+           }
+           else if(('#txt-in-user-fileup').val==''){
+             modalAlert("파일 업로드 실패", '파일을 업로드해주세요', function () {});
+             return false;
+           }
+           else if(('#txt-in-user-des').val==''){
+             modalAlert("파일 업로드 실패", '파일설명을 입력해주세요', function () {});
+             return false;
+           }
+           else{
+             alert("ok");
+             location.href = '/projectmain';
+           }
+         }
+         
        },
-
-       function (error) {
-         modalAlert("회원가입", "서버에러", function () {});
-         $(".inner-circles-loader").remove();
-         $("#upload").val('파일 업로드');
-       },
-
-       function () {
-         $(".inner-circles-loader").remove();
-         $("#upload").val('파일 업로드');
-         return false;
-       }
-     );
-
-   });
+       
+       fail: 
+       
+     });
+    });
+  
+   
  });
