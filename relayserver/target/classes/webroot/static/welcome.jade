@@ -4,37 +4,8 @@ head
   link(rel='stylesheet', href='./css/welcome.css', type='text/css')
   script(src='./js/signuptest.js')
   script(src='./js/messageCollection.js')
+  script(src='./js/signin.js')
   
-  script.
-    $(document).ready(function () {
-    var isSavedId = getCookie('saveId');
-    var savedId  = getCookie('id');
-    if(isSavedId) {
-        $('#chk-save-id').attr('checked', true);
-        $('#txt-user-id').val(savedId);
-    }
-    
-    $('#frm-signin').submit(function (e) {
-    //alert();
-    if($('#chk-save-id').is(':checked')) {
-        setCookie('saveId', 'true', 10000000);
-        setCookie('id', $('#txt-user-id').val(), 10000000);
-    }
-    return formRequest(this, onReqSuccess, onReqFailed);
-    });
-    });
-    function onReqSuccess(data) {
-    if(data.result) {
-    //modalAlert('success');
-    location.replace('/projectmain');
-    } else {
-    modalAlert(signinTitle, signinERRmsg+'br'+tryAgain);
-    }
-    }
-    function onReqFailed(data) {
-    var res = $.parseJSON(data.responseText);
-    modalAlert('', res.message);
-    }
   title
     | Webdroid
 body
@@ -65,16 +36,16 @@ body
                 .form-group
                   label.sr-only(for='txt-user-pw')
                     | Password
-                  input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='password', maxlength='30', placeholder='Password', tabindex='2')
+                  input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='password', maxlength='20', placeholder='Password', tabindex='2')
                 .form-group
-                    input.btn.btn-success.btn-block.btn-lg(type='submit', value='Login', tabindex='3')
+                    input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign In', tabindex='3')
                 .form-group
                     .col-xs-6.col-sm-6.col-md-6
                         label
                             input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
                             | remember ID
                     .col-xs-6.col-sm-6.col-md-6.text-right
-                        a#a-pwfind(href='/pwfind')  find password
+                        a#a-pwfind(href='/pwfind')  Find password
                     
 
             .blank10
@@ -94,9 +65,9 @@ body
                   input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='Name',knownname='name')
                 .form-group
                   label.sr-only(for='txt-in-user-pw') Password
-                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password', knownname='password')
+                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password',maxlength='20', knownname='password')
                 .form-group
                   label.sr-only(for='txt-in-user-pw-re') Password repeat
-                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat',knownname='password check')
+                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat', maxlength='20',knownname='password check')
                 .form-group
                   input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign Up')

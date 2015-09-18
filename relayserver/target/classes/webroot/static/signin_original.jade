@@ -3,54 +3,35 @@ doctype html
 head  
   include commonheader
   link(rel='stylesheet', href='./css/settings.css', type='text/css')
+  script(src='./js/signin.js')
+  
 
-script.
-    $(document).ready(function () {
-      var isSavedId = getCookie('saveId');
-      var savedId  = getCookie('id');
-      if(isSavedId) {
-          $('#chk-save-id').attr('checked', true);
-          $('#txt-user-id').val(savedId);
-      }
-    
-    $('#frm-signin').submit(function() {
-      return formRequest('#frm-signin', 
-          function(data){
-            if(data.result){
-              location.href = '/projectmain'; 
-            }
-            else
-              modalAlert("로그인", '로그인에 실패했습니다 .<br>다시 로그인해주세요', function() {});
-          },
-          function(error){modalAlert("로그인","서버에러", function(){});}
-      );
-    });
-    
+  
 
 body
+  .div
+    .col-md-4.col-md-offset-4
+      .row
+        h3 SignIn
+        h5 Enjoy WEBDROID after signin!
+        hr
+        form#frm-signin(action='/signin', method='post')
+          .form-group
+            label.sr-only(for='txt-user-id') Email address
+            input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='email', maxlength='40', placeholder='Email', tabindex='1') 
 
-  .col-md-4.col-md-offset-4
-    .row
-      h3 로그인
-      h5 로그인 후 , 웹드로이드를 즐겨보세요!
-      hr
-      form#frm-signin(action='/signin', method='post')
-        .form-group
-          label.sr-only(for='txt-user-id') Email address
-          input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1') 
+          .form-group
+            label.sr-only(for='txt-user-pw') Password
+            input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='password', maxlength='20', placeholder='Password', tabindex='2')
 
-        .form-group
-          label.sr-only(for='txt-user-pw') Password
-          input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='비밀번호', maxlength='30', placeholder='Password', tabindex='2')
+          .form-group
+            .col-xs-6.col-sm-6.col-md-6
+              label
+                input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
+                | remember ID
+            .col-xs-6.col-sm-6.col-md-6.text-right
+              a#a-pwfind(href='/pwfind') Find password | 
+              a#a-pwfind(href='/signup_original')  Sign up
 
-        .form-group
-          .col-xs-6.col-sm-6.col-md-6
-            label
-              input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
-              | ID 저장
-          .col-xs-6.col-sm-6.col-md-6.text-right
-            a#a-pwfind(href='/pwfind') 비밀번호 찾기 | 
-            a#a-pwfind(href='/signup_original')  회원가입
-
-        .form-group
-          input.btn.btn-success.btn-block.btn-lg(type='submit', value='로그인', tabindex='3')
+          .form-group
+            input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign In', tabindex='3')

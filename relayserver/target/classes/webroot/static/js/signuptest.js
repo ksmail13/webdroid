@@ -4,7 +4,7 @@ $(document).ready(function () {
 
       
       if($("#txt-in-user-pw").val() != $("#txt-in-user-pw-re").val()){
-        modalAlert("Password error", "password doesn't match <br> Please check it", function() {});
+        modalAlert(pwTitle+" "+ ERR, pwmatchERRmsg+" <br>"+ check, function() {});
         return false;
       }
       
@@ -13,20 +13,18 @@ $(document).ready(function () {
         function(data){
           
           if(data.result && $("#txt-in-user-name").val()!='' && $("#txt-in-user-pw").val()!='' && $("#txt-in-user-pw-re").val()!='' ){
-            modalAlert("Signup", 'Successfully signed up! <br> Enjoy WEBDROID after sign-in!', function() {location.href = '/';});     
+            modalAlert(signupTitle+" " +SC, signupSCmsg, function() {location.href = '/';});     
           }
         
           else{
-            modalAlert("Signup", 'Signup failed.<br>Please try again', function() {});
+            modalAlert(signupTitle+ " " +ERR, signupERRmsg+ "<br>" +tryAgain, function() {});
             return false;
           }
         },
 
-        function(error){modalAlert("Signup","Server Error!!<br>We apologize for inconvenience.<br> Please try again.", function(){});}
+        function(error){modalAlert(serverTitleTitle,serverERRmsg+"<br>"+ tryAgain, function(){});}
       );
       }
-      
-    
 
   });
 
@@ -66,7 +64,7 @@ $(document).ready(function () {
       }
 
       function idFailed(result) {
-        modalAlert('실패','실패',function(){});
+        modalAlert(serverTitleTitle,serverERRmsg+"<br>"+ tryAgain, function(){});
       }  
   
      

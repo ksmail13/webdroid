@@ -3,7 +3,14 @@
  * request to server asynchnously
  */
 function requestAysnc(url, type, param, success, failed) {
-    $.ajax({'url':url, 'type':type, 'data':param, 'success': success, 'error':failed});  
+    $.ajax({'url':url, 'type':type, 'data':param, 'success': success, 
+            'error':function(e){
+              if(e.status == 401){
+                location.href='/signin_original';
+              }
+            }
+
+    });  
 }
 
 /*
