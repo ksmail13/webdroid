@@ -1,5 +1,6 @@
 import os
 import thread
+from controller.AdbController import AdbController
 from controller.VirtualBoxController import VirtualBoxController
 from PIL import Image
 
@@ -20,6 +21,11 @@ def runVm(machineNum,clientSock) :
     #self.machineNum += 1
     #self.findVM(split_data[1])
     portNum = 1100 + int(machineNum)
+    mAdbController = AdbController(str(portNum))
+    mAdbController.killServer()
+    mAdbController.startServer()
+    mAdbController.connectVirtualbox()
+    print str(mach.id)
 
 
 class ServerSocket :

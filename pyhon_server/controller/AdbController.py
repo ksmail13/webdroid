@@ -4,15 +4,10 @@ import subprocess
 __author__ = 'admin'
 
 class AdbController :
-    virtualmachinIp = ""
-    userId = ""
-    port = ""
     adbString = "adb"
-
-    def __init__(self, virtualmachinIp, userId,port) :
-        self.virtualmachinIp = virtualmachinIp
-        self.userId = userId
-        self.port = port
+    ip = "10.0.2.15/24"
+    def __init__(self, virtualmachinId) :
+        self.virtualmachinId = virtualmachinId
 
     def killServer(self) :
         pipe = subprocess.Popen(self.adbString + " kill-server",
@@ -41,7 +36,7 @@ class AdbController :
         #return stdout, stderr
 
     def setTcpip(self) :
-        pipe = subprocess.Popen(self.adbString + " tcpip " + self.port,
+        pipe = subprocess.Popen(self.adbString + " tcpip " + self.virtualmachinId,
                                 shell = True,
                                 stdin = subprocess.PIPE,
                                 stdout = subprocess.PIPE,
@@ -57,7 +52,7 @@ class AdbController :
         #return stdout, stderr
 
     def connectVirtualbox(self) :
-        pipe = subprocess.Popen(self.adbString + " connect " + self.virtualmachinIp,
+        pipe = subprocess.Popen(self.adbString + " connect " + self.ip,
                                 shell = True,
                                 stdin = subprocess.PIPE,
                                 stdout = subprocess.PIPE,

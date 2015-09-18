@@ -16,8 +16,8 @@ environment variable path -> add C:\Program Files\Oracle\VirtualBox;
 
 class MachineCreator :
     machineName = "android_x86"
-    VmRoot = "C:/Users/Owner/VirtualBox Vms" #server vm folder path
-    VmRootWin = "C:\\Users\\Owner\\VirtualBox VMs"
+    VmRoot = "C:/Users/Administrator/VirtualBox Vms" #server vm folder path
+    VmRootWin = "C:\\Users\\Administrator\\VirtualBox VMs"
     #machineNumber = 1
     portNumber = 1100
     nUUID = ""

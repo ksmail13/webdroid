@@ -22,8 +22,9 @@ public class RunProjectRequestHandler extends RequestHandler {
 
     @Override
     public void handlingWithParams(Map<String, Object> params) {
+        String uId = session.get("id").toString();
         String msg = req.getParam("command");    // "run_vm@userId"
-        vertx.eventBus().send("socket", msg + "#2");
+        vertx.eventBus().send("socket", msg + "#" + uId);
         vertx.eventBus().consumer("frameBuffer",this::frameBufferSender);
 
 
