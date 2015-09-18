@@ -27,7 +27,6 @@ public class ProjectdeletRequestHandler extends RequestHandler {
 
     public void handlingWithParams(Map<String, Object> params) {
         JsonArray dbParams = JsonUtil.createJsonArray(params.get("id"));
-        System.out.println("Delete Project!");
         mDBConnector.update(Query.DELETE_PROJECT, dbParams,
                 new SQLResultHandler<UpdateResult>(this) {
                     @Override

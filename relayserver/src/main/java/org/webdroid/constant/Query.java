@@ -113,4 +113,13 @@ public class Query {
             "FROM project\n"+
             "WHERE p_id=?";
 
+    public final static String SET_PATH =
+            "update project " +
+            "set p_path = ? " +
+            "where p_id = ?";
+
+    public final static String UPDATE_USER_PROJECT =
+            "insert into user_project " +
+            "(u_id,p_id) " +
+            "value (?,?)";
 }

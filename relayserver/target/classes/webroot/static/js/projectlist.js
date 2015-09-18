@@ -44,12 +44,7 @@ $(document).ready(function(){
             var spid = $(this).attr("pid");
             e.stopPropagation();
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                $('.project-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
-                 $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
 
@@ -57,7 +52,7 @@ $(document).ready(function(){
             var spid = $(this).attr("pid");
             e.stopPropagation();
             requestAysnc('/favorate_projectlist','post',{id:spid},function(data) {
-                $('.project-block[pid='+spid+']').appendTo('#dv-favorate');
+                location.reload();
             },null);
         });
 
@@ -70,7 +65,7 @@ $(document).ready(function(){
             myHTML += '<div class="col-md-4 col-sm-4 favorate-block">';
                 myHTML += '<div class="thumbnail" pid="'+data.favorates[i].id+'" ppath="">';
 
-                myHTML += '<div class="row margin0 go" pid="'+data.projects[i].id+'">';
+                myHTML += '<div class="row margin0 go" pid="'+data.favorates[i].id+'">';
                 myHTML += '<div class="col-xs-5"><div class="app-icon">';
                 myHTML += '<img src="/images/apple-touch-icon@2.png">';
 
@@ -107,12 +102,7 @@ $(document).ready(function(){
             var spid = $(this).attr("pid");
             e.stopPropagation();
             requestAysnc('/delete_projectlist','post',{id:spid},function (data){
-                $('.project-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
-                $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
 
@@ -120,9 +110,7 @@ $(document).ready(function(){
             var spid = $(this).attr("pid");
             e.stopPropagation();
             requestAysnc('/cancel_favorate_projectlist','post',{id:spid},function(data) {
-                 $('.favorate-block').each(function(){
-                    if($(this).attr('pid') == spid) $(this).remove();
-                });
+                location.reload();
             },null);
         });
         
