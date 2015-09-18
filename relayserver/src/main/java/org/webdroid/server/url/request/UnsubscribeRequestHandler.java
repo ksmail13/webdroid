@@ -35,6 +35,9 @@ public class UnsubscribeRequestHandler extends RequestHandler {
                         public void success(UpdateResult result) {
                             if (result.getUpdated() > 0) {
                                 sendJsonResult(HttpStatusCode.SUCCESS, true, ResultMessage.MEMBER_CHECKED);
+                                session.destroy();
+                                context.clearUser();
+
                             } else
                                 sendJsonResult(HttpStatusCode.SUCCESS, false, ResultMessage.MEMBER_FAIL);
                         }

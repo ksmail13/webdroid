@@ -6,6 +6,8 @@ head
   link(rel='stylesheet', href='/css/profile.css', type='text/css')
   link(rel='stylesheet', href='css/projectmain.css', type='text/css')
   link(rel='stylesheet', href='http://css-spinners.com/css/spinner/inner-circles.css', type='text/css')
+  script(src="//code.jquery.com/jquery-1.11.0.min.js")
+  script(src="/js/jquery.form.js")
   script(src='./js/profile.js')
   script(src='./js/projectlist.js')
 
@@ -86,7 +88,7 @@ include commonnavbar
                           .modal-header
                             button.close(type='button', data-dismiss='modal') ×
                           .modal-body
-                            form#fileup(action='/fileup', method='post', enctype='multipart/form-data' name='fileup')                
+                            form#fileup(action='/fileup', method='post', enctype='multipart/form-data', name='fileup')                
                               .form-group
                                 label.sr-only(for='txt-in-user-file') File
                                 input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', knownname='파일',placeholder='파일 이름')

@@ -101,7 +101,9 @@ function validString(variable) {
             //add_block_page();
             //add_popup_box(opt);
             $('body').append(createModalTag(opt));
-            //prop.onload();
+            if(isValid(prop.onload)){
+              prop.onload();
+            }
             if(isValid(opt.form)) {
                 $('#'+opt.form.id).submit(function(e) {
                     return formRequest(this, opt.form.success, opt.form.error);
@@ -142,7 +144,8 @@ function validString(variable) {
                         html += '<div class="form-group">'+
                                     '<label class="sr-only" for="'+content.id+'">'+content.placeholder+'</label>'+
                                     '<input type="'+content.type+'" name="'+content.name+'" class="form-control input-lg" id="'+content.id+'" placeholder="'+content.placeholder+'" knownname="'+content.knownname+'"/>'+
-                                '</div>';
+                                '</div>'+
+                                 '<div class="msg_here"></div>' ;
             }
                         html +='<div class="form-group text-center">';
             for(var i=0; i<options.buttons.length;i++) {
