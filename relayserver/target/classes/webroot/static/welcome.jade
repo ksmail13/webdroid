@@ -3,6 +3,7 @@ head
   include commonheader
   link(rel='stylesheet', href='./css/welcome.css', type='text/css')
   script(src='./js/signuptest.js')
+  script(src='./js/messageCollection.js')
   
   script.
     $(document).ready(function () {
@@ -27,12 +28,12 @@ head
     //modalAlert('success');
     location.replace('/projectmain');
     } else {
-    modalAlert("로그인 실패", data.message);
+    modalAlert(signinTitle, signinERRmsg+'br'+tryAgain);
     }
     }
     function onReqFailed(data) {
     var res = $.parseJSON(data.responseText);
-    modalAlert('요청 실패', res.message);
+    modalAlert('', res.message);
     }
   title
     | Webdroid
@@ -59,64 +60,43 @@ body
                 .form-group
                   label.sr-only(for='txt-user-id')
                     | Email address
-                  input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1')
+                  input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='email', maxlength='30', placeholder='Email', tabindex='1')
+                  
                 .form-group
                   label.sr-only(for='txt-user-pw')
                     | Password
-                  input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='비밀번호', maxlength='30', placeholder='Password', tabindex='2')
+                  input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='password', maxlength='30', placeholder='Password', tabindex='2')
                 .form-group
                     input.btn.btn-success.btn-block.btn-lg(type='submit', value='Login', tabindex='3')
                 .form-group
                     .col-xs-6.col-sm-6.col-md-6
                         label
                             input#chk-save-id(type='checkbox', name='save_id', style='vertical-align:top') 
-                            | ID 저장
+                            | remember ID
                     .col-xs-6.col-sm-6.col-md-6.text-right
-                        a#a-pwfind(href='/pwfind') 비밀번호 찾기
+                        a#a-pwfind(href='/pwfind')  find password
                     
 
-              //
-                table.login-table
-                  tr
-                    td.form-group
-                      label.sr-only(for='txt-user-id')
-                        | Email address
-                      input#txt-user-id.form-control.input-lg(type='email', name='user_id', knownname='이메일', maxlength='30', placeholder='Email', tabindex='1')
-                    td(rowspan='2')
-                      input.login-btn.height90(type='submit', value='Login', tabindex='3')
-                  tr
-                    td.from-group
-                      label.sr-only(for='txt-user-pw')
-                        | Password
-                      input#txt-user-pw.form-control.input-lg(type='password', name='user_pw', knownname='비밀번호', maxlength='30', placeholder='Password', tabindex='2')
-                  tr
-                    td.form-group
-                      span
-                        input#chk-save-id(type='checkbox', name='save_id')
-                        label(for='chk-save-id') ID 저장
-                    td.form-group.text-center
-                      a.btn.btn-link(href='#') 아이디 / 비밀번호 찾기
             .blank10
               hr
             .row
               p 
-                h4 가입하기
+                h4 Signup
               form#frm-signup(action='/signup', method='post')
-                .form-group
-                  .input-group
-                    label.sr-only(for='txt-in-user-id') Email address
-                    input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email', knownname='이메일')
-                    .input-group-addon
-                      button#idcheck(type='button')
-                        span.glyphicon.glyphicon-ok(aria-hidden='true', data-toggle='tooltip', title='ID 중복확인')
+                .form-group        
+                  label.sr-only(for='txt-in-user-id') Email address
+                  input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
+
+                  .msg_here
+                    
                 .form-group
                   label.sr-only(for='txt-in-user-name') Name
-                  input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='이름',knownname='이름')
+                  input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='Name',knownname='name')
                 .form-group
                   label.sr-only(for='txt-in-user-pw') Password
-                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password', knownname='비밀번호')
+                  input#txt-in-user-pw.form-control.input-lg(type='password', name='user_pw', placeholder='Password', knownname='password')
                 .form-group
                   label.sr-only(for='txt-in-user-pw-re') Password repeat
-                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat',knownname='비밀번호 확인')
+                  input#txt-in-user-pw-re.form-control.input-lg(type='password', name='user-pw-re', placeholder='Password repeat',knownname='password check')
                 .form-group
                   input.btn.btn-success.btn-block.btn-lg(type='submit', value='Sign Up')

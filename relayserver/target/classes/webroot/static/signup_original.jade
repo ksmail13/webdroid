@@ -9,24 +9,22 @@ head
   script(src='./js/signuptest.js')
       
     
-include commonnavbar 
+
 .row
-  .col-md-4.col-md-offset-4
-    h3 가입하기
-    h5 간단한 회원가입 후 , 웹드로이드를 즐겨보세요!
+  .col-xs-4.col-xs-offset-4
+    h3 SignUp
+    h5 After simple signup, enjoy WEBDROID!
     hr
     form#demo#frm-signup(action="/signup", method='post')
-      .form-group
-        .input-group
-          label.sr-only(for='txt-in-user-id') Email address
-          input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
-          .input-group-addon
-            button#idcheck(type='button')
-              span.glyphicon.glyphicon-ok(aria-hidden='true', data-toggle='tooltip', title='ID 중복확인')
+      .form-group        
+        label.sr-only(for='txt-in-user-id') Email address
+        input#txt-in-user-id.form-control.input-lg(type='email', name='user_id', placeholder='Email')
+      
+        .msg_here
     
       .form-group
         label.sr-only(for='txt-in-user-name') Name
-        input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='이름')
+        input#txt-in-user-name.form-control.input-lg(name='user_name', placeholder='Name')
       
       .pwcheck
         .form-group

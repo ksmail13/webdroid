@@ -6,6 +6,13 @@ function requestAysnc(url, type, param, success, failed) {
     $.ajax({'url':url, 'type':type, 'data':param, 'success': success, 'error':failed});  
 }
 
+/*
+  message color: success(green), danger(red)
+  */
+function msgcolor(status,msg){
+  return '<p class="text-'+status+'">'+msg+'</p>';  
+}
+
 // request by form information
 // use on submit
 // frm : form dom object
@@ -144,8 +151,9 @@ function validString(variable) {
                         html += '<div class="form-group">'+
                                     '<label class="sr-only" for="'+content.id+'">'+content.placeholder+'</label>'+
                                     '<input type="'+content.type+'" name="'+content.name+'" class="form-control input-lg" id="'+content.id+'" placeholder="'+content.placeholder+'" knownname="'+content.knownname+'"/>'+
-                                '</div>'+
-                                 '<div class="msg_here"></div>' ;
+                                '<div class="msg_here '+content.msgclass+'"></div>'+
+                                '</div>';
+                                  
             }
                         html +='<div class="form-group text-center">';
             for(var i=0; i<options.buttons.length;i++) {

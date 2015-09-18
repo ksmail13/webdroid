@@ -2,13 +2,15 @@ doctype html
 
 head    
   include commonheader
-  script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js')
+  // script(type='text/javascript', src='http://www.technicalkeeda.com/js/javascripts/plugin/jquery.validate.js')
   script(src='./js/setting.js')
   title=context.get('name')+"'s Settings"
   link(rel='stylesheet', href='./css/settings.css', type='text/css')
+  script(src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js")
 
 include commonnavbar
-  
+
+
 #outside.container-setting
   .container
     #gitgit.padding20
@@ -30,3 +32,4 @@ include commonnavbar
         span.glyphicon.glyphicon-menu-right
         |  회원 탈퇴
 
+ 

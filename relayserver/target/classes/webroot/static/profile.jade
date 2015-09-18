@@ -10,6 +10,7 @@ head
   script(src="/js/jquery.form.js")
   script(src='./js/profile.js')
   script(src='./js/projectlist.js')
+  script(scr='./js/messageCollection.js')
 
 include commonnavbar
 // body
@@ -45,14 +46,14 @@ include commonnavbar
                 .modal-content
                   .modal-header
                     button.close(type='button', data-dismiss='modal') ×
-                    h4.modal-title 자기소개를 입력하세요 
+                    h4.modal-title Fill your profile
                   .modal-body
                     form#frm-update-introduce(action="/update_introduce", method='post')
                       .form-group
                         label.sr-only(for='txt-profile') Profile
                         textarea#comment.form-control(rows='5', name='introduce')
                       .form-group
-                        input.setting_btn.padding5(type='submit', value='입력하기')
+                        input.setting_btn.padding5(type='submit', value='Update')
                   // modalbody
                 // modalcontent
               // modal dialog
@@ -63,7 +64,7 @@ include commonnavbar
             li
               h2.section-title
                 span.glyphicon.glyphicon-star
-                |  즐겨찾기
+                |  MY FAVORITE
             li
               #dv-favorate.row
                 
@@ -72,7 +73,7 @@ include commonnavbar
                 .col-sm-8.col-md-8.col-lg-8
                   h2.section-title
                     span.glyphicon.glyphicon-option-horizontal
-                    |  내 프로젝트
+                    |  MY PROJECT
                 .col-sm-4.col-md-4.col-lg-4.text-right
                   .blank20
                   
@@ -91,19 +92,19 @@ include commonnavbar
                             form#fileup(action='/fileup', method='post', enctype='multipart/form-data', name='fileup')                
                               .form-group
                                 label.sr-only(for='txt-in-user-file') File
-                                input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', knownname='파일',placeholder='파일 이름')
+                                input#txt-in-user-file.form-control.input-lg(type='text', name='p_name', knownname='file',placeholder='File Name')
                               .form-group
                                 label.sr-only(for='txt-in-user-fileup') File upload
-                                input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', knownname='파일업로드', placeholder='Fileup')
+                                input#txt-in-user-fileup.form-control.input-lg(type='file', name='file-up', knownname='File Upload', placeholder='Fileup')
 
                               .form-group
                                 label.sr-only(for='txt-profile') Profile                                
-                                textarea#txt-in-user-des.form-control.input-lg(rows='4', cols='50',type="text", name='p_descript', knownname='파일 설명', placeholder='파일 설명')
+                                textarea#txt-in-user-des.form-control.input-lg(rows='4', cols='50',type="text", name='p_descript', knownname='File description', placeholder='File Description')
 
 
                               .form-group.modal-footer
                                 .loading
-                                input#upload.login-btn.btn-lg.btn-default.padding5(type='submit', value='파일 불러오기')
+                                input#upload.login-btn.btn-lg.btn-default.padding5(type='submit', value='Upload')
 
             li
               #dv-projectlist.row
