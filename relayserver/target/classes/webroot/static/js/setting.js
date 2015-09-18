@@ -4,7 +4,7 @@ $(document).ready(function(){
     var git_modal_option = {
       title:'GitHub 아이디 등록',
       form:{action:'/gitsubmit', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':git_frmsuccess, 'error': git_frmfailed},
-      contents:[{ name:'git_id', 'placeholder':'아이디', 'id':'git_id', 'type':'email'}],
+      contents:[{ name:'git_id', 'placeholder':'아이디', 'id':'git_id', 'type':'email', 'maxlength':'30'}],
       buttons:[{'id':'gitsubmit', text:'등록하기', actiontype:'submit'}]
     };
     
@@ -118,7 +118,8 @@ $(document).ready(function(){
     var member_modal_option={
       title:'회원을 탈퇴하시겠습니까? ',
       form:{action:'/pwvalidate', method:'post', id:'frm-test', enctype:'multipart/form-data', 'success':member_frmsuccess, 'error': pw_frmfailed},
-      contents:[{ name:'old_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password','knownname':'비밀번호'}],
+      contents:[{ name:'old_pw', 'placeholder':'비밀번호 입력', 'id':'check_pw', 'type':'password', 'maxlength':'50','knownname':'비밀번호'}],
+
       buttons:[{'type':'success','id':'membersubmit', text:'탈퇴하기', actiontype:'submit'}]
     };
     

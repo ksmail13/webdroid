@@ -11,6 +11,7 @@ head
   script(src='./js/profile.js')
   script(src='./js/projectlist.js')
   script(scr='./js/messageCollection.js')
+  script(src='./js/uploader.js')
 
 include commonnavbar
 // body
@@ -22,7 +23,7 @@ include commonnavbar
         |  My profile 
         .profile-pic.padding5
           .row
-            img.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')       
+            img#proimg.img-circle(src='images/chicha.jpg', alt='Cinque Terre', width='170', height='170')     
           .panel-body
             span.glyphicon.glyphicon-menu-right
             | #{context.get('name')}
@@ -51,7 +52,7 @@ include commonnavbar
                     form#frm-update-introduce(action="/update_introduce", method='post')
                       .form-group
                         label.sr-only(for='txt-profile') Profile
-                        textarea#comment.form-control(rows='5', name='introduce')
+                        textarea#comment.form-control(rows='5', name='introduce',maxlength='200')
                       .form-group
                         input.setting_btn.padding5(type='submit', value='Update')
                   // modalbody
@@ -88,6 +89,7 @@ include commonnavbar
                         .modal-content
                           .modal-header
                             button.close(type='button', data-dismiss='modal') ×
+                            h4.modal-title 파일 업로드
                           .modal-body
                             form#fileup(action='/fileup', method='post', enctype='multipart/form-data', name='fileup')                
                               .form-group
