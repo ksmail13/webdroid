@@ -1,13 +1,19 @@
 package org.webdroid.server;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.Session;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import io.vertx.ext.web.handler.sockjs.impl.SockJSSocketBase;
+import org.webdroid.constant.WebdroidConstant;
+import org.webdroid.server.handler.RouteHandler;
 import org.webdroid.util.Log;
 import sun.misc.BASE64Encoder;
 import sun.misc.BASE64Decoder;
@@ -25,6 +31,83 @@ import java.io.*;
  */
 public class SocketJSServer extends WebdroidVerticle {
 
+    protected Session session;
+    private String uid;
+    SockJSHandler sockJSHandler;
+    Buffer buffer = null;
+
+    public void start() throws Exception {
+        HttpServer server = vertx.createHttpServer();
+        EventBus eb = vertx.eventBus();
+        //initRouter(server);
+        /*mDBConnector = new DBConnector(vertx, aBoolean -> {
+            Log.logging("DB " + (aBoolean ? "Connected":"Unconnected"));
+            if(aBoolean) {
+            }
+        });*/
+        Router router =  Router.router(vertx);
+        //SockJSHandlerOptions Options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
+        sockJSHandler = SockJSHandler.create(vertx);//,Options);
+
+        router.route("/vm_device").handler(routingContext -> {
+            routingContext.response().sendFile(WebdroidConstant.Path.TEMPL_STATIC + "/device_displayer.html");
+            session = routingContext.session();
+            uid = session.get("id").toString();
+        });
+        router.route("/vm_device/*").handler(sockJSHandler);
+
+        final String BOOTSTRAP = "/bootstrap/(css|fonts|js)/\\S+.\\S+";
+        final String CSS = "/css/\\S+.(css)";
+        final String JS = "/js/\\S+.(js)";
+        final String IMG = "/images/\\S+.(jpeg|png|jpg|ico)";
+
+        StaticHandler staticHandler = StaticHandler.create(WebdroidConstant.Path.STATIC);
+
+        router.route().pathRegex(BOOTSTRAP).handler(staticHandler);
+        router.route().pathRegex(JS).handler(staticHandler);
+        router.route().pathRegex(CSS).handler(staticHandler);
+        router.route().pathRegex(IMG).handler(staticHandler);
+
+        server.requestHandler(router::accept);
+        server.listen(8080);
+
+        eb.consumer("vm_event_to_clnt", this::vmEventHandler);
+        sockJSHandler.socketHandler(sockJSSocket -> {
+            Log.logging(sockJSSocket.remoteAddress().host());
+            vertx.eventBus().send("vm_event_to_py","run_vm#"+uid); // 최초 연결시에 run_vm 메시지전달
+
+            sockJSSocket.handler(buffer -> { // user->python 이벤트전달
+                // sockJSSocket.write(buffer);
+                vertx.eventBus().send("vm_event_to_py", "event_vm#" + uid + "#" + buffer);
+            });
+            sockJSSocket.endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void aVoid) {
+                    vertx.eventBus().send("vm_event_to_py", "event_vm#" + uid + "#vmend");
+                }
+            });
+        });
+    }
+
+    private void vmEventHandler(Message<Object> objectMessage) { // python->user 이벤트전달
+        String[] split_array;
+        split_array = objectMessage.toString().split("#");
+        if(split_array[0].contains("vm_event")) {
+            buffer = buffer.appendString(split_array[0]);
+            sockJSHandler.socketHandler(sockJSSocket -> {
+                sockJSSocket.write(buffer);
+            });
+        }
+    }
+}
+
+
+
+
+
+
+
+/*
     public int j=0;
 
     public static String encodeToString(BufferedImage image, String type) {
@@ -44,24 +127,9 @@ public class SocketJSServer extends WebdroidVerticle {
         }
         return imageString;
     }
+*/
 
-    public void start() throws Exception {
-        HttpServer server = vertx.createHttpServer();
-        //initRouter(server);
-
-
-        /*mDBConnector = new DBConnector(vertx, aBoolean -> {
-            Log.logging("DB " + (aBoolean ? "Connected":"Unconnected"));
-            if(aBoolean) {
-            }
-        });*/
-
-        Router router =  Router.router(vertx);
-        SockJSHandlerOptions Options = new SockJSHandlerOptions().setHeartbeatInterval(2000);
-        SockJSHandler sockJSHandler = SockJSHandler.create(vertx,Options);
-
-        sockJSHandler.socketHandler(sockJSSocket -> {
-            Log.logging(sockJSSocket.remoteAddress().host());
+/*
             vertx.setPeriodic(33, id -> {
                 Buffer buffer = Buffer.buffer();
                 String buf = null;
@@ -74,12 +142,9 @@ public class SocketJSServer extends WebdroidVerticle {
                 }
                 buffer.setString(0,buf);
                 sockJSSocket.write(buffer);
-            });
-            sockJSSocket.handler(buffer -> {
+            });*/
 
-               // sockJSSocket.write(buffer);
-                System.out.println(buffer.getByte(0)-48);
-                /*
+/*
                 int i;
                 String buf = "0";
                 String adrr = "";
@@ -113,18 +178,10 @@ public class SocketJSServer extends WebdroidVerticle {
 
 
 
-            });
-        });
-        router.route("/myapp").handler(routingContext -> {
-            routingContext.response().sendFile("./webroot/static/device_displayer.html");
-        });
 
-        router.route("/myapp/*").handler(sockJSHandler);
+/*
+
         router.route("/sockjs-0.3.4.js").handler(routingContext -> {
             routingContext.response().sendFile("./webroot/static/sockjs-0.3.4.js").end();
         });
-        router.route().handler(StaticHandler.create("./webroot/static/"));
-        server.requestHandler(router::accept);
-        server.listen(8080);
-    }
-}
+        router.route().handler(StaticHandler.create("./webroot/static/"));*/

@@ -5,6 +5,7 @@ var	context = null;
 var log_table = null;
 var	img = new Image();
 
+var buf = "";
 var	mode = 0;
 var	dragging = false;
 var	paused = true;
@@ -17,7 +18,7 @@ var	discs = [
 		{x:0, y:0}
 		];
 
-var sock = new SockJS('http://172.30.1.20:8080/myapp');
+var sock = new SockJS('http://127.0.0.1:8080/vm_device');
 
 //----------------------------------------function
 function windowToCanvas(displayer,x,y){
@@ -44,19 +45,17 @@ function updateReadout(x,y){
 }
 
 function updateText(x,y){
-	xy_text.innerText = xy_text.value + '(' + x.toFixed(0) + ', ' + y.toFixed(0) + ')\n';	
-	xy_text.scrollTop = xy_text.scrollHeight;
-	var buf = mode + zeroPad(x.toFixed(0),100) + zeroPad(y.toFixed(0),1000);
-	send(buf);
+	//xy_text.innerText = xy_text.value + '(' + x.toFixed(0) + ', ' + y.toFixed(0) + ')\n';	
+	//xy_text.scrollTop = xy_text.scrollHeight;
+	buf = zeroPad(x.toFixed(0),100) + '#' + zeroPad(y.toFixed(0),100);
 }
 
 function updateTextDouble(x1,y1,x2,y2){
 	xy_text.innerText = xy_text.value + '(' + x1.toFixed(0) + ', ' + y1.toFixed(0) + '), ('
 										 + x2.toFixed(0) + ', ' + y2.toFixed(0) + ')\n';	
 	xy_text.scrollTop = xy_text.scrollHeight;
-	var buf = mode + zeroPad(x1.toFixed(0),100) + zeroPad(y1.toFixed(0),1000)
+	buf = mode + zeroPad(x1.toFixed(0),100) + zeroPad(y1.toFixed(0),1000)
 				 + zeroPad(x2.toFixed(0),100) + zeroPad(y2.toFixed(0),1000);
-	send(buf);
 }
 
 function clearText(){
@@ -198,7 +197,8 @@ function displayerInit(displayer) {
 		
 		if(dragging == true){
 			if(mode==0){
-				updateText(loc.x,loc.y);	
+				updateText(loc.x,loc.y);
+				send('press#'+buf+'#1');
 			}
 			else{
 				drawRect(loc.x,loc.y);
@@ -206,8 +206,17 @@ function displayerInit(displayer) {
 		}
 	};
 
+	displayer.onclick = function (e){
+		var loc = windowToCanvas(displayer, e.clientX, e.clientY);
+
+		e.preventDefault();
+
+		updateText(loc.x,loc.y);
+		send('touch#'+buf);
+	}
+
 	displayer.onmousedown = function (e){
-		addLog("0");
+		//addLog("0");
 		var loc = windowToCanvas(displayer, e.clientX, e.clientY);
 
 		e.preventDefault();
@@ -215,6 +224,7 @@ function displayerInit(displayer) {
 		dragging = true;
 		if(mode==0){
 			updateText(loc.x,loc.y);
+			send('press#'+buf+'#1');
 		}else{
 			zoomx = loc.x;
 			zoomy = loc.y;
@@ -227,6 +237,7 @@ function displayerInit(displayer) {
 			dragging = false;
 			animateCall(e);
 		}
+		send('press#'+buf+'#0');
 		dragging = false;
 	};
 
@@ -239,11 +250,12 @@ function displayerInit(displayer) {
 
 //-------------------------------socket function
 sock.onopen = function() {
-	console.log('open');
+	console.log('sock open');
 };
 
 sock.onclose = function() {
-	console.log('close');
+	send('sock close');
+	console.log('sock close');
 };
 
 function send(message) {
@@ -256,21 +268,22 @@ function send(message) {
 }
 
 sock.onmessage = function(e) {
-	console.log('message', e.data);
-	if(e.data)	img.src = 'data:image/jpg;base64,' + e.data;
-	else console.log("empty response");
-	drawBackground();
+	console.log('message recieved', e.data);
+	//if(e.data)	img.src = 'data:image/jpg;base64,' + e.data;
+	//else console.log("empty response");
+	//drawBackground();
 };
 
 
 //----------------------------- initializing
 function makeDevice(target)  {
+	/*
 	var html = "<div class='container screen-center'>";
 	html += "<div class='row'>";
 	
 	html += "<div class='col-md-4'>";
 	html += "<div id='xy_field'></div>";
-	html += "<canvas id='displayer' class='canvas-border' width='320' height='480'> \
+	html += "<canvas id='displayer' class='canvas-border' width='360' height='640'> \
 		Canvas not supported \
 		</canvas></div>";
 
@@ -295,8 +308,14 @@ function makeDevice(target)  {
 		</tbody> \
 		</table> \
 		</div></div></div>";
+		*/
+	var html = "<div class='device_wrapper'><div id='xy_field'></div>";
+	html +=  "<canvas id='displayer' width='360' height='640'> \
+		Canvas not supported \
+		</canvas></div>";
 
 	$(target).html(html);
+	/*
 	log_table = $('#log_table').DataTable( {
 		deferRender: true,
 		scrollY: '25vh',
@@ -308,11 +327,11 @@ function makeDevice(target)  {
 		dom: 't<"bottom"f>',
 		language: {"emptyTable": " "},
 		aaSorting: []
-	});
+	});*/
 
 	displayer = document.getElementById('displayer');
 	xy_field = document.getElementById('xy_field');
-	xy_text = document.getElementById('xy_text');
+	//xy_text = document.getElementById('xy_text');
 	context = displayer.getContext('2d');
 
 	drawBackground();

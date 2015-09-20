@@ -9,6 +9,7 @@ html(ng-app='')
     script(src='/js/jquery.layout-1.4.1.js')
     script(src='/js/jquery.ui.all.js')
     script(src='/js/jqueryFileTree.js', type='text/javascript')
+    script(src='/js/showModalDialog.js')
     link(rel='stylesheet', href='/css/layout-default-latest.css', type='text/css')
     link(rel='stylesheet', href='/css/projectview.css', type='text/css')
     link(href='/css/jqueryFileTree.css', rel='stylesheet', type='text/css', media='screen')
@@ -39,7 +40,15 @@ html(ng-app='')
       resizeBrowser();
       $("#playbtn").click( function(){
       //alert('button clicked');
-      requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data){}, null);
+      //requestAysnc('/run_vm', 'post', { command:"run_vm" }, function(data){}, null);
+      var url = 'http://localhost:8080/vm_device';
+      var popOptions = "dialogWidth: 400px; dialogHeight: 680px; center: yes; resizable: no; status: no; scroll: no;"; 
+      var vReturn = window.showModalDialog(url, window,  popOptions );
+      if (vReturn == 'ok'){
+      location.reload();
+      return;
+      }else{return;}
+      return vReturn;
       });
       $(document).ready( function(){
       $("body").layout( {

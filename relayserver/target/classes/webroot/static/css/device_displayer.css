@@ -1,0 +1,13 @@
+body {
+	background-color: #282828 !important;
+}
+#xy_field {
+	color: #5b5;
+}
+#displayer {
+	border:2px solid #5b5;
+	background-color: #fff;
+}
+.device_wrapper {
+	margin-left: 20px;
+}

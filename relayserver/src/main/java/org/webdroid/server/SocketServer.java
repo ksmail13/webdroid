@@ -7,6 +7,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetSocket;
 
+import java.io.*;
 import java.util.Optional;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 public class SocketServer extends WebdroidVerticle {
 
-    private final static int PY_PORT = 1112;
+    private final static int PY_PORT = 1113;
     private final static String PY_IP = "211.243.108.156";
     NetClient netClient;
     Optional<NetSocket> socket = Optional.empty();
@@ -26,6 +27,7 @@ public class SocketServer extends WebdroidVerticle {
         netClient = vertx.createNetClient();
         netClient.connect(PY_PORT, PY_IP, this::connectHandler);
         eb.consumer("socket", this::vmEventHandler);
+        eb.consumer("vm_event_to_py", this::vmEventHandler);
     }
 
     private void connectHandler(AsyncResult<NetSocket> netSocketAsyncResult) {
@@ -49,7 +51,21 @@ public class SocketServer extends WebdroidVerticle {
         }
     }
 
-    private void recvHandler(Buffer buffer) {
+    private void recvHandler(Buffer buffer) { //run_vm_fail#uid
+        vertx.eventBus().send("vm_event_to_clnt",buffer);
+        /*
+        frameBufferRecved += buffer.toString(); //frmae_buffer_end#uid
+        System.out.print(buffer.toString());
+        if(buffer.toString().contains("end#")){
+            try {
+                BufferedWriter bf = new BufferedWriter(new FileWriter("recvtest.txt"));
+                bf.write(frameBufferRecved);
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }*/
+        /*
         System.out.println(buffer.toString());
         if(frameBufferRecvState){
             if(buffer.toString().startsWith("frame_buffer_end")){
@@ -69,11 +85,12 @@ public class SocketServer extends WebdroidVerticle {
         }else if(buffer.toString().startsWith("frame_buffer_start")){
             frameBufferRecvState = true;
             System.out.println("frame_buffer_start");
-        }
+        }*/
     }
 
     private void vmEventHandler(Message<Object> objectMessage) {
-        System.out.println(objectMessage.body()); // "run_vm@userId"
+        //System.out.println(objectMessage.body()); // "run_vm@userId"
+        logger.debug(objectMessage.body());
         socket.ifPresent(sock -> sock.write(objectMessage.body().toString()));
 
     }
